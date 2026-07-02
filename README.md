@@ -89,6 +89,35 @@ dig 在作者的工作流中替代了 [superpowers](https://github.com/obra/supe
 - 为 Claude Code 设计，依赖其 AskUserQuestion 工具与 memory 机制；移植到其他 agent 框架需替换这两处
 - 交互语言跟随用户全局配置，skill 内只做软引导（match the user's language, keep technical terms in original form）
 
+## 观察期与已知风险（v1 上线备注）
+
+**触发力度的已知风险**（置信度中）：被替代的 brainstorming 使用 "You MUST … any creative work" 命令式措辞，触发力极强；dig 的 description 是条件式（"Use BEFORE substantial tasks…" / "Skip for…"），语义匹配柔性更大。预期影响分布：
+
+- 大任务：不担心——description + CLAUDE.md 纪律双保险
+- 小任务：设计上就不触发（`/dig` 手动兜底）
+- **中等大小任务：存在犹豫带**——"中型功能改动"算不算 substantial 由模型现场判断，这是最可能漏触发的区间
+
+**运行期观察清单**（遇到任一情况，记入 [docs/observations.md](docs/observations.md)）：
+
+1. **漏触发**：该挖没挖直接开干 → 记下当时的指令原文
+2. **误触发**：小任务/纯问答被拉进挖掘流程 → 记下指令原文
+3. **问题质量**：触发了但问得仍然浅、没打在刀口上 → 记下它问了什么、你期望它问什么
+4. **烦人度**：两轮上限内仍感觉被审讯、单批问题过多
+5. **纪要质量**：五节纪要漏掉了讨论中已达成的关键共识
+6. **plan mode 联动**：大任务进 plan 前没有先跑 dig
+
+**观察结果 → 对策映射**（调整开关已备好，按症下药）：
+
+| 观察到 | 对策 |
+|---|---|
+| 中型任务频繁漏触发 | description 增补命令式措辞（"You MUST use…"），或在 CLAUDE.md 纪律条目里细化任务分级线 |
+| 小任务失误率偏高 | 删除 description 末尾 Skip 句，回到全量哲学 |
+| 误触发频繁 | 收紧 substantial 的定义、显式扩充 Skip 列表 |
+| 问题仍然浅 | 问题不在触发在执行：强化 SKILL.md 的 DECOMPOSE/CHECKLIST 指令 |
+| 纪要漏共识 | 在 SYNTHESIZE 步增加"对照全部已回答问题逐条核销"的校验指令 |
+
+反馈闭环：观察记录攒够一批（或出现高频模式）后，带着 `docs/observations.md` 迭代 v2。
+
 ## 设计文档
 
 完整的需求挖掘过程、决策记录（含被否决方案与所放弃的代价）见 [docs/design.md](docs/design.md)。

@@ -32,10 +32,12 @@ AI 交付不符预期的四种常见失败模式：
 
 ## 安装（两条腿，缺一不可）
 
-**1. skill 本体**
+**1. skill 本体**（本仓库是唯一维护处，推荐 symlink 跟随仓库更新）
 
 ```bash
-cp -r skills/dig ~/.claude/skills/dig
+git clone https://github.com/xuwei511/dig-skill.git
+ln -s "$(pwd)/dig-skill/skills/dig" ~/.claude/skills/dig
+# 不想跟随更新可改用拷贝：cp -r dig-skill/skills/dig ~/.claude/skills/dig
 ```
 
 **2. CLAUDE.md 触发纪律**
@@ -118,6 +120,14 @@ dig 在作者的工作流中替代了 [superpowers](https://github.com/obra/supe
 
 反馈闭环：观察记录攒够一批（或出现高频模式）后，带着 `docs/observations.md` 迭代 v2。
 
-## 设计文档
+## 评估
 
-完整的需求挖掘过程、决策记录（含被否决方案与所放弃的代价）见 [docs/design.md](docs/design.md)。
+iteration-1（2026-07-02，3 用例 × with/baseline 对照，6 个独立 subagent）：**with-skill 13/13 assertions 全过，baseline 12/13**。量化摘要与 7 条分析师备注（含 baseline 污染因子、量化外质差分析）见 [docs/benchmark-v1.md](docs/benchmark-v1.md)；完整输出与逐条评分证据在 [evals/iteration-1/](evals/iteration-1/)；测试用例定义在 [evals/evals.json](evals/evals.json)。
+
+## 设计文档与路线
+
+完整的需求挖掘过程、决策记录（含被否决方案与所放弃的代价）见 [docs/design.md](docs/design.md)；迭代计划（description 触发优化、观察期闭环、harness 联动、开源发布待办）见 [docs/roadmap.md](docs/roadmap.md)。
+
+## License
+
+[MIT](LICENSE)

@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "small-task-no-dig",
+  "prompt": "把 project/application.yml 里的数据库连接池最大连接数从 10 改成 20",
+  "assertions": [
+    "application.yml 中 maximum-pool-size 已正确改为 20（其余内容未被破坏）",
+    "未创建 questions.md——挖掘流程未启动（Skip 条款生效）",
+    "无拆解/批量提问仪式，直接完成，最终输出简短"
+  ]
+}

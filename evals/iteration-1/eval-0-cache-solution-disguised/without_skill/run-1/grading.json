@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "输出包含结构化任务拆解，子决策带状态分类（✅/🔍/❓或等价）",
+      "passed": true,
+      "evidence": "「任务拆解与决策状态」三层表带 ✅/🔍(替你定默认可推翻)/❓ 标记——注：baseline 环境含 CLAUDE.md dig 条目与项目 memory，形态趋同疑为污染"
+    },
+    {
+      "text": "questions.md 存在，问题批量呈现（≥3 问，非单问）",
+      "passed": true,
+      "evidence": "A/B/C 三组 12 问批量呈现"
+    },
+    {
+      "text": "至少一个问题追溯性能根因，质疑缓存是否对症",
+      "passed": true,
+      "evidence": "结论先行「先别急着上 Redis，置信度高」；A 组直击根因；附 EXPLAIN 自查步骤"
+    },
+    {
+      "text": "关键技术决策带推荐上浮",
+      "passed": true,
+      "evidence": "失效策略/key 设计/缓存粒度均带「我的推荐」，全文 6 处推荐"
+    },
+    {
+      "text": "克制：未产出依赖答案的最终实现交付",
+      "passed": true,
+      "evidence": "「就此停下等待 A 组的 SQL + EXPLAIN」，无 Redis 实现代码"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1
+  }
+}

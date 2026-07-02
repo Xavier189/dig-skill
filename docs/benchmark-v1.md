@@ -20,6 +20,6 @@
 ## 运行细节
 
 - 3 用例 × (with-skill + baseline) = 6 个独立 subagent 并行
-- 逐条 assertion 评分证据见 dig-skill-workspace/iteration-1/*/*/run-1/grading.json
+- 逐条 assertion 评分证据见 evals/iteration-1/*/*/run-1/grading.json
 - 完整输出（questions.md 等）同目录 run-1/outputs/
 - eval-1 with-skill 产出归因说明：原 agent 与替补 r2 曾短暂并存，r2 自报覆盖写过 questions.md 一次。经核对：磁盘上只存在一个版本（19:20 写入），评分所用备份（19:21）与当前文件 diff 完全一致——评分、产出、归档三者自洽。该产出无论出自哪个 run，均为「读取 dig SKILL.md 的 with-skill 配置」，评估效度不受影响。r2 无残留文件，两个 agent 均已确认关停。

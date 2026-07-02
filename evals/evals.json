@@ -1,0 +1,26 @@
+{
+  "skill_name": "dig",
+  "evals": [
+    {
+      "id": 0,
+      "name": "cache-solution-disguised",
+      "prompt": "我的 Spring Boot 3 项目用户列表页查询特别慢，高峰期要 3-4 秒，帮我加个 Redis 缓存解决一下，给我个落地方案",
+      "expected_output": "先拆解并呈现理解图景（✅🔍❓）；批量提出锚定关键决策的问题，其中至少一问追溯根因（慢是否已定位、缓存是否对症）；关键技术决策带推荐上浮；未获回答前不产出依赖答案的最终实现方案",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "logging-revamp-midsize",
+      "prompt": "帮我规划一下改造我们微服务的日志体系，现在线上排查问题太费劲，日志格式不统一、到处都是，查个问题要翻好几个服务的控制台",
+      "expected_output": "拆解出真实目标（快速定位跨服务问题 vs 日志格式美化）；问题覆盖目标/边界/成功标准；识别分叉（trace/日志聚合/格式规范是不同药方）；批量提问带推荐",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "small-task-no-dig",
+      "prompt": "把 project/application.yml 里的数据库连接池最大连接数从 10 改成 20",
+      "expected_output": "直接完成修改，不启动挖掘流程（Skip 条款生效），无批量提问仪式，无 questions.md",
+      "files": ["project/application.yml"]
+    }
+  ]
+}

@@ -33,6 +33,7 @@
 
 ## 4. 开源发布待办
 
+- [x] 跨平台兼容（2026-07-03）：对齐 Agent Skills 开放标准，SKILL.md 单文件通用化（CC 一等 + 内置降级措辞），README 平台安装矩阵（Claude Code / Codex / Cursor 详细，其余指向 agentskills.io）——决策记录 design.md D6
 - [ ] 确认 LICENSE（当前 MIT，可换）
 - [ ] `gh repo create dig-skill --public --source . --push`
-- [ ] 补充 GitHub 仓库描述与 topics（claude-code, skill, requirements, socratic）
+- [ ] 补充 GitHub 仓库描述与 topics（claude-code, skill, requirements, socratic, agent-skills）

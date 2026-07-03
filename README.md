@@ -30,14 +30,20 @@ AI 交付不符预期的四种常见失败模式：
 
 提问铁律：**答案会改变做法的问题才配问**——两个现实答案若导向同一做法，就不值得问；每个问题必须指明测试假设的哪一部分，禁止无锚点的"还有什么要补充"；不接受伪装成需求的方案（"要个按钮"先追溯到它解决什么问题）；关键决策带推荐上浮而非默默拍板；开放项超过 ~8 个视为任务过大，先建议分解而不是审讯——loop 中连续两轮新分叉不减也同样转拆分。
 
-## 安装（两条腿，缺一不可）
+## 安装
 
-**1. skill 本体**（本仓库是唯一维护处，推荐 symlink 跟随仓库更新）
+dig 遵循 [Agent Skills](https://agentskills.io) 开放标准（SKILL.md 格式），可在任何兼容客户端使用。**Claude Code 为一等支持**，其余平台按「跨平台降级说明」运行。本仓库是唯一维护处，各平台都推荐 symlink 跟随仓库更新（不想跟随可改用 `cp -r`）。
 
 ```bash
 git clone https://github.com/xuwei511/dig-skill.git
+```
+
+### Claude Code（一等支持，两条腿缺一不可）
+
+**1. skill 本体**
+
+```bash
 ln -s "$(pwd)/dig-skill/skills/dig" ~/.claude/skills/dig
-# 不想跟随更新可改用拷贝：cp -r dig-skill/skills/dig ~/.claude/skills/dig
 ```
 
 **2. CLAUDE.md 触发纪律**
@@ -48,6 +54,53 @@ ln -s "$(pwd)/dig-skill/skills/dig" ~/.claude/skills/dig
 大任务（新功能、架构变更、重构、复杂配置/选型）：
 - 动手或进 plan mode 前，先用 dig skill 挖掘需求：拆解模糊点与隐含决策 → 批量精准提问 → 澄清纪要确认后才继续
 ```
+
+### OpenAI Codex
+
+```bash
+ln -s "$(pwd)/dig-skill/skills/dig" ~/.codex/skills/dig
+```
+
+发现机制与 Claude Code 同源：启动时按 description 注入，任务匹配即激活（早期版本需 `codex --enable skills` 手动开启）。触发第二条腿：在 `~/.codex/AGENTS.md` 或项目 AGENTS.md 加入下方纪律片段。
+
+已在 codex-cli 0.142.5 实测冒烟通过：模糊任务上完整走出"三段假设（含任务特定风险点）→ 单条消息 4 问（带选项、推荐、注明所测分叉）→ 纪要确认前不动代码"的降级形态。
+
+### Cursor
+
+```bash
+# 用户级（全局）
+ln -s "$(pwd)/dig-skill/skills/dig" ~/.cursor/skills/dig
+# 或项目级：把 skills/dig 放入项目的 .cursor/skills/dig
+```
+
+`/dig` 手动调用，Agent 亦会按 description 自动选用（官方文档：[Agent Skills | Cursor Docs](https://cursor.com/docs/skills)）。触发第二条腿同样走 AGENTS.md 纪律片段。注：Cursor 侧为文档级支持，未实测，问题请提 issue。
+
+### 其他 Agent Skills 兼容客户端
+
+Gemini CLI、GitHub Copilot / VS Code、OpenCode、Goose、Roo Code、Kiro 等数十家客户端支持同一标准：把 `skills/dig` 放入该客户端的 skills 目录即可，目录位置见各家文档（完整客户端名单：[agentskills.io](https://agentskills.io)）。不支持 skill/斜杠注入的平台不在支持范围。
+
+### AGENTS.md 纪律片段（非 Claude Code 平台的第二条腿）
+
+```markdown
+For substantial tasks (new features, architecture or technology decisions, refactors,
+complex configuration), run the dig skill BEFORE starting work or writing a plan:
+hypothesize → batched precise questions → loop until nothing new surfaces → clarity
+memo confirmed by the user.
+```
+
+## 跨平台降级说明
+
+SKILL.md 单文件即全部方法论，Claude Code 专有能力在正文内置了降级路径，无需适配文件：
+
+| 能力 | Claude Code | 其他平台 |
+|---|---|---|
+| 结构化提问 | AskUserQuestion（选项卡交互） | 单条消息内编号问题列表，每问带选项与推荐 |
+| 长期记忆沉淀（SETTLE） | memory 机制 | 无持久记忆则跳过写入 |
+| 全局触发纪律 | CLAUDE.md 条目 | AGENTS.md 或等价全局指令文件 |
+| plan mode 联动 | 纪要作为 plan 的输入 | 各平台等价 planning 流程同理 |
+| 自动触发 | description 匹配 + CLAUDE.md 双保险 | 取决于客户端实现，手动调用兜底 |
+
+不承诺非 Claude Code 平台的自动触发与行为质量等效——同一份指令在不同模型/客户端上的执行质量必然有差异，遇到问题请带平台与版本信息提 issue。
 
 ## 使用
 
@@ -88,7 +141,7 @@ dig 在作者的工作流中替代了 [superpowers](https://github.com/obra/supe
 ## 局限性备注
 
 - 自动触发是语义匹配，非确定性机制；CLAUDE.md 纪律条目不可省略
-- 为 Claude Code 设计，依赖其 AskUserQuestion 工具与 memory 机制；移植到其他 agent 框架需替换这两处
+- 遵循 Agent Skills 开放标准，任何兼容客户端可用；Claude Code 为一等支持（AskUserQuestion、memory、plan mode 联动全量可用），其他平台按「跨平台降级说明」运行，行为质量依赖各客户端与模型的实现
 - 交互语言跟随用户全局配置，skill 内只做软引导（match the user's language, keep technical terms in original form）
 
 ## 观察期与已知风险（v1 上线备注）

@@ -8,7 +8,7 @@ description: Socratic requirements excavation before starting work. Use BEFORE s
 Surface what the user actually wants before any work begins. The stated request is a starting clue, not the requirement. Hidden intent, unstated constraints, and decisions silently delegated to you are where delivered work goes wrong.
 
 <HARD-RULE>
-Do not start implementation, write code, or present a final plan until the clarity memo (Step 4) is confirmed by the user. If already in plan mode, complete the dig before writing the plan — the memo is the plan's input.
+Do not start implementation, write code, or present a final plan until the clarity memo (Step 4) is confirmed by the user. If already in plan mode (or your platform's planning flow), complete the dig before writing the plan — the memo is the plan's input.
 </HARD-RULE>
 
 Match the user's language; keep technical terms in their original form.
@@ -21,7 +21,7 @@ Ask only what would change what you build. Before asking anything, name two real
 
 ### 0. CONTEXT — absorb before hypothesizing
 
-Read what's relevant: files the task touches, project docs, and memory (long-term goals, recurring preferences). Look for the user's bigger picture — a deliverable that is technically correct but misaligned with their long-term plans is still a failure.
+Read what's relevant: files the task touches, project docs, and — if your platform keeps persistent memory — stored long-term goals and recurring preferences. Look for the user's bigger picture — a deliverable that is technically correct but misaligned with their long-term plans is still a failure.
 
 ### 1. HYPOTHESIZE — commit to an interpretation the user can attack
 
@@ -42,7 +42,7 @@ If the stress-test leaves more than ~8 unresolved forks, the task is too big for
 
 ### 2. ASK — batched questions grown from the weakest points
 
-Present the hypothesis, then ask via AskUserQuestion: up to 4 questions per batch, ordered by impact, each with concrete options and a recommendation. Never drip-feed one question per turn. Ask everything you already know is open now — the loop below exists for questions born from answers, not for rationing known ones.
+Present the hypothesis, then ask — via AskUserQuestion in Claude Code, or as a numbered list in a single message on platforms without a structured question tool: up to 4 questions per batch, ordered by impact, each with concrete options and a recommendation. Never drip-feed one question per turn. Ask everything you already know is open now — the loop below exists for questions born from answers, not for rationing known ones.
 
 Every question must:
 
@@ -79,13 +79,13 @@ Get explicit confirmation. Then hand off: into plan mode for large builds, or st
 ### 5. SETTLE — persist what outlives the task
 
 - Long-lived information only: cross-task goals (e.g. an ongoing side project this task serves), recurring preferences, domain background. Nothing task-local.
-- At most 1-2 memory writes per dig; check existing memories first and prefer updating over creating.
-- Clearly cross-project facts: suggest the user add them to global CLAUDE.md — do not edit global config yourself.
+- At most 1-2 memory writes per dig; check existing memories first and prefer updating over creating. No persistent memory on your platform? Skip the writes.
+- Clearly cross-project facts: suggest the user add them to the global instructions file (CLAUDE.md, AGENTS.md, or your platform's equivalent) — do not edit global config yourself.
 - Memo persistence is OFF by default. When the user asks to save (or a harness integration requests it), write to `docs/clarity/YYYY-MM-DD-<slug>.md` with frontmatter `task`/`date`/`status` and the five memo sections as fixed headings — that structure is the machine-readable contract.
 
 ## Shallow vs deep — calibrate here
 
-User request: "用户列表页高峰期要 3-4 秒，帮我加个 Redis 缓存，给个落地方案。"
+User request: "Our user list page takes 3-4 seconds at peak. Add a Redis cache for it — give me an implementation plan."
 
 Shallow — each looks professional; none changes whether caching is even the right move:
 

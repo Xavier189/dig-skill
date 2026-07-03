@@ -13,49 +13,56 @@ Do not start implementation, write code, or present a final plan until the clari
 
 Match the user's language; keep technical terms in their original form.
 
-## Why decompose before asking
+## The bar every question must clear
 
-Questions asked before decomposition hit surface parameters, not load-bearing decisions. Shallow one-at-a-time questioning is the exact failure mode this skill exists to fix: decompose first, then ask everything that matters in one batch.
+Ask only what would change what you build. Before asking anything, name two realistic answers that would lead to different approaches; if every likely answer leads to the same action, you already know enough — don't ask. This bar outranks every step below: a step performed without it is theater.
 
 ## Process
 
-### 0. CONTEXT — absorb before decomposing
+### 0. CONTEXT — absorb before hypothesizing
 
 Read what's relevant: files the task touches, project docs, and memory (long-term goals, recurring preferences). Look for the user's bigger picture — a deliverable that is technically correct but misaligned with their long-term plans is still a failure.
 
-### 1. DECOMPOSE — break the request into decisions
+### 1. HYPOTHESIZE — commit to an interpretation the user can attack
 
-Split the request into its constituent sub-decisions and unknowns. Mark each:
+Before asking anything, present a working hypothesis in three parts. Write every part so the user could point at a line and say "no — that's wrong". Self-test: if a sentence would survive unchanged in a different task's hypothesis, it is filler — delete it.
 
-- ✅ explicit — the user already specified it
-- 🔍 delegated — has a reasonable default, but is a decision the user should ratify (technology choice, structure, trade-offs, anything hard to reverse)
-- ❓ ambiguous — genuinely unclear or missing
+1. **What you actually want** — the outcome behind the stated request, in one or two sentences. If the request is a solution ("add a Redis cache"), state the problem you believe it is meant to solve ("the list page is slow at peak") — the gap between those two is where digs pay off.
+2. **Where this goes wrong** — the one or two places THIS task is most likely to fail or be misread: a named trap ("paginated filtered lists are the worst case for caching — key explosion, low hit rate"), never a generic risk ("scope may creep").
+3. **If forced to start now, I would…** — a concrete sketch, one decision per line, each line marked:
+   - ✅ explicit — the user already said it
+   - 🔍 delegated — you'd default to X, but the user should ratify (technology choice, structure, trade-offs, anything hard to reverse); recommend, never silently decide
+   - ❓ ambiguous — you can't even pick a default
 
-### 2. CHECKLIST — sweep for blind spots
+Keep the whole hypothesis under ~15 lines — it must be correctable on sight. The sketch is bait: a concrete plan draws corrections that an abstract list of unknowns never will.
 
-Run the decomposition against six dimensions; add any 🔍/❓ items the sweep uncovers:
+Before showing it, stress-test it from six angles: real goal (is the ask a means to something unstated?), scope (what does the user assume is in or out that you don't?), success criteria (would you both agree it worked?), failure (what breaks first, and who notices?), dependencies & constraints (what must exist, or must not change?), long-term fit (does the sketch fight the user's bigger picture?). These are attack angles, not sections to fill — never write one line per angle. Most angles won't bite; the two or three that could overturn part 1 or reroute part 3 are exactly where your questions come from.
 
-1. **Real goal** — why this, and what will it be used for once built?
-2. **Scope & boundaries** — what is explicitly NOT included?
-3. **Success criteria** — how do we know it worked?
-4. **Failure & risk scenarios** — what does failure look like, who notices?
-5. **Dependencies & constraints** — what must exist first; time/compatibility/compliance limits?
-6. **Long-term fit** — does this align with the user's bigger picture and existing habits?
+If the stress-test leaves more than ~8 unresolved forks, the task is too big for one dig — propose splitting it into sub-tasks instead of interrogating.
 
-### 3. ASK — batched, precise, anchored
+### 2. ASK — batched questions grown from the weakest points
 
-First present the decomposition compactly (one line per item with its ✅🔍❓ mark) so the user can correct your understanding on sight.
+Present the hypothesis, then ask via AskUserQuestion: up to 4 questions per batch, ordered by impact, each with concrete options and a recommendation. Never drip-feed one question per turn. Ask everything you already know is open now — the loop below exists for questions born from answers, not for rationing known ones.
 
-Then ask ALL open items via AskUserQuestion in batches of up to 4, ordered by impact, each with concrete options and a recommendation. Never drip-feed one question per turn.
+Every question must:
 
-Question quality rules (hard):
+- name what it tests — which part of the hypothesis, which 🔍/❓ fork. A question you can't tie to the hypothesis (including "anything else I should know?" filler) is a checklist reflex: cut it.
+- clear the bar above — some realistic answer must change the approach.
+- refuse solutions disguised as requirements — trace "add a cache" back to the slowness it is meant to fix before designing the cache.
 
-- Every question must anchor to a specific 🔍 or ❓ item. No "anything else?" filler.
-- Never accept a solution disguised as a requirement — trace "I need a button" back to the problem it solves.
-- Surface delegated decisions (🔍) even when you have a good default: recommend, don't silently decide.
-- If open items exceed ~8, the task is too big — propose decomposing it into sub-tasks instead of interrogating.
+If the stress-test leaves no 🔍 or ❓ standing, say so and go straight to the memo — a dig with zero questions is a legitimate outcome, not a failure to perform.
 
-Stop condition: all 🔍/❓ resolved or explicitly deferred → converge. A second round only if answers open a new major fork. Hard cap: two rounds.
+Calibrate every batch against **Shallow vs deep** at the end of this file.
+
+### 3. LOOP — dig until answers stop moving the hypothesis
+
+Each answer can expose a fork that was invisible before it. A loop of batches is not drip-feeding: a new round is justified only by new information from the last one. After every batch:
+
+1. **Update the hypothesis out loud, delta only** — "your answer on X changes the sketch: …". Never restate what didn't move.
+2. **Admission gate for follow-ups** — a new question earns its place only if it states, inside itself: (a) which answer opened it — quote or closely paraphrase the user's words — and (b) which fork it decides. Shape: "You said writes must be visible immediately — that rules out plain TTL, so: invalidate on write, or drop caching for this query?" If you can't fill both slots, you are re-running a checklist, not following a thread: drop it.
+3. **Converge** when a round's answers open no admissible follow-ups and every 🔍/❓ is resolved or explicitly deferred. Say you've converged and move to the memo — never pad a final round to look thorough. There is no round cap and no round quota: one round often suffices; the gate decides, not ambition.
+4. **Too big?** If two consecutive rounds each open as many new forks as they close, stop interrogating — the request is several tasks wearing one sentence. Propose a split and dig only the first sub-task.
+5. **Escape hatch** — if the user says "开工", "start", "just do it", or equivalent, stop asking immediately: fold every unresolved item into the memo's Open items with the default you will apply, and present the memo for its usual confirmation.
 
 ### 4. SYNTHESIZE — the clarity memo
 
@@ -75,3 +82,27 @@ Get explicit confirmation. Then hand off: into plan mode for large builds, or st
 - At most 1-2 memory writes per dig; check existing memories first and prefer updating over creating.
 - Clearly cross-project facts: suggest the user add them to global CLAUDE.md — do not edit global config yourself.
 - Memo persistence is OFF by default. When the user asks to save (or a harness integration requests it), write to `docs/clarity/YYYY-MM-DD-<slug>.md` with frontmatter `task`/`date`/`status` and the five memo sections as fixed headings — that structure is the machine-readable contract.
+
+## Shallow vs deep — calibrate here
+
+User request: "用户列表页高峰期要 3-4 秒，帮我加个 Redis 缓存，给个落地方案。"
+
+Shallow — each looks professional; none changes whether caching is even the right move:
+
+- "Redis or Caffeine?"
+- "What TTL — 5 minutes or 30?"
+- "Cache the full page response, or per-user entries?"
+
+These pick parameters on top of an unexamined plan; they accept the disguised solution as the requirement.
+
+Deep — each names the fork it decides:
+
+- "Is the page slow only at peak, or always?" — always-slow points at the query itself, where an index might fix it outright; peak-only points at pool/concurrency, where a cache barely helps. Decides whether Redis is the right project at all.
+- "After someone edits a user, how stale may the list be?" — "must be fresh immediately" makes invalidation the real project and query optimization probably cheaper; "minutes are fine" makes plain TTL viable. Decides the shape — or the existence — of the cache design.
+- "Has anyone measured where the 3-4 seconds go?" — if not, the sketch starts with EXPLAIN and pool metrics, not Redis; a 30-minute index beats a permanent consistency tax. Decides step 1 of the work.
+
+A legitimate round-2 follow-up, in the admissible shape:
+
+- "You said it's only slow at peak and the connection pool maxes out — that moves the diagnosis from 'slow query' to 'connection starvation', so: raise the pool, or first find what's hogging connections?"
+
+Copy the moves, never the content. The deep moves are: trace the intent, price the consequence, attack your own sketch. Never reuse these literal questions on a task that is not this task.

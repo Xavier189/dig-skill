@@ -22,8 +22,10 @@
 
 ## 2. 观察期反馈闭环（进行中）
 
-- 运行中按 [README 观察清单](../README.md#观察期与已知风险v1-上线备注) 记录到 [observations.md](observations.md)
-- 攒一批或出现高频模式 → 按「观察结果 → 对策映射」迭代 → 发 v2，跑 `evals/iteration-2` 与 iteration-1 对比（评分基建已就位）
+- 2026-07-03：首批真实反馈到达（机械化执行 / 提问偏参数 / 澄清后不追问，详见 [observations.md](observations.md) 三条）→ **v2 已发布**：假设先行 + 收敛驱动 loop + 深浅问校准示例，决策记录见 [design.md](design.md) D1-R1。
+- 本轮按用户决策**不跑 evals/iteration-2**，先真实使用观察。v2 观察重点：loop 收敛轮数分布、假设是否任务特定（vs 模板化）、"开工"逃生口触发情况、校准示例是否被照抄到不相干任务。
+- 运行中按 [README 观察清单](../README.md#观察期与已知风险v1-上线备注) 记录到 [observations.md](observations.md)。
+- iteration-2 启动条件：v2 观察攒 3+ 条或出现高频模式；届时与 iteration-1 对照（评分基建已就位），并考虑把 loop 收敛性写成新 assertion。
 
 ## 3. Harness 联动（远期）
 

@@ -41,7 +41,7 @@ AI 交付不符预期的四种常见失败模式：
 dig 遵循 [Agent Skills](https://agentskills.io) 开放标准（SKILL.md 格式），可在任何兼容客户端使用。**Claude Code 为一等支持**，其余平台按「跨平台降级说明」运行。本仓库是唯一维护处，各平台都推荐 symlink 跟随仓库更新（不想跟随可改用 `cp -r`）。
 
 ```bash
-git clone https://github.com/xuwei511/dig-skill.git
+git clone https://github.com/Xavier189/dig-skill.git
 ```
 
 ### Claude Code（一等支持，两条腿缺一不可）

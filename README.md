@@ -44,7 +44,7 @@ dig 遵循 [Agent Skills](https://agentskills.io) 开放标准（SKILL.md 格式
 git clone https://github.com/Xavier189/dig-skill.git
 ```
 
-### Claude Code（两条腿，缺一不可）
+### Claude Code
 
 **1. skill 本体**
 
@@ -72,11 +72,7 @@ ln -s "$(pwd)/dig-skill/skills/dig" ~/.agents/skills/dig
 
 - **Codex**：启动时按 description 发现，任务匹配即激活（早期版本需 `codex --enable skills` 手动开启）；平台专属目录 `~/.codex/skills/` 亦可。已在 codex-cli 0.142.5 实测：从 `~/.agents/skills/` 正常发现，且模糊任务上完整走出"三段假设（含任务特定风险点）→ 单条消息 4 问（带选项、推荐、注明所测分叉）→ 纪要确认前不动代码"的降级形态。
 - **Cursor**：`/dig` 手动调用，Agent 亦会按 description 自动选用（官方文档：[Agent Skills | Cursor Docs](https://cursor.com/docs/skills)）；平台专属目录为项目级 `.cursor/skills/`、用户级 `~/.cursor/skills/`。注：Cursor 侧为文档级支持，未实测，问题请提 issue。
-- 触发第二条腿：在 `~/.codex/AGENTS.md` 或项目 AGENTS.md 加入下方纪律片段。
-
-### 其他 Agent Skills 兼容客户端
-
-Gemini CLI、GitHub Copilot / VS Code、OpenCode、Goose、Roo Code、Kiro 等数十家客户端支持同一标准：把 `skills/dig` 放入该客户端的 skills 目录即可，目录位置见各家文档（完整客户端名单：[agentskills.io](https://agentskills.io)）。不支持 skill/斜杠注入的平台不在支持范围。
+- 触发第二条腿：在 `AGENTS.md` 或项目 AGENTS.md 加入下方纪律片段。
 
 ### AGENTS.md 纪律片段（非 Claude Code 平台的第二条腿）
 
@@ -99,7 +95,7 @@ SKILL.md 单文件即全部方法论，Claude Code 专有能力在正文内置�
 | plan mode 联动 | 纪要作为 plan 的输入 | 各平台等价 planning 流程同理 |
 | 自动触发 | description 匹配 + CLAUDE.md 双保险 | 取决于客户端实现，手动调用兜底 |
 
-不承诺非 Claude Code 平台的自动触发与行为质量等效：同一份指令在不同模型、不同客户端上跑出来的质量本来就有差异。遇到问题请带上平台与版本信息提 issue。
+同一份指令在不同模型、不同客户端上跑出来的质量本来就有差异。遇到问题请带上平台与版本信息提 issue。
 
 ## 使用
 

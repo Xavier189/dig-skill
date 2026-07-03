@@ -69,7 +69,7 @@ dig 取三者交集：比 brainstorming 挖得深，比 socratic-architect 务�
 - **选定**：SKILL.md 仍是唯一事实源；4 处专有引用（AskUserQuestion / plan mode / memory / 全局 CLAUDE.md）改能力式措辞——CC 工具名保留置前，各附一句降级做法；语言策略 = 模型消费文本全英文（校准示例任务随之英文化）、用户显示层保留中英双格式（纪要五节标题的中文注释是 harness 解析契约，不动）；README 平台矩阵 CC+Codex+Cursor 详细、其余一句指向 agentskills.io + AGENTS.md 版纪律片段。
 - **否决**：adapters/ 平台适配层——N 份同步、漂移风险、撕裂"仓库单一事实源"；代价是放弃按平台单独调优措辞的能力。
 - **否决**：SKILL.md 纯 CC 语境不动、降级只写 README——非 CC 模型看到的是含陌生工具名的指令，降级行为不可控；代价是 CC 用户也会读到降级从句（正文 +0 行，从句内联）。
-- 验收：Codex 实测冒烟**通过**（2026-07-03，codex-cli 0.142.5，`~/.codex/skills/dig` symlink；模糊日志任务上完整产出三段假设——含两个任务特定 named trap——+ 单消息 4 问带选项/推荐/所测分叉 + 纪要确认前不动代码，~45k tokens）；Cursor 文档级（官方 skills 文档核实路径：项目 `.cursor/skills/`、用户 `~/.cursor/skills/`）。
+- 验收：Codex 实测冒烟**通过**（2026-07-03，codex-cli 0.142.5；模糊日志任务上完整产出三段假设——含两个任务特定 named trap——+ 单消息 4 问带选项/推荐/所测分叉 + 纪要确认前不动代码，~45k tokens）。安装路径实测收敛到跨 agent 共享目录 `~/.agents/skills/dig`（Codex 实测可发现，Cursor 官方文档亦列该目录），README 推荐一条软链服务多家；Cursor 文档级（项目 `.cursor/skills/`、用户 `~/.cursor/skills/` 为平台专属备选）。
 - 边界：不承诺非 CC 平台自动触发与行为质量等效，手动调用兜底；非 CC 反馈走 GitHub issue（带平台与版本）。
 
 ## 4. 失败模式自查

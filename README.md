@@ -1,8 +1,14 @@
-# dig — Socratic Requirements Excavation for Claude Code
+# dig（刨根）— 动手之前，先把需求挖干净
 
-在动手之前，先把你真正想要的东西挖出来。
+> 打破砂锅问到底的需求挖掘 skill。你说"加个缓存"，它先问你"到底什么慢、慢在哪"——因为 AI 编码最贵的浪费不是写错代码，而是把不该做的东西漂亮地做完。
 
-dig 是一个 Claude Code skill：面对大任务或模糊指令时，它让 Claude 先亮出对任务的**理解假设**（你真正要什么 / 最易做错在哪 / 现在开做会怎么做），把问题**批量、精准**地打在假设最不稳的地方，你的答案引出新分叉就继续追问，挖净后形成一份 10 秒可确认的澄清纪要，然后才允许进入 plan 或实现。
+面对大任务或模糊指令，dig 让 agent 开工前先干三件事：
+
+1. **亮出理解假设**——"我理解你真正要的是 X、这事最容易做错在 Y、现在开做我会做 Z"，说错了你当场纠
+2. **批量精准提问**——只问"答案会改变做法"的问题，每批 ≤4、带选项和推荐，绝不挤牙膏式一次一问
+3. **刨到根再收工**——你的答案引出新分叉就继续追，挖净（或你喊"开工"）才收敛成一份 10 秒可确认的澄清纪要，确认后才进 plan/实现
+
+遵循 [Agent Skills](https://agentskills.io) 开放标准：**Claude Code 一等支持**，Codex / Cursor / Gemini CLI 等数十家兼容客户端可用。
 
 ## 它解决什么问题
 
@@ -55,25 +61,18 @@ ln -s "$(pwd)/dig-skill/skills/dig" ~/.claude/skills/dig
 - 动手或进 plan mode 前，先用 dig skill 挖掘需求：拆解模糊点与隐含决策 → 批量精准提问 → 澄清纪要确认后才继续
 ```
 
-### OpenAI Codex
+### Codex / Cursor（共用 `~/.agents/skills/`，一条软链服务多家）
+
+两家都读取跨 agent 共享的用户级 skills 目录 `~/.agents/skills/`：
 
 ```bash
-ln -s "$(pwd)/dig-skill/skills/dig" ~/.codex/skills/dig
+mkdir -p ~/.agents/skills
+ln -s "$(pwd)/dig-skill/skills/dig" ~/.agents/skills/dig
 ```
 
-发现机制与 Claude Code 同源：启动时按 description 注入，任务匹配即激活（早期版本需 `codex --enable skills` 手动开启）。触发第二条腿：在 `~/.codex/AGENTS.md` 或项目 AGENTS.md 加入下方纪律片段。
-
-已在 codex-cli 0.142.5 实测冒烟通过：模糊任务上完整走出"三段假设（含任务特定风险点）→ 单条消息 4 问（带选项、推荐、注明所测分叉）→ 纪要确认前不动代码"的降级形态。
-
-### Cursor
-
-```bash
-# 用户级（全局）
-ln -s "$(pwd)/dig-skill/skills/dig" ~/.cursor/skills/dig
-# 或项目级：把 skills/dig 放入项目的 .cursor/skills/dig
-```
-
-`/dig` 手动调用，Agent 亦会按 description 自动选用（官方文档：[Agent Skills | Cursor Docs](https://cursor.com/docs/skills)）。触发第二条腿同样走 AGENTS.md 纪律片段。注：Cursor 侧为文档级支持，未实测，问题请提 issue。
+- **Codex**：启动时按 description 发现，任务匹配即激活（早期版本需 `codex --enable skills` 手动开启）；平台专属目录 `~/.codex/skills/` 亦可。已在 codex-cli 0.142.5 实测：从 `~/.agents/skills/` 正常发现，且模糊任务上完整走出"三段假设（含任务特定风险点）→ 单条消息 4 问（带选项、推荐、注明所测分叉）→ 纪要确认前不动代码"的降级形态。
+- **Cursor**：`/dig` 手动调用，Agent 亦会按 description 自动选用（官方文档：[Agent Skills | Cursor Docs](https://cursor.com/docs/skills)）；平台专属目录为项目级 `.cursor/skills/`、用户级 `~/.cursor/skills/`。注：Cursor 侧为文档级支持，未实测，问题请提 issue。
+- 触发第二条腿：在 `~/.codex/AGENTS.md` 或项目 AGENTS.md 加入下方纪律片段。
 
 ### 其他 Agent Skills 兼容客户端
 

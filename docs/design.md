@@ -25,6 +25,16 @@
 
 dig 取三者交集：比 brainstorming 挖得深，比 socratic-architect 务实（挖完要干活），比 requirements-elicitation 轻。
 
+### 2.1 事后对照（2026-07-07，v2.1 输入）
+
+v2 上线后对照的两篇外部文章与一个同类仓库；吸收与否决的决策记录见 D7。
+
+| 参照物 | 机制 | 对照结论 |
+|---|---|---|
+| [A field guide to Claude Fable: finding your unknowns](https://claude.com/blog/a-field-guide-to-claude-fable-finding-your-unknowns)（Thariq/Anthropic，2026-07-03，X 长文收录进官方博客） | map（prompt/context）≠ territory（真实约束），差值 = unknowns，按 Rumsfeld 四象限拆解；interview / brainstorm-prototype / blind spot pass / references / 实现期 implementation-notes / 事后 quiz 全周期手法 | 独立同源印证：其 interview 例句 "prioritize questions where my answer would change the architecture" 与 dig 提问门槛逐字重合，且立场是模型越强瓶颈越向"人澄清 unknowns 的能力"移——dig 类 skill 价值随模型进步上升。dig 多出假设先行、批量提问、收敛准入、memo 契约；它多出的 show-don't-ask 与实现期 Deviations 被 v2.1 吸收，blind spot pass 转观察项 |
+| [Designing Loops](https://x.com/ClaudeDevs/status/2074208949205881033)（Claude Code 官方博文，2026-07-06） | loop = agent 循环工作直到停止条件，按触发/停止/原语/适用任务四维分类（turn-based / goal-based / time-based / proactive）；质量靠可自验证的量化检查 + 把个别修复编码进系统 | 与 dig 是同一工作流的两端：dig 提高人参与的质量（灌入隐性知识），loop 减少人的参与（自主跑更久）——挖得净，loop 才跑得远。v2.1 的 Success criteria 可验证性引导来自"检查越量化越容易自验证"；"把个别修复编码进系统"正是 observations→design 修订循环的既有做法，获官方印证 |
+| [mattpocock/skills](https://github.com/mattpocock/skills)：grilling 系（grill-me / grill-with-docs）+ wayfinder | grilling：一次一问的严酷 interview 直到共识，"事实自查、决策必问"，每问带推荐答案，确认前不动工；grill-with-docs 附带产出 ADR 与 glossary；wayfinder（in-progress）：超单 session 的大工作在 issue tracker 建共享决策地图，fog of war 渐进立 ticket，一次 session 只解决一个 | grilling 与 dig 在"一次一问 vs 批量"上正面对立（Matt Pocock 明言 "Asking multiple questions at once is bewildering"）——验证 D1 否决项是真实存在的流派，属用户偏好分歧而非对错；其"事实自查、决策必问"分界线被 v2.1 吸收进提问门槛。wayfinder 恰好是 dig"任务过大转拆分"之后缺失的承接形态，远期联动候选（roadmap §5） |
+
 ## 3. 关键决策记录（含被否决项与代价）
 
 ### D1 挖掘风格：先拆解后批量精准提问 ｜ 可逆性：高
@@ -71,6 +81,32 @@ dig 取三者交集：比 brainstorming 挖得深，比 socratic-architect 务�
 - **否决**：SKILL.md 纯 CC 语境不动、降级只写 README——非 CC 模型看到的是含陌生工具名的指令，降级行为不可控；代价是 CC 用户也会读到降级从句（正文 +0 行，从句内联）。
 - 验收：Codex 实测冒烟**通过**（2026-07-03，codex-cli 0.142.5；模糊日志任务上完整产出三段假设（含两个任务特定 named trap）+ 单消息 4 问带选项/推荐/所测分叉 + 纪要确认前不动代码，~45k tokens）。安装路径实测收敛到跨 agent 共享目录 `~/.agents/skills/dig`（Codex 实测可发现，Cursor 官方文档亦列该目录），README 推荐一条软链服务多家；Cursor 文档级（项目 `.cursor/skills/`、用户 `~/.cursor/skills/` 为平台专属备选）。
 - 边界：不承诺非 CC 平台自动触发与行为质量等效，手动调用兜底；非 CC 反馈走 GitHub issue（带平台与版本）。
+
+### D7 v2.1：吸收外部同源实践（2026-07-07）｜ 可逆性：高（四处均为独立句子级改动，删句即回滚）
+
+- 触发：两篇外部文章对照分析（见 §2.1）——trq212《finding your unknowns》与 Claude Code 官方《Designing Loops》，加上从前者评论区顺藤挖出的 mattpocock/skills。
+- **选定**（SKILL.md 四处句子级吸收 + 两个观察项，不跑 eval 随 v2 同批观察）：
+  1. 提问门槛加"事实/决策"分界线：能自查（代码/文档/git 历史）的事实不问用户，问题只留给决策——来自 grilling，与"答案会改变做法"门槛正交互补（一个滤掉不改变做法的问题，一个滤掉不该由用户回答的问题）
+  2. ASK 节加 show-don't-ask 通道：品味类分叉（视觉/交互/措辞/命名）附 2-4 个具体草案让用户挑，不抽象提问——填补四象限中 unknown knowns（"看到才认得"）一格，问答对这类分叉天然低效；CC 上由 AskUserQuestion 的 option preview 承接
+  3. SYNTHESIZE 交接附实现期协议：memo 未覆盖的新分叉，低影响选保守默认、记入 Deviations、继续；触及数据模型/对外接口/不可逆时回来问——来自 trq212 核心论点"光提前规划不够，unknowns 会在实现深处冒出来"，是 🔍 delegated 语义向实现期的自然延伸；memo 五节标题契约未动
+  4. Success criteria 节加可验证性引导（measurable over sentiment）——来自 loops 文"检查越量化越容易自验证"，memo 是下游输入，可验证的标准让下游能自检
+  5. 观察项（不动 SKILL.md）：a) show-don't-ask 该用没用/被滥用；b) 用户一轮内连续答"不知道/你定"（unknown unknowns 密集、用户非需求权威的场景）——攒 3+ 条再决定是否给 LOOP 加教育模式分支（blind spot pass：先解释分叉的后果差异再问）
+- **否决**：全盘引入 Rumsfeld 四象限术语——SKILL.md 自有语言（✅🔍❓ + fork）已覆盖，叠第二套术语徒增加载与理解成本；代价是与外部文献的术语映射靠本记录承担
+- **否决**：引入完整 implementation-notes.md 流程（trq212 原方案）——dig 定位是前置挖掘，实现期流程超出边界；只取一句话协议作为交接纪律；代价是实现期记录的结构化程度低于原方案
+- **否决**：blind spot pass 立即入正文——触发场景（用户在陌生领域）的真实频率未知，先观察再加，避免 v1"清单走过场"教训在新分支上重演
+- **维持原判**：D1 否决"一次一问"不变——grilling 的存在恰好证明该流派真实而非稻草人，分歧在用户偏好（作者反挤牙膏）而非对错
+- 新代价（有意接受）：SKILL.md 108→110 行，三处原句加长，触发加载成本微增；show-don't-ask 给 ASK 步引入"判断分叉类型"的新自由度，误判（普通分叉滥做草案）列为观察项 5a
+- 定位叙事（非 SKILL.md）：README 引入"模型越强，瓶颈越从模型能力移向人澄清 unknowns 的能力"（trq212）与"dig 挖得净、loop 才跑得远"（两文合并图景）
+
+### D8 v2.2：批内独立性约束（2026-07-07）｜ 可逆性：高（一句话，删句即回滚）
+
+- 触发：用户对批量提问的结构性疑虑——一次给 4 问，Q1 的回答可能使 Q2 不该问，或使 Q2 的选项全错，批内表达不了这种依赖。
+- 分析：批内依赖三形态——**存在性依赖**（Q1 答案决定 Q2 该不该问）与**选项集依赖**（Q2 该问但选项随 Q1 变）是真问题；**仅推荐依赖**（问题与选项恒成立，只有推荐随 Q1 变）不是，条件式推荐即可解，卡它会把批量削成变相一次一问。现有机制已覆盖大半：loop 的 cite-the-answer 门槛本就是依赖问题的归宿（"born from answers"），假设先行使 ≤15 行草案的分叉行多为同层独立决策，AskUserQuestion 四问同框逐答也让用户能带着 Q1 的选择协调 Q2。缺口只在：SKILL.md 没有一句话禁止依赖问题混入同批，而 v1 教训 = 没写的纪律不被执行。
+- **选定 A**：ASK 节加批内独立性约束——存在或选项集依赖本批另一答案的问题不进本批，留给 loop（在那里它恰好满足 cite-the-answer 门槛）；仅推荐变化不算依赖，写条件式推荐留在批内。效果 = 独立问题保持并行（批量的长处）+ 依赖链交给 loop 逐层串行（一次一问的长处，grilling "resolving dependencies one-by-one" 的真正优势被结构性收编）；批量哲学不变。
+- **否决 B**（批内条件式问题，"若 Q1 选缓存：TTL？"）：选项组合爆炸、AskUserQuestion 无条件显隐能力、认知负担正是 grilling 指认的 bewildering 本尊。
+- **否决 C**（改回一次一问）：D1 既有否决维持——轮次爆炸 + 审讯感 + 丢失四问同框的全局视野（用户能看出这批问题共同勾勒的方向对不对，一次一问给不了）。
+- **否决 D**（不动措辞、信任模型自行处理）：v1 已证明没写的纪律靠不住。
+- 新代价（有意接受）：深依赖链每层多一轮（但每轮仍并行其余独立问题，且这正是 loop 的本职）；"独立性"判断引入新自由度——过严会把仅推荐依赖也拆批、批量退化为变相一次一问，列为观察项（README 观察清单 11）。
 
 ## 4. 失败模式自查
 

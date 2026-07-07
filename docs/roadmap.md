@@ -23,6 +23,8 @@
 ## 2. 观察期反馈闭环（进行中）
 
 - 2026-07-03：首批真实反馈到达（机械化执行 / 提问偏参数 / 澄清后不追问，详见 [observations.md](observations.md) 三条）→ **v2 已发布**：假设先行 + 收敛驱动 loop + 深浅问校准示例，决策记录见 [design.md](design.md) D1-R1。
+- 2026-07-07：外部对照吸收（trq212《finding your unknowns》官方博客文 + Claude Code 官方《Designing Loops》+ 顺藤挖出的 mattpocock/skills）→ **v2.1 已发布**：提问门槛加"事实自查、决策必问"分界线、ASK 加 show-don't-ask 通道（品味类分叉附草案）、纪要交接附实现期 Deviations 协议、Success criteria 加可验证性引导。四处均句子级、删句即回滚，决策记录 [design.md](design.md) D7 + §2.1。不跑 eval，随 v2 同批观察；观察重点追加：show-don't-ask 该用没用/被滥用、用户连续答"不知道"的频率（blind spot pass 候选场景，README 观察清单 9/10）。
+- 2026-07-07：用户疑虑驱动（批量提问的批内依赖：Q1 的回答可能使 Q2 作废或选项全错）→ **v2.2 已发布**：ASK 加批内独立性约束——存在或选项集依赖本批另一答案的问题留给 loop（在那里恰好满足 cite-the-answer 门槛），仅推荐变化写条件式推荐留批内。独立问题并行 + 依赖链 loop 逐层串行，一次一问流派的依赖感知被结构性收编而批量哲学不变。决策记录 [design.md](design.md) D8；观察重点：依赖仍混批 / 过度拆批（README 观察清单 11）。
 - 本轮按用户决策**不跑 evals/iteration-2**，先真实使用观察。v2 观察重点：loop 收敛轮数分布、假设是否任务特定（vs 模板化）、"开工"逃生口触发情况、校准示例是否被照抄到不相干任务。
 - 运行中按 [README 观察清单](../README.md#观察期与已知风险v1-上线备注) 记录到 [observations.md](observations.md)。
 - iteration-2 启动条件：v2 观察攒 3+ 条或出现高频模式；届时与 iteration-1 对照（评分基建已就位），并考虑把 loop 收敛性写成新 assertion。
@@ -37,3 +39,7 @@
 - [ ] 确认 LICENSE（当前 MIT，可换）
 - [x] GitHub 仓库已建并公开：[Xavier189/dig-skill](https://github.com/Xavier189/dig-skill)
 - [x] 仓库描述与 topics（claude-code, claude-skill, agent-skills, requirements-engineering, socratic-method, ai-agents, codex, cursor）
+
+## 5. 同类项目联动（远期候选）
+
+[mattpocock/skills](https://github.com/mattpocock/skills) 的 wayfinder（in-progress 状态）与 dig 天然衔接：dig 判定"任务过大转拆分"后，拆出的子任务目前只是一段建议文本；wayfinder 把这类超 session 的模糊工作变成 issue tracker 上的共享决策地图（fog of war 渐进立 ticket，一次 session 只解决一个）。若其毕业出 in-progress，评估"dig 拆分 → wayfinder 式地图"的交接形态。对照记录见 [design.md](design.md) §2.1。

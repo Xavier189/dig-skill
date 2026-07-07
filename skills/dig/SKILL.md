@@ -15,7 +15,7 @@ Match the user's language; keep technical terms in their original form.
 
 ## The bar every question must clear
 
-Ask only what would change what you build. Before asking anything, name two realistic answers that would lead to different approaches; if every likely answer leads to the same action, you already know enough — don't ask. This bar outranks every step below: a step performed without it is theater.
+Ask only what would change what you build. Before asking anything, name two realistic answers that would lead to different approaches; if every likely answer leads to the same action, you already know enough — don't ask. And a fact you can look up yourself — in the code, the docs, the git history — never goes to the user, however much it would change the approach: look it up; questions are reserved for decisions, which are the user's alone. This bar outranks every step below: a step performed without it is theater.
 
 ## Process
 
@@ -42,13 +42,15 @@ If the stress-test leaves more than ~8 unresolved forks, the task is too big for
 
 ### 2. ASK — batched questions grown from the weakest points
 
-Present the hypothesis, then ask — via AskUserQuestion in Claude Code, or as a numbered list in a single message on platforms without a structured question tool: up to 4 questions per batch, ordered by impact, each with concrete options and a recommendation. Never drip-feed one question per turn. Ask everything you already know is open now — the loop below exists for questions born from answers, not for rationing known ones.
+Present the hypothesis, then ask — via AskUserQuestion in Claude Code, or as a numbered list in a single message on platforms without a structured question tool: up to 4 questions per batch, ordered by impact, each with concrete options and a recommendation. Never drip-feed one question per turn. Ask everything you already know is open now — the loop below exists for questions born from answers, not for rationing known ones. And batch only independent questions: one whose existence or option set depends on how another question in this batch is answered is not askable yet — hold it for the loop, where it is exactly a question born from that answer and passes the gate by citing it. Recommendation-only coupling is not dependence: keep the question in the batch and write the recommendation conditionally ("if peak-only, X; otherwise Y").
 
 Every question must:
 
 - name what it tests — which part of the hypothesis, which 🔍/❓ fork. A question you can't tie to the hypothesis (including "anything else I should know?" filler) is a checklist reflex: cut it.
 - clear the bar above — some realistic answer must change the approach.
 - refuse solutions disguised as requirements — trace "add a cache" back to the slowness it is meant to fix before designing the cache.
+
+Some forks cannot be asked, only shown. When a fork is a taste call the user will only recognize on sight — visual style, interaction feel, wording, naming — an abstract question buys nothing ("what style do you want?" returns "not sure"): attach 2-4 concrete sketches for the user to react to (as option previews in AskUserQuestion on Claude Code; inline in the message elsewhere) instead of asking for a description they cannot give.
 
 If the stress-test leaves no 🔍 or ❓ standing, say so and go straight to the memo — a dig with zero questions is a legitimate outcome, not a failure to perform.
 
@@ -71,10 +73,10 @@ Present a memo the user can verify in ~10 seconds, exactly five sections:
 - **Goal（真实目标）** — the actual objective, one or two sentences
 - **Decisions（已拍板）** — each ratified decision, one line each
 - **Boundaries（明确不做）** — explicit exclusions
-- **Success criteria（成功标准）**
+- **Success criteria（成功标准）** — checks the result can be verified against; prefer measurable over sentiment ("p95 under 500ms", not "feels fast")
 - **Open items（开放项）** — deferred questions, risks, remaining assumptions
 
-Get explicit confirmation. Then hand off: into plan mode for large builds, or straight to implementation for contained work. The memo is the downstream input.
+Get explicit confirmation. Then hand off: into plan mode for large builds, or straight to implementation for contained work. The memo is the downstream input, and it travels with one standing rule — no dig catches every fork before work starts: when implementation hits a fork the memo does not cover, take the conservative option, log it under a `Deviations` note, and keep going; but stop and come back to ask when it touches a data model, a public interface, or anything hard to reverse.
 
 ### 5. SETTLE — persist what outlives the task
 

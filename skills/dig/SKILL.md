@@ -23,6 +23,8 @@ Ask only what would change what you build. Before asking anything, name two real
 
 Read what's relevant: files the task touches, project docs, and — if your platform keeps persistent memory — stored long-term goals and recurring preferences. Look for the user's bigger picture — a deliverable that is technically correct but misaligned with their long-term plans is still a failure.
 
+Reading has the same bar as asking: read only what could change the hypothesis or the questions, and stop once you can name the traps and forks — full understanding is the work phase's job, not this step's. Depth follows the task: for diagnose-and-rework requests the excavation IS the point — dig until the mechanism is pinned, and say what you are about to read and why, so the silence before the first question is accounted for; for new features read structure, entry points, and neighboring conventions, leaving implementation detail to the work phase; for direction or technology calls the docs may be all you need.
+
 ### 1. HYPOTHESIZE — commit to an interpretation the user can attack
 
 Before asking anything, present a working hypothesis in three parts. Write every part so the user could point at a line and say "no — that's wrong". Self-test: if a sentence would survive unchanged in a different task's hypothesis, it is filler — delete it.

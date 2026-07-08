@@ -60,7 +60,7 @@ ln -s "$(pwd)/dig-skill/skills/dig" ~/.claude/skills/dig
 
 ```markdown
 大任务（新功能、架构变更、重构、复杂配置/选型）：
-- 动手或进 plan mode 前，先用 dig skill 挖掘需求：拆解模糊点与隐含决策 → 批量精准提问 → 澄清纪要确认后才继续
+- 动手或进 plan mode 前，先用 dig skill 挖掘需求：亮出理解假设 → 批量精准提问 → 追问到收敛 → 澄清纪要确认后才继续
 ```
 
 ### Codex / Cursor（共用 `~/.agents/skills/`，一条软链服务多家）
@@ -141,9 +141,9 @@ dig 在作者的工作流中替代了 [superpowers](https://github.com/obra/supe
 - 遵循 Agent Skills 开放标准，任何兼容客户端可用；Claude Code 上功能最全（AskUserQuestion、memory、plan mode 联动都可用），其他平台按「跨平台降级说明」运行，行为质量依赖各客户端与模型的实现
 - 交互语言跟随用户全局配置，skill 内只做软引导（match the user's language, keep technical terms in original form）
 
-## 观察期与已知风险（v1 上线备注）
+## 观察期与已知风险
 
-**触发力度的已知风险**（置信度中）：被替代的 brainstorming 使用 "You MUST … any creative work" 命令式措辞，触发力极强；dig 的 description 是条件式（"Use BEFORE substantial tasks…" / "Skip for…"），语义匹配柔性更大。预期影响分布：
+**触发力度的已知风险**（置信度中，v1 上线时评估）：被替代的 brainstorming 使用 "You MUST … any creative work" 命令式措辞，触发力极强；dig 的 description 是条件式（"Use BEFORE substantial tasks…" / "Skip for…"），语义匹配柔性更大。预期影响分布：
 
 - 大任务：不担心，description + CLAUDE.md 纪律双保险
 - 小任务：设计上就不触发（`/dig` 手动兜底）

@@ -27,7 +27,7 @@
 - 2026-07-07：用户疑虑驱动（批量提问的批内依赖：Q1 的回答可能使 Q2 作废或选项全错）→ **v2.2 已发布**：ASK 加批内独立性约束——存在或选项集依赖本批另一答案的问题留给 loop（在那里恰好满足 cite-the-answer 门槛），仅推荐变化写条件式推荐留批内。独立问题并行 + 依赖链 loop 逐层串行，一次一问流派的依赖感知被结构性收编而批量哲学不变。决策记录 [design.md](design.md) D8；观察重点：依赖仍混批 / 过度拆批（README 观察清单 11）。
 - 2026-07-07：用户疑虑驱动（CONTEXT 步 session 开头大量读取是否得不偿失，首个真实案例复盘：本地 case/local-case-1.md，诊断类深读 1912 行被判定为正面样本）→ **v2.3 已发布**：CONTEXT 加与提问对称的读取门槛——read only what could change the hypothesis or the questions，能写出 named trap 与分叉即停；深度随任务类型分档（诊断/改造类挖掘即任务且长排查前预告、新功能类读结构/入口/惯例、方向/选型类读文档）。案例已脱敏存档 [observations.md](observations.md) 作"深读正当"界碑。决策记录 [design.md](design.md) D9；观察重点：任务类型误判（README 观察清单 12）。
 - 本轮按用户决策**不跑 evals/iteration-2**，先真实使用观察。v2 观察重点：loop 收敛轮数分布、假设是否任务特定（vs 模板化）、"开工"逃生口触发情况、校准示例是否被照抄到不相干任务。
-- 运行中按 [README 观察清单](../README.md#观察期与已知风险v1-上线备注) 记录到 [observations.md](observations.md)。
+- 运行中按 [README 观察清单](../README.md#观察期与已知风险) 记录到 [observations.md](observations.md)。
 - iteration-2 启动条件：v2 观察攒 3+ 条或出现高频模式；届时与 iteration-1 对照（评分基建已就位），并考虑把 loop 收敛性写成新 assertion。
 
 ## 3. Harness 联动（远期）

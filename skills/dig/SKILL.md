@@ -1,6 +1,6 @@
 ---
 name: dig
-description: Socratic requirements excavation before starting work. Use BEFORE substantial tasks — new features, new projects, architecture or technology decisions, refactors, complex configuration changes — and BEFORE entering plan mode for such tasks. Also use whenever a request contains vague goals, hidden decisions, or underspecified details. Decomposes the request, surfaces hidden decisions and ambiguities, asks batched precise questions, and produces a clarity memo the user confirms before any work begins. Skip for small fixes, single-point edits, and purely informational questions.
+description: Socratic requirements excavation for uncovering what the user actually wants before work begins. Use whenever intent, goals, scope, constraints, success criteria, or hidden decisions are unclear or admit materially different interpretations, regardless of task size or domain. Also use whenever the user explicitly asks to dig, clarify, excavate, or challenge the requirements. Do not trigger merely because a task is large, architectural, or complex when the request is already decision-complete. Skip clear requests and purely informational questions unless explicitly invoked. Produces a clarity memo the user confirms before downstream work resumes.
 ---
 
 # Dig — Socratic Requirements Excavation
@@ -8,22 +8,22 @@ description: Socratic requirements excavation before starting work. Use BEFORE s
 Surface what the user actually wants before any work begins. The stated request is a starting clue, not the requirement. Hidden intent, unstated constraints, and decisions silently delegated to you are where delivered work goes wrong.
 
 <HARD-RULE>
-Do not start implementation, write code, or present a final plan until the clarity memo (Step 4) is confirmed by the user. If already in plan mode (or your platform's planning flow), complete the dig before writing the plan — the memo is the plan's input.
+Once dig is invoked, do not produce the requested deliverable or present a final plan until the clarity memo (Step 4) is confirmed by the user. Explicit invocation always counts, even when the request appears clear. After confirmation, end the dig and return control to the caller; task sizing, planning, implementation, and review belong to the downstream workflow.
 </HARD-RULE>
 
 Match the user's language; keep technical terms in their original form.
 
 ## The bar every question must clear
 
-Ask only what would change what you build. Before asking anything, name two realistic answers that would lead to different approaches; if every likely answer leads to the same action, you already know enough — don't ask. And a fact you can look up yourself — in the code, the docs, the git history — never goes to the user, however much it would change the approach: look it up; questions are reserved for decisions, which are the user's alone. This bar outranks every step below: a step performed without it is theater.
+Ask only what would change what you deliver. Before asking anything, name two realistic answers that would lead to different approaches; if every likely answer leads to the same action, you already know enough — don't ask. And a fact you can look up yourself — in code, provided materials, connected sources, official sources, docs, or history — never goes to the user, however much it would change the approach: look it up; questions are reserved for decisions, which are the user's alone. This bar outranks every step below: a step performed without it is theater.
 
 ## Process
 
 ### 0. CONTEXT — absorb before hypothesizing
 
-Read what's relevant: files the task touches, project docs, and — if your platform keeps persistent memory — stored long-term goals and recurring preferences. Look for the user's bigger picture — a deliverable that is technically correct but misaligned with their long-term plans is still a failure.
+Read what's relevant: materials the task touches, available sources, and — if your platform keeps persistent memory — stored long-term goals and recurring preferences. Look for the user's bigger picture — a deliverable that satisfies the literal request but conflicts with their real objective is still a failure.
 
-Reading has the same bar as asking: read only what could change the hypothesis or the questions, and stop once you can name the traps and forks — full understanding is the work phase's job, not this step's. Depth follows the task: for diagnose-and-rework requests the excavation IS the point — dig until the mechanism is pinned, and say what you are about to read and why, so the silence before the first question is accounted for; for new features read structure, entry points, and neighboring conventions, leaving implementation detail to the work phase; for direction or technology calls the docs may be all you need.
+Reading has the same bar as asking: read only what could change the hypothesis or the questions, and stop once you can name the traps and forks — full understanding is the downstream work phase's job, not this step's. Depth follows the uncertainty: for diagnose-and-rework requests the excavation IS the point — dig until the mechanism is pinned, and say what you are about to read and why, so the silence before the first question is accounted for; for build-or-change requests read the relevant structure, inputs, and neighboring conventions; for decisions, research, or strategy, read the evidence and existing commitments that could change the choice.
 
 ### 1. HYPOTHESIZE — commit to an interpretation the user can attack
 
@@ -33,7 +33,7 @@ Before asking anything, present a working hypothesis in three parts. Write every
 2. **Where this goes wrong** — the one or two places THIS task is most likely to fail or be misread: a named trap ("paginated filtered lists are the worst case for caching — key explosion, low hit rate"), never a generic risk ("scope may creep").
 3. **If forced to start now, I would…** — a concrete sketch, one decision per line, each line marked:
    - ✅ explicit — the user already said it
-   - 🔍 delegated — you'd default to X, but the user should ratify (technology choice, structure, trade-offs, anything hard to reverse); recommend, never silently decide
+   - 🔍 delegated — you'd default to X, but the user should ratify (strategy, structure, trade-offs, public commitments, anything hard to reverse); recommend, never silently decide
    - ❓ ambiguous — you can't even pick a default
 
 Keep the whole hypothesis under ~15 lines — it must be correctable on sight. The sketch is bait: a concrete plan draws corrections that an abstract list of unknowns never will.
@@ -52,7 +52,7 @@ Every question must:
 - clear the bar above — some realistic answer must change the approach.
 - refuse solutions disguised as requirements — trace "add a cache" back to the slowness it is meant to fix before designing the cache.
 
-Some forks cannot be asked, only shown. When a fork is a taste call the user will only recognize on sight — visual style, interaction feel, wording, naming — an abstract question buys nothing ("what style do you want?" returns "not sure"): attach 2-4 concrete sketches for the user to react to (as option previews in AskUserQuestion on Claude Code; inline in the message elsewhere) instead of asking for a description they cannot give.
+Some forks cannot be asked, only shown. When a fork is a taste call the user will only recognize on sight — visual style, interaction feel, wording, naming — an abstract question buys nothing ("what style do you want?" returns "not sure"): attach 2-4 concrete sketches for the user to react to (as option previews in AskUserQuestion on Claude Code; inline in the message elsewhere) instead of asking for a description they cannot give. A taste fork is not resolved merely because you can choose a plausible default; do not bury that default in the memo before the user has seen alternatives.
 
 If the stress-test leaves no 🔍 or ❓ standing, say so and go straight to the memo — a dig with zero questions is a legitimate outcome, not a failure to perform.
 
@@ -66,7 +66,7 @@ Each answer can expose a fork that was invisible before it. A loop of batches is
 2. **Admission gate for follow-ups** — a new question earns its place only if it states, inside itself: (a) which answer opened it — quote or closely paraphrase the user's words — and (b) which fork it decides. Shape: "You said writes must be visible immediately — that rules out plain TTL, so: invalidate on write, or drop caching for this query?" If you can't fill both slots, you are re-running a checklist, not following a thread: drop it.
 3. **Converge** when a round's answers open no admissible follow-ups and every 🔍/❓ is resolved or explicitly deferred. Say you've converged and move to the memo — never pad a final round to look thorough. There is no round cap and no round quota: one round often suffices; the gate decides, not ambition.
 4. **Too big?** If two consecutive rounds each open as many new forks as they close, stop interrogating — the request is several tasks wearing one sentence. Propose a split and dig only the first sub-task.
-5. **Escape hatch** — if the user says "开工", "start", "just do it", or equivalent, stop asking immediately: fold every unresolved item into the memo's Open items with the default you will apply, and present the memo for its usual confirmation.
+5. **Escape hatch** — if the user says "开工", "start", "just do it", or equivalent, stop asking immediately: fold every unresolved item into the memo's Open items with the default you will apply, and present the memo for its usual confirmation. This stops questions, not show-don't-ask: if an unresolved taste fork would materially change the result, include 2-4 concrete sketches in or immediately before the memo and mark the recommended default, so the user can correct it during confirmation.
 
 ### 4. SYNTHESIZE — the clarity memo
 
@@ -75,15 +75,15 @@ Present a memo the user can verify in ~10 seconds, exactly five sections:
 - **Goal（真实目标）** — the actual objective, one or two sentences
 - **Decisions（已拍板）** — each ratified decision, one line each
 - **Boundaries（明确不做）** — explicit exclusions
-- **Success criteria（成功标准）** — checks the result can be verified against; prefer measurable over sentiment ("p95 under 500ms", not "feels fast")
+- **Success criteria（成功标准）** — checks the result can be verified against; prefer observable or measurable evidence over vague sentiment ("participants can name the three decisions and owners", not "the workshop feels useful")
 - **Open items（开放项）** — deferred questions, risks, remaining assumptions
 
-Get explicit confirmation. Then hand off: into plan mode for large builds, or straight to implementation for contained work. The memo is the downstream input, and it travels with one standing rule — no dig catches every fork before work starts: when implementation hits a fork the memo does not cover, take the conservative option, log it under a `Deviations` note, and keep going; but stop and come back to ask when it touches a data model, a public interface, or anything hard to reverse.
+Get explicit confirmation, then end the dig. Return the memo to the caller as downstream input; do not prescribe plan mode, implementation, a reviewer, architecture review, or any task-size workflow. Those choices are independent of requirements excavation and must follow the task's domain, size, and risk. No dig catches every fork before work resumes: when downstream work hits a fork the memo does not cover, take the conservative option, log it under a `Deviations` note, and keep going; but stop and come back to ask when it changes an external contract, public commitment, irreversible action, or anything else hard to reverse.
 
 ### 5. SETTLE — persist what outlives the task
 
 - Long-lived information only: cross-task goals (e.g. an ongoing side project this task serves), recurring preferences, domain background. Nothing task-local.
-- At most 1-2 memory writes per dig; check existing memories first and prefer updating over creating. No persistent memory on your platform? Skip the writes.
+- Only persist memory when the user or an authorized harness explicitly requests it. At most 1-2 memory writes per dig; check existing memories first and prefer updating over creating. No persistent memory on your platform? Skip the writes.
 - Clearly cross-project facts: suggest the user add them to the global instructions file (CLAUDE.md, AGENTS.md, or your platform's equivalent) — do not edit global config yourself.
 - Memo persistence is OFF by default. When the user asks to save (or a harness integration requests it), write to `docs/clarity/YYYY-MM-DD-<slug>.md` with frontmatter `task`/`date`/`status` and the five memo sections as fixed headings — that structure is the machine-readable contract.
 
@@ -110,3 +110,5 @@ A legitimate round-2 follow-up, in the admissible shape:
 - "You said it's only slow at peak and the connection pool maxes out — that moves the diagnosis from 'slow query' to 'connection starvation', so: raise the pool, or first find what's hogging connections?"
 
 Copy the moves, never the content. The deep moves are: trace the intent, price the consequence, attack your own sketch. Never reuse these literal questions on a task that is not this task.
+
+A non-software request follows the same logic. "Book an offsite at a countryside villa" may disguise different goals: rewarding the team, repairing collaboration, or making a concrete decision. Dates, headcount, and budget matter, but none decides whether an overnight villa is the right format; the intended change in the team does.

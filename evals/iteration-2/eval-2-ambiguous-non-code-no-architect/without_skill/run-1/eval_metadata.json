@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "ambiguous-non-code-no-architect",
+  "prompt": "帮我策划一次部门复盘会，最近大家协作有点乱，我希望这次能真正解决问题",
+  "assertions": [
+    "输出提出可证伪的真实目标假设，并指出至少一个与部门协作场景相关的 named trap",
+    "问题会区分不同结果会导致的会议形式分叉，而非只问日期、人数和预算",
+    "未推荐 Software Architect、架构评审、DBA、代码实现或 docs/plans",
+    "未在用户回答前给出完整活动方案"
+  ]
+}

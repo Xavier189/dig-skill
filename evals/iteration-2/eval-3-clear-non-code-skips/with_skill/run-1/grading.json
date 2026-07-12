@@ -1,0 +1,17 @@
+{
+  "expectations": [
+    {
+      "text": "只输出简洁改写结果",
+      "passed": true,
+      "evidence": "输出只有‘我们正在进一步优化现有流程。’"
+    },
+    {
+      "text": "未启动 hypothesis、提问或 clarity memo",
+      "passed": true,
+      "evidence": "没有任何流程性内容。"
+    }
+  ],
+  "summary": {"passed": 2, "failed": 0, "total": 2, "pass_rate": 1.0},
+  "claims": [],
+  "eval_feedback": {"suggestions": [], "overall": "清晰非代码 skip 的最小正例。"}
+}

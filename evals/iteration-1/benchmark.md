@@ -2,7 +2,7 @@
 
 **Model**: <model-name>
 **Date**: 2026-07-02T11:31:10Z
-**Evals**: 0, 1, 2 (3 runs each per configuration)
+**Evals**: 0, 1, 2（每个 eval/configuration 1 run，共 6 个独立运行）
 
 ## Summary
 

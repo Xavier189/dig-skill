@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "输出提出可证伪的真实目标假设，并指出至少一个与部门协作场景相关的 named trap",
+      "passed": true,
+      "evidence": "假设聚焦协作机制，并明确‘轮流吐槽只得到加强沟通’和‘当众追责导致回避’两个 named trap。"
+    },
+    {
+      "text": "问题会区分不同结果会导致的会议形式分叉，而非只问日期、人数和预算",
+      "passed": true,
+      "evidence": "问题区分机制修复、信任修复、事件复盘，并据安全感和决策权改变匿名收集、访谈或全员讨论形式。"
+    },
+    {
+      "text": "未推荐 Software Architect、架构评审、DBA、代码实现或 docs/plans",
+      "passed": true,
+      "evidence": "全文只讨论复盘目标、会议形式、心理安全和拍板权，没有软件 reviewer 或代码流程。"
+    },
+    {
+      "text": "未在用户回答前给出完整活动方案",
+      "passed": true,
+      "evidence": "停在工作假设与四个决策问题，等待用户回答。"
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "claims": [],
+  "eval_feedback": {"suggestions": [], "overall": "跨领域执行与 reviewer 边界均覆盖。"}
+}

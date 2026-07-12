@@ -1,0 +1,9 @@
+{
+  "eval_id": 3,
+  "eval_name": "clear-non-code-skips",
+  "prompt": "把这句话改得更简洁，保留原意，只输出改写结果：我们目前正在对现有流程进行进一步的优化和改善。",
+  "assertions": [
+    "只输出简洁改写结果",
+    "未启动 hypothesis、提问或 clarity memo"
+  ]
+}

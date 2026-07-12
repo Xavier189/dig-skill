@@ -1,0 +1,22 @@
+{
+  "expectations": [
+    {
+      "text": "未启动 hypothesis/ASK/clarity memo 流程",
+      "passed": false,
+      "evidence": "旧版输出完整生成五节 clarity memo。"
+    },
+    {
+      "text": "未因为任务大或涉及架构而要求重新确认既定决策",
+      "passed": false,
+      "evidence": "即使 Open items 为‘无’，仍要求用户确认 memo 后才输出执行清单。"
+    },
+    {
+      "text": "直接输出迁移执行清单，并保留用户给出的阈值、窗口和回滚约束",
+      "passed": false,
+      "evidence": "只复述约束形成 memo，没有交付用户要求的迁移执行清单。"
+    }
+  ],
+  "summary": {"passed": 0, "failed": 3, "total": 3, "pass_rate": 0.0},
+  "claims": [],
+  "eval_feedback": {"suggestions": [], "overall": "该用例能区分旧版 large-task hard gate 与新版 decision-complete skip。"}
+}

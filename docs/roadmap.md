@@ -2,9 +2,9 @@
 
 仓库是 dig 的单一事实源（`~/.claude/skills/dig` 是指向 `skills/dig` 的 symlink），所有迭代在此维护。
 
-## 1. Description 触发优化（v1.x，观察期后启动）
+## 1. Description 触发优化（v2.4，进行中）
 
-针对已知的「中型任务犹豫带」风险（见 [benchmark-v1.md](benchmark-v1.md) 分析师备注与 README 观察期一节）。
+针对真实使用暴露的「任务规模与需求清晰度错误绑定」风险（见 [observations.md](observations.md) 2026-07-12 条与 README 触发范围一节）。
 
 做法（skill-creator 的自动化优化环节）：
 
@@ -18,7 +18,7 @@
    脚本自动 60/40 切分训练/保留集，每条查询跑 3 次取触发率，按保留集分数选 `best_description` 防过拟合
 3. 用 `best_description` 更新 SKILL.md frontmatter，前后对比入库
 
-启动时机：`docs/observations.md` 攒到 3+ 条「漏触发」记录后（用真实失败案例替换部分合成查询，优化更对症）。
+启动时机已满足：2026-07-12 的真实反馈同时暴露误触发、漏触发与 downstream reviewer 越界，先完成 v2.4 边界回归，再决定是否运行 description 自动优化循环。
 
 ## 2. 观察期反馈闭环（进行中）
 
@@ -26,9 +26,10 @@
 - 2026-07-07：外部对照吸收（trq212《finding your unknowns》官方博客文 + Claude Code 官方《Designing Loops》+ 顺藤挖出的 mattpocock/skills）→ **v2.1 已发布**：提问门槛加"事实自查、决策必问"分界线、ASK 加 show-don't-ask 通道（品味类分叉附草案）、纪要交接附实现期 Deviations 协议、Success criteria 加可验证性引导。四处均句子级、删句即回滚，决策记录 [design.md](design.md) D7 + §2.1。不跑 eval，随 v2 同批观察；观察重点追加：show-don't-ask 该用没用/被滥用、用户连续答"不知道"的频率（blind spot pass 候选场景，README 观察清单 9/10）。
 - 2026-07-07：用户疑虑驱动（批量提问的批内依赖：Q1 的回答可能使 Q2 作废或选项全错）→ **v2.2 已发布**：ASK 加批内独立性约束——存在或选项集依赖本批另一答案的问题留给 loop（在那里恰好满足 cite-the-answer 门槛），仅推荐变化写条件式推荐留批内。独立问题并行 + 依赖链 loop 逐层串行，一次一问流派的依赖感知被结构性收编而批量哲学不变。决策记录 [design.md](design.md) D8；观察重点：依赖仍混批 / 过度拆批（README 观察清单 11）。
 - 2026-07-07：用户疑虑驱动（CONTEXT 步 session 开头大量读取是否得不偿失，首个真实案例复盘：本地 case/local-case-1.md，诊断类深读 1912 行被判定为正面样本）→ **v2.3 已发布**：CONTEXT 加与提问对称的读取门槛——read only what could change the hypothesis or the questions，能写出 named trap 与分叉即停；深度随任务类型分档（诊断/改造类挖掘即任务且长排查前预告、新功能类读结构/入口/惯例、方向/选型类读文档）。案例已脱敏存档 [observations.md](observations.md) 作"深读正当"界碑。决策记录 [design.md](design.md) D9；观察重点：任务类型误判（README 观察清单 12）。
-- 本轮按用户决策**不跑 evals/iteration-2**，先真实使用观察。v2 观察重点：loop 收敛轮数分布、假设是否任务特定（vs 模板化）、"开工"逃生口触发情况、校准示例是否被照抄到不相干任务。
+- 2026-07-12：用户纠正产品定义——dig 的根本目的是挖掘和澄清表达，不是“大任务 skill”；task grading 只决定 downstream execution，不能决定是否 dig → **v2.4 已发布**：自动触发改由需求不确定性驱动，与任务大小/领域解耦；显式调用强制；memo 确认后 dig 结束，不绑定 reviewer 或 workflow。决策记录 [design.md](design.md) D10。
+- iteration-2 已完成：6 个 v2.4 边界用例全部通过；eval 0-2 同时跑 v2.3 snapshot baseline。eval-0/1 分别证实模糊小任务触发与清晰大任务跳过；eval-2 新旧双过，印证 Software Architect 污染源在全局 `AGENTS.md` 而非旧 SKILL.md。完整结果与静态 review 见 [evals/iteration-2/](../evals/iteration-2/)。
 - 运行中按 [README 观察清单](../README.md#观察期与已知风险) 记录到 [observations.md](observations.md)。
-- iteration-2 启动条件：v2 观察攒 3+ 条或出现高频模式；届时与 iteration-1 对照（评分基建已就位），并考虑把 loop 收敛性写成新 assertion。
+- iteration-2 完成条件已满足；下一步只在积累新的真实 trigger 误判后运行 20-query description 优化，避免用合成样本过拟合。
 
 ## 3. Harness 联动（远期）
 

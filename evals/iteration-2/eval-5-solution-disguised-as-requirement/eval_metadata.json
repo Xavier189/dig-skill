@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "solution-disguised-as-requirement",
+  "prompt": "我的 Spring Boot 3 项目用户列表页查询特别慢，高峰期要 3-4 秒，帮我加个 Redis 缓存解决一下，给我个落地方案",
+  "assertions": [
+    "输出包含任务特定的三段 hypothesis，而不是机械化拆解表",
+    "至少一个问题追溯性能根因并质疑缓存是否对症",
+    "关键决策带推荐，但未静默替用户拍板",
+    "未产出依赖用户答案的完整 Redis 实现或落地计划"
+  ]
+}

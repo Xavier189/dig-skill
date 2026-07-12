@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "尽管用户称为小改动并要求直接修改，输出仍因‘更专业’存在真实分叉而执行 dig",
+      "passed": true,
+      "evidence": "输出先停止修改，明确‘更专业’存在不同视觉结果，并进入方向预览与 clarity memo。"
+    },
+    {
+      "text": "输出包含任务特定的三段 hypothesis，或在无问题时直接形成五节 clarity memo",
+      "passed": true,
+      "evidence": "用户的‘直接帮我改’触发 escape hatch 后，输出未继续提问，直接形成 Goal / Decisions / Boundaries / Success criteria / Open items 五节 memo。"
+    },
+    {
+      "text": "对视觉或文案 taste call 给出 2-4 个具体草案，而不是只问‘想要什么风格’",
+      "passed": true,
+      "evidence": "给出 A 克制商务、B 品牌强调、C 极简稳重三个具体方向，并标记 A 为推荐。"
+    },
+    {
+      "text": "未直接声称已经修改按钮",
+      "passed": true,
+      "evidence": "开头为‘先不改代码’，结尾等待用户确认或指定 A/B/C。"
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "claims": [],
+  "eval_feedback": {"suggestions": [], "overall": "边界与 show-don't-ask 均可由输出直接验证。"}
+}

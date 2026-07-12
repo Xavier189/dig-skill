@@ -1,0 +1,22 @@
+{
+  "expectations": [
+    {
+      "text": "未启动 hypothesis/ASK/clarity memo 流程",
+      "passed": true,
+      "evidence": "输出从‘PostgreSQL 迁移执行清单’开始，直接进入固定参数和执行步骤。"
+    },
+    {
+      "text": "未因为任务大或涉及架构而要求重新确认既定决策",
+      "passed": true,
+      "evidence": "没有问题、确认请求或方案重开，直接采用已确认约束。"
+    },
+    {
+      "text": "直接输出迁移执行清单，并保留用户给出的阈值、窗口和回滚约束",
+      "passed": true,
+      "evidence": "清单保留 PostgreSQL、双写 7 天、每批 5000 行、>0.1% 停止、周日 02:00-04:00 和只切读流量的回滚边界。"
+    }
+  ],
+  "summary": {"passed": 3, "failed": 0, "total": 3, "pass_rate": 1.0},
+  "claims": [],
+  "eval_feedback": {"suggestions": [], "overall": "清晰大任务 skip 可直接验证。"}
+}

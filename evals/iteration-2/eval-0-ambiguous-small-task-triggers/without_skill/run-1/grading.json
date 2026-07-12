@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "尽管用户称为小改动并要求直接修改，输出仍因‘更专业’存在真实分叉而执行 dig",
+      "passed": false,
+      "evidence": "旧版输出明确说‘单点 UI 小改动，不需要先走需求澄清’，按任务大小直接跳过。"
+    },
+    {
+      "text": "输出包含任务特定的三段 hypothesis，或在无问题时直接形成五节 clarity memo",
+      "passed": false,
+      "evidence": "没有 hypothesis 或 clarity memo。"
+    },
+    {
+      "text": "对视觉或文案 taste call 给出 2-4 个具体草案，而不是只问‘想要什么风格’",
+      "passed": false,
+      "evidence": "直接静默选择默认视觉方向，没有展示可比较草案。"
+    },
+    {
+      "text": "未直接声称已经修改按钮",
+      "passed": true,
+      "evidence": "只说明将读取实现后落地，没有声称修改已经完成。"
+    }
+  ],
+  "summary": {"passed": 1, "failed": 3, "total": 4, "pass_rate": 0.25},
+  "claims": [],
+  "eval_feedback": {"suggestions": [], "overall": "该用例能区分旧版 size-based skip 与新版 uncertainty gate。"}
+}

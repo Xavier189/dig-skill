@@ -99,6 +99,20 @@ Choose the lightest artifact that serves the user.
 
 Use the relevant information-model sections and include state labels wherever a reader might mistake an assumption for a requirement.
 
+### Handoff Snapshot
+
+Use only when another agent, tool, session, or durable artifact must consume the result:
+
+```markdown
+## Ready state
+## Carry forward
+## Assumptions, deferred items, and accepted risks
+## Boundaries
+## Success evidence
+```
+
+`Ready state` says what can now happen, not which workflow must happen. It may indicate direct delivery, evidence gathering, prototype, design, coordination planning, domain review, or stop. Omit this renderer when the conversation itself is sufficient.
+
 A PRD, spec, ADR, user-story set, or implementation-plan input is a renderer requested by the user or downstream harness. It is not the internal reasoning model and not an automatic dig output.
 
 ## Persistence

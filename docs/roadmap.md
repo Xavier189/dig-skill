@@ -34,6 +34,16 @@
 - [x] 形成 merge/migration notes
 - [ ] 用户审核后再决定是否覆盖 main
 
+## Phase 4：Downstream 解耦
+
+- [x] 审计并退役 `big-task` 固定编排
+- [x] 明确 dig 无业务 skill 前置、无强制后继
+- [x] 增加 Handoff Snapshot renderer
+- [x] 将全局 task-size 分级改为 risk-based downstream routing
+- [x] 保留 alternatives、reversibility、failure/recovery、YAGNI 与 domain-aware review
+- [x] targeted handoff eval：4/4、14/14 assertions
+- [x] 生成 [handoff benchmark](../evals/handoff-v1/benchmark.md) 与 [static viewer](../evals/handoff-v1/review.html)
+
 ## 后续观察项
 
 这些不阻塞 rebuild v1：

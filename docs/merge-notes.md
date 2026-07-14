@@ -16,6 +16,8 @@
 - 重写 README、design、roadmap 与行为 eval；
 - 保留 v2.4 文档和旧 benchmark 作为 history/baseline，不让旧契约继续控制 active skill；
 - 加入 9 组 rebuild v1 对照结果、grading、benchmark 和 static review viewer。
+- 退役 `big-task` 固定编排，加入无前置、无强制后继的 downstream contract；
+- 加入 4 组 handoff regression、grading、benchmark 和 static review viewer。
 
 ## 合并闸门
 
@@ -23,9 +25,20 @@
 - [x] v2.4 baseline：27/34 assertions；
 - [x] skill frontmatter 通过两套 validator；
 - [x] JSON、Markdown 本地链接和 diff whitespace 检查通过；
+- [x] downstream handoff：14/14 assertions；
 - [x] `main` 保持在 base commit；
 - [ ] 用户审核 [review viewer](../evals/rebuild-v1/review.html)；
 - [ ] 用户明确决定合并。
+
+## 本机 integration state
+
+以下动作已经在本机完成，但不随 Git merge 自动传播到其他机器：
+
+- 删除 `~/.agents/skills/big-task`；
+- 删除 `~/.claude/skills/big-task` symlink；
+- 将 `~/.codex/AGENTS.md` 与 `~/.claude/CLAUDE.md` 的 task-size 流水线替换为 risk-based downstream routing。
+
+其他环境安装此版本时，也应移除旧 `big-task` 和对应全局引用，否则旧路由仍可能覆盖新版边界。
 
 ## 未来合并
 

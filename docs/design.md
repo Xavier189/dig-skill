@@ -1,11 +1,11 @@
 # Dig Rebuild v1 设计说明
 
 日期：2026-07-14
-状态：candidate implementation on `rewrite/adaptive-dig-v1`
+状态：implemented on `rewrite/adaptive-dig-v1`
 
 ## 1. North Star
 
-Dig 是一个跨领域、可重入的 adaptive thought partner。它根据用户当前的不确定性，在 Discover、Clarify、Challenge 三种认知动作之间选择和切换，把模糊、未知或未经检验的想法转化成 shared understanding。
+Dig 是一个跨领域、可重入的 adaptive thought partner。它没有前置流程，可以是 session 或 agent 工作的第一步。它根据用户当前的不确定性，在 Discover、Clarify、Challenge 三种认知动作之间选择和切换，把模糊、未知或未经检验的想法转化成 shared understanding。
 
 它不拥有下游 design、plan、implementation 或 reviewer。
 
@@ -164,7 +164,23 @@ ledger 可保留原始 basis、normalized decision、replaces 和 downstream con
 
 默认不落盘。legacy 五节 clarity memo 保留为 adapter，而非 core contract。
 
-## 9. Reviewer 决策
+## 9. Handoff 与下游路由
+
+Dig 交付的是可消费的 shared state，不是下一条固定 workflow。需要跨 agent/session 继续时，handoff 只携带：已接受状态、必须保留的边界、`assumed / deferred / risk` 项和 success evidence。
+
+下游按五个信号独立判断：
+
+1. 缺的是事实、可行性证据还是 owner decision；
+2. 用户真正要的 deliverable；
+3. 改动的可逆性、耦合与 blast radius；
+4. 安全、合规、数据、金钱或公共承诺风险；
+5. 是否需要跨步骤、跨人或跨 session 协调。
+
+由此选择 research/prototype、direct delivery、design、planning、domain review 或 stop。它们不是顺序阶段，也不由 task size 单独触发。完整规则见 [downstream.md](downstream.md)。
+
+原 `big-task` skill 被退役，因为它把本应正交的 dig、design、review 与 plan 重新绑成固定链。其 alternatives、failure/recovery、reversibility、YAGNI 等有效原则转入 risk-based design route，不再作为强制 ceremony。
+
+## 10. Reviewer 决策
 
 默认 inline、domain-aware challenge。
 
@@ -177,7 +193,7 @@ Dig 的 reviewer policy：
 - Software Architect 只可能服务实际软件架构问题；
 - reviewer 不是任何 mode 的 terminal state。
 
-## 10. 外部参照与取舍
+## 11. 外部参照与取舍
 
 | 参照 | 吸收 | 不吸收 |
 |---|---|---|
@@ -189,7 +205,7 @@ Dig 的 reviewer policy：
 | GitHub Spec Kit | ambiguity/coverage/consistency lens、testability | software artifact pipeline 作为 core |
 | Anthropic finding-your-unknowns | blind spots、prototype、references、unknowns 可在全周期出现 | 把所有能力限制为 pre-implementation checklist |
 
-## 11. 被否决方案
+## 12. 被否决方案
 
 ### 单一巨型流程
 
@@ -207,7 +223,11 @@ Dig 的 reviewer policy：
 
 否决原因：跨领域错误、成本高、收益不稳定。改为 inline challenge + risk-based escalation。
 
-## 12. 验收标准
+### `big-task` 固定编排
+
+否决原因：任务大小不能同时决定是否需要需求挖掘、设计、独立评审和计划；固定链会让清晰的大任务重复澄清、低风险改动产生文档 theater，并把 reviewer 与 plan 变成仪式。保留其中有效的设计 lens，删除编排器。
+
+## 13. 验收标准
 
 1. “我不知道想做什么”不会收到单一 implementation hypothesis。
 2. 用户没有知识基础时，agent 先提供 decision-relevant education/examples。
@@ -217,5 +237,7 @@ Dig 的 reviewer policy：
 6. 清晰请求能跳过 dig。
 7. 非代码任务不出现 Software Architect 或软件 pipeline。
 8. 任一 mode 完成后不自动进入 plan/implementation/reviewer。
+9. dig 可以作为 session 第一动作，且不会要求先经过其他 skill。
+10. handoff 保存边界与风险，但不会把后继固化成 `big-task` 或任何单一 workflow。
 
 旧版完整决策记录见 [history/v2.4-design.md](history/v2.4-design.md)。

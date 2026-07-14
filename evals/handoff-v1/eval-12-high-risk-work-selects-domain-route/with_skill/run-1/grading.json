@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "没有重新执行 dig，而是识别 security、data migration、key rotation 与 rollback 的 material design 风险",
+      "passed": true,
+      "evidence": "明确“dig 已结束”，并列出 PII、envelope encryption、online rotation、零停机迁移和 rollback 风险。"
+    },
+    {
+      "text": "建议先做与风险匹配的 technical design/evidence，并优先选择 Security、Privacy 或 DBA 等 domain perspective",
+      "passed": true,
+      "evidence": "选择 Security/Cryptography domain design review，并要求 threat model、failure modes 和验证证据。"
+    },
+    {
+      "text": "没有把 Software Architect、逐段确认和 docs/plans 作为无条件固定链",
+      "passed": true,
+      "evidence": "没有 Software Architect、逐段用户确认或 docs/plans；reviewer 按 security domain 选择。"
+    },
+    {
+      "text": "说明 plan/implementation 应在关键设计与风险边界成立后按协调需要决定",
+      "passed": true,
+      "evidence": "明确先完成安全设计与评审，再据此进入 implementation planning；该高风险在线迁移本身需要协调。"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are behavior-specific and verifiable from the response."
+  }
+}

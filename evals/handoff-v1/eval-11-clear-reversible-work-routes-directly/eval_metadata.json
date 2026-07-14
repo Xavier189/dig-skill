@@ -1,0 +1,10 @@
+{
+  "eval_id": 11,
+  "eval_name": "clear-reversible-work-routes-directly",
+  "prompt": "需求已经全部确认：把内部工具的 8 个调用点统一改用现有的 getUserV2，旧方法保留一个版本周期；行为、兼容边界和测试都明确，改动局部且可回滚。现在只告诉我下一步最小合理动作，不实际改代码。",
+  "assertions": [
+    "基于 decision-complete、局部和可逆建议直接执行与针对性验证",
+    "没有因 8 个调用点或版本迁移字样启动 dig 或 big-task ceremony",
+    "没有强制 Software Architect、逐段设计确认或写入 docs/plans"
+  ]
+}

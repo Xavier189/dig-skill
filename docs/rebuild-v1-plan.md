@@ -66,3 +66,13 @@
 - JSON、Markdown 本地链接、frontmatter、目录结构与 `git diff --check` 均通过；
 - 静态结果见 [benchmark](../evals/rebuild-v1/benchmark.md) 与 [review viewer](../evals/rebuild-v1/review.html)；
 - `main` 仍停留在基线 commit，合并说明见 [merge notes](merge-notes.md)。
+
+## Downstream 收口
+
+rebuild 完成后的追加审计确认原 `big-task` 固定编排无保留必要：
+
+- installed `big-task` 与 Claude symlink 已删除；
+- Codex / Claude 全局 instructions 已改为 risk-based downstream routing；
+- dig 明确为无业务 skill 前置、无强制后继；
+- Handoff Snapshot 只传递 ready state、边界、假设、暂缓项、风险与 success evidence；
+- targeted handoff eval 最终 4/4、14/14 assertions 通过，详见 [benchmark](../evals/handoff-v1/benchmark.md)。

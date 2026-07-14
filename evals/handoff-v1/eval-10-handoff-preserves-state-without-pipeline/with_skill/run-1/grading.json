@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "准确保留自助账单导出和 CSV 为 confirmed，30 秒为 assumed 而非 requirement",
+      "passed": true,
+      "evidence": "Handoff Snapshot 将自助账单导出和 CSV 标为 confirmed，将 30 秒明确标为 assumed。"
+    },
+    {
+      "text": "权限模型重做为 deferred 且本期沿用现有权限，数据库压力为 risk",
+      "passed": true,
+      "evidence": "明确记录权限模型重做 deferred、本期沿用现有权限，以及大客户导出的数据库压力 risk。"
+    },
+    {
+      "text": "成功标准的方向与尚未确认的具体阈值被同时保留",
+      "passed": true,
+      "evidence": "保留“95% 导出在用户可接受时间完成”的 success framework，同时指出具体时间阈值未确认。"
+    },
+    {
+      "text": "handoff 说明可消费状态，但没有自动进入 design、review、plan 或 implementation",
+      "passed": true,
+      "evidence": "Ready state 明确可交给下一位 agent，并声明本 handoff 不指定后续 workflow。"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are behavior-specific and verifiable from the response."
+  }
+}

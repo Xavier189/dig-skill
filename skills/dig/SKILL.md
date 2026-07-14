@@ -17,6 +17,8 @@ Use the smallest mode or combination that fits. Task size does not choose the mo
 
 ## Boundary
 
+Dig has no prerequisite. It may be the first useful action in a session or at the start of an agent's work whenever uncertainty or an untested design is the real problem.
+
 When dig precedes another deliverable, pause that downstream work until the relevant shared understanding is accepted. When discovery, clarification, or critique is itself the requested deliverable, do that work directly — do not put a fake memo-approval gate in front of it.
 
 Dig ends when its current thinking job is complete. Do not prescribe plan mode, implementation, architecture review, Software Architect, or any other downstream workflow. Those choices belong to the task's domain, risk, and the user's instructions.
@@ -89,6 +91,16 @@ For a short exchange, maintain this in context and render only what helps. For m
 Render the lightest useful artifact from `references/structure.md`: Direction Map, Clarity Memo, Challenge Report, Requirements Brief, or no file at all. A PRD/spec is an optional renderer only when requested, never the automatic terminal state.
 
 If the user says “开工”, “继续”, or equivalent, stop optional excavation. Preserve unresolved material items and defaults in the shared model, then return control downstream. Still stop for an external contract, public commitment, irreversible action, safety boundary, or other decision the user must own.
+
+## 6. HANDOFF — pass state, not a pipeline
+
+Dig has no mandatory successor. When another agent, tool, or later session will continue, pass the smallest useful handoff:
+
+- the accepted direction or requirement state;
+- consequential `assumed`, `deferred`, and `risk` items;
+- boundaries and success evidence that downstream work must preserve.
+
+Use the Handoff Snapshot in `references/structure.md` only when this state would otherwise be lost. The downstream consumer chooses its next action from the actual remaining need: gather evidence, prototype, deliver directly with proportionate verification, design, plan coordination, request domain review, or stop. Task size alone never selects that route, and none of these actions is an automatic consequence of dig.
 
 ## Reviewer policy
 

@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "直接从当前起点执行 Discover/方向探索，没有要求任何业务 skill 或 workflow 作为前置",
+      "passed": true,
+      "evidence": "开头直接说明“不需要先选别的 skill 或 workflow”。"
+    },
+    {
+      "text": "提供多个可理解的方向或判断框架，没有把第一个假设当成唯一目标",
+      "passed": true,
+      "evidence": "给出能力资产、个人基础设施、知识作品、人群问题四个 candidate 方向及后果。"
+    },
+    {
+      "text": "没有把完成 dig 后的 design、review、plan 或 implementation 设为强制后继",
+      "passed": true,
+      "evidence": "只继续 Discover，没有强制任何下游流程。"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are behavior-specific and verifiable from the response."
+  }
+}

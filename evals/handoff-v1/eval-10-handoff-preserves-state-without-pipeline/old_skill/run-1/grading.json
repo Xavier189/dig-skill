@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "准确保留自助账单导出和 CSV 为 confirmed，30 秒为 assumed 而非 requirement",
+      "passed": true,
+      "evidence": "旧版 handoff 同样准确区分 confirmed 的目标/CSV 与 assumed 的 30 秒。"
+    },
+    {
+      "text": "权限模型重做为 deferred 且本期沿用现有权限，数据库压力为 risk",
+      "passed": true,
+      "evidence": "权限模型与数据库压力分别标为 deferred 和 risk。"
+    },
+    {
+      "text": "成功标准的方向与尚未确认的具体阈值被同时保留",
+      "passed": true,
+      "evidence": "success framework 与 not yet specified 的具体阈值均被保留。"
+    },
+    {
+      "text": "handoff 说明可消费状态，但没有自动进入 design、review、plan 或 implementation",
+      "passed": true,
+      "evidence": "接手边界明确只保存 shared state，不包含 design 或 implementation plan。"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are behavior-specific and verifiable from the response."
+  }
+}

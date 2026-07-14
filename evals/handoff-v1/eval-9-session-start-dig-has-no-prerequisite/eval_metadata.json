@@ -1,0 +1,10 @@
+{
+  "eval_id": 9,
+  "eval_name": "session-start-dig-has-no-prerequisite",
+  "prompt": "这是一个刚开始的新 session。我只知道最近想做一个能长期积累的个人项目，但方向完全没有。请直接从这里帮我想清楚，不要先让我选择别的 skill 或工作流。",
+  "assertions": [
+    "直接从当前起点执行 Discover/方向探索，没有要求任何业务 skill 或 workflow 作为前置",
+    "提供多个可理解的方向或判断框架，没有把第一个假设当成唯一目标",
+    "没有把完成 dig 后的 design、review、plan 或 implementation 设为强制后继"
+  ]
+}

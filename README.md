@@ -145,11 +145,25 @@ docs/challenges/YYYY-MM-DD-<slug>.md
 
 dig 只负责 discovery、clarity、challenge 和 shared-state structure。
 
+- dig 没有必须先跑的业务 skill，可以是 session 或 agent 工作的第一步；system instructions、权限、安全边界和必要上下文仍然有效。
 - 对话或 critique 本身是交付物时，直接完成，不先设置 memo gate。
 - dig 作为前置工作时，在 shared understanding 被接受前不开始依赖这些决定的下游交付。
 - 完成后立即归还控制权，不指定 plan mode、implementation、architecture review 或 task-size workflow。
 - 默认 inline、domain-aware challenge；独立 reviewer 是高风险或显式要求时的 escalation。
 - 非软件任务永远不会因为 dig 被路由到 Software Architect。
+
+dig 之后也没有唯一的“下一步”：
+
+| 当前剩余需要 | 合理后继 | 典型产物 |
+|---|---|---|
+| 缺事实或可行性证据 | inspect / research / cheap prototype | evidence 或实验结果 |
+| 状态清楚、改动局部且可逆 | direct delivery | 完成交付 + verification |
+| 实现选择会改变 contract、data、coupling 或 recovery | design | inline design；必要时 ADR/spec |
+| 多步骤、跨 session、需要协调或恢复 | planning | 可执行 task state；不默认落盘 |
+| 高风险或需要独立专业判断 | domain review | findings + accepted/rejected risks |
+| 当前思考本身已经完成目标 | stop | Direction Map / Brief / 无文件 |
+
+这些路线可以组合或回到 dig，但不能按“任务大”固定串成流水线。完整 handoff contract 见 [docs/downstream.md](docs/downstream.md)。
 
 ## 安装
 
@@ -193,7 +207,7 @@ skills/dig/
     └── structure.md
 ```
 
-完整产品决策见 [docs/design.md](docs/design.md)，落地与验收记录见 [docs/rebuild-v1-plan.md](docs/rebuild-v1-plan.md)，未来合并说明见 [docs/merge-notes.md](docs/merge-notes.md)。旧 v2.4 设计记录保存在 [docs/history/v2.4-design.md](docs/history/v2.4-design.md)。
+完整产品决策见 [docs/design.md](docs/design.md)，下游衔接见 [docs/downstream.md](docs/downstream.md)，落地与验收记录见 [docs/rebuild-v1-plan.md](docs/rebuild-v1-plan.md)，未来合并说明见 [docs/merge-notes.md](docs/merge-notes.md)。旧 v2.4 设计记录保存在 [docs/history/v2.4-design.md](docs/history/v2.4-design.md)。
 
 ## 验证
 
@@ -207,7 +221,7 @@ skills/dig/
 - 清晰请求不会因为任务大小或“可能还有盲区”被误触发；
 - 非代码任务不出现 Software Architect 或软件流程。
 
-历史 benchmark 位于 `evals/iteration-1/`、`evals/iteration-2/`。rebuild v1 的量化结果见 [benchmark](evals/rebuild-v1/benchmark.md)，逐项新旧输出可在 [static review viewer](evals/rebuild-v1/review.html) 中检查。
+历史 benchmark 位于 `evals/iteration-1/`、`evals/iteration-2/`。rebuild v1 的量化结果见 [benchmark](evals/rebuild-v1/benchmark.md)，逐项新旧输出可在 [static review viewer](evals/rebuild-v1/review.html) 中检查。无前置与 downstream handoff 的追加回归见 [handoff benchmark](evals/handoff-v1/benchmark.md) 和 [handoff viewer](evals/handoff-v1/review.html)。
 
 ## License
 

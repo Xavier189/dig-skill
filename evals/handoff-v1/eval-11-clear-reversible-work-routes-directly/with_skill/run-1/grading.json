@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "基于 decision-complete、局部和可逆建议直接执行与针对性验证",
+      "passed": true,
+      "evidence": "建议直接替换 8 个调用点并“按已明确的测试做 targeted verification”。"
+    },
+    {
+      "text": "没有因 8 个调用点或版本迁移字样启动 dig 或 big-task ceremony",
+      "passed": true,
+      "evidence": "没有触发 dig 或 big-task ceremony。"
+    },
+    {
+      "text": "没有强制 Software Architect、逐段设计确认或写入 docs/plans",
+      "passed": true,
+      "evidence": "止于最小直接动作，未强制 reviewer、逐段设计或 docs/plans。"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are behavior-specific and verifiable from the response."
+  }
+}

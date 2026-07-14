@@ -116,6 +116,56 @@
         "保留双写 7 天、5000 行、0.1%、回滚和窗口等明确约束",
         "没有要求 Software Architect 或重新确认既定决策"
       ]
+    },
+    {
+      "id": 9,
+      "name": "session-start-dig-has-no-prerequisite",
+      "prompt": "这是一个刚开始的新 session。我只知道最近想做一个能长期积累的个人项目，但方向完全没有。请直接从这里帮我想清楚，不要先让我选择别的 skill 或工作流。",
+      "expected_output": "直接进入 Discover；不要求先执行 big-task、plan、brief intake 或其他前置流程，也不预设完成 dig 后必须进入某条流水线。",
+      "files": [],
+      "assertions": [
+        "直接从当前起点执行 Discover/方向探索，没有要求任何业务 skill 或 workflow 作为前置",
+        "提供多个可理解的方向或判断框架，没有把第一个假设当成唯一目标",
+        "没有把完成 dig 后的 design、review、plan 或 implementation 设为强制后继"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "handoff-preserves-state-without-pipeline",
+      "prompt": "我们已经完成了一轮 dig。只帮我整理给下一位 agent 的 handoff，不要继续设计或写计划：目标是把账单导出从人工改成自助，这是 confirmed；CSV 是 confirmed；30 秒内生成是你暂定的 assumed；权限模型重做 deferred，本期沿用现有权限；大客户导出可能造成数据库压力是 risk；成功标准是 95% 的导出在用户可接受时间内完成，但具体阈值还没确认。",
+      "expected_output": "输出轻量 Handoff Snapshot，准确保留 confirmed/assumed/deferred/risk 与未确认 success threshold；说明 ready state，但不指定固定 downstream pipeline。",
+      "files": [],
+      "assertions": [
+        "准确保留自助账单导出和 CSV 为 confirmed，30 秒为 assumed 而非 requirement",
+        "权限模型重做为 deferred 且本期沿用现有权限，数据库压力为 risk",
+        "成功标准的方向与尚未确认的具体阈值被同时保留",
+        "handoff 说明可消费状态，但没有自动进入 design、review、plan 或 implementation"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "clear-reversible-work-routes-directly",
+      "prompt": "需求已经全部确认：把内部工具的 8 个调用点统一改用现有的 getUserV2，旧方法保留一个版本周期；行为、兼容边界和测试都明确，改动局部且可回滚。现在只告诉我下一步最小合理动作，不实际改代码。",
+      "expected_output": "因为状态清楚且可逆，建议直接执行并跑针对性验证；文件数不触发 big-task、强制设计、reviewer 或落盘 plan。",
+      "files": [],
+      "assertions": [
+        "基于 decision-complete、局部和可逆建议直接执行与针对性验证",
+        "没有因 8 个调用点或版本迁移字样启动 dig 或 big-task ceremony",
+        "没有强制 Software Architect、逐段设计确认或写入 docs/plans"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "high-risk-work-selects-domain-route",
+      "prompt": "需求已经确认：给生产中的客户身份证号做 envelope encryption，要求在线轮换密钥、零停机、可审计并保留紧急回滚能力。先判断接下来该进入什么工作，不要实现，也不要重新挖需求。",
+      "expected_output": "因 security/data/recovery 风险进入 evidence-backed technical design，并按需选择 Security/Privacy/DBA 等 domain review；不重新 dig，也不套固定 big-task 全流程。",
+      "files": [],
+      "assertions": [
+        "没有重新执行 dig，而是识别 security、data migration、key rotation 与 rollback 的 material design 风险",
+        "建议先做与风险匹配的 technical design/evidence，并优先选择 Security、Privacy 或 DBA 等 domain perspective",
+        "没有把 Software Architect、逐段确认和 docs/plans 作为无条件固定链",
+        "说明 plan/implementation 应在关键设计与风险边界成立后按协调需要决定"
+      ]
     }
   ]
 }

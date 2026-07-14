@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "直接从当前起点执行 Discover/方向探索，没有要求任何业务 skill 或 workflow 作为前置",
+      "passed": true,
+      "evidence": "开头直接说“不需要先选 skill 或工作流”，随后从当前生活证据进入方向探索。"
+    },
+    {
+      "text": "提供多个可理解的方向或判断框架，没有把第一个假设当成唯一目标",
+      "passed": true,
+      "evidence": "列出信息整理、重复手工、他人反复咨询、表达主题、资源连接等五类可识别线索作为方向判断框架，没有指定唯一项目。"
+    },
+    {
+      "text": "没有把完成 dig 后的 design、review、plan 或 implementation 设为强制后继",
+      "passed": true,
+      "evidence": "停在方向发现问题，没有预设 design、review、plan 或 implementation。"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are behavior-specific and verifiable from the response."
+  }
+}

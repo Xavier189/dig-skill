@@ -168,6 +168,14 @@ ledger 可保留原始 basis、normalized decision、replaces 和 downstream con
 
 Dig 交付的是可消费的 shared state，不是下一条固定 workflow。需要跨 agent/session 继续时，handoff 只携带：已接受状态、必须保留的边界、`assumed / deferred / risk` 项和 success evidence。
 
+下游还需要区分三个正交机制：
+
+1. `skill` 提供可重复使用的专业能力、workflow、知识与资源；
+2. `agent/subagent` 决定本次执行由谁完成、是否并行、是否需要独立视角；
+3. conversation message、file、issue 或 task state 决定 shared state 如何跨边界延续。
+
+因此 v1 不预建通用 post-dig skill tree、不建立固定 subagent graph，也不让 dig 默认自动落盘。窄 skill 只从反复出现且边界稳定的真实业务/专业模式中提取；subagent 按本次依赖与风险临时选择；durable artifact 只在跨 session、恢复、审批、审计或明确共享需要时产生。
+
 下游按五个信号独立判断：
 
 1. 缺的是事实、可行性证据还是 owner decision；

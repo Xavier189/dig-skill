@@ -165,6 +165,16 @@ dig 之后也没有唯一的“下一步”：
 
 这些路线可以组合或回到 dig，但不能按“任务大”固定串成流水线。完整 handoff contract 见 [docs/downstream.md](docs/downstream.md)。
 
+### `skill`、`subagent`、落盘不是同一层
+
+| 机制 | 解决什么 | 一句话例子 |
+|---|---|---|
+| 窄 skill | 重复出现的专业知识、稳定 workflow 或工具资源 | 每月反复做供应商对账，规则稳定后提取 `invoice-reconciliation` |
+| subagent | 本次执行的并行 worker 或独立专业视角 | 分别盘点 API compatibility 与 database migration；或独立 Security review |
+| durable artifact | 让精确状态跨 agent、session、审批或审计继续存在 | 明天换 session 继续时保存 Handoff Snapshot / issue / ADR |
+
+dig 默认不自动写文件。同一 session 换 agent 时，把精简 Handoff Snapshot 放进派发消息即可；跨 session 时，由用户或授权 harness 按项目约定持久化，新 session 读取后还要核对会漂移的代码与事实。完整判断和八个端到端案例见 [下游说明](docs/downstream.md)。
+
 ## 安装
 
 ```bash

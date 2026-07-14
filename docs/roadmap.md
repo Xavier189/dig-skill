@@ -54,5 +54,8 @@
 4. decision ledger 的启用门槛是否过早或过晚。
 5. renderer 是否需要独立 skill/harness adapter。
 6. description 是否需要 20-query trigger optimization；先积累真实误判再做，避免合成样本过拟合。
+7. 哪些真实业务/专业任务稳定重复，足以提取窄 skill；不预先建立通用 post-dig skill tree。
+8. 跨 agent 的 inline Snapshot 是否足够，还是反复出现状态丢失，值得增加 dispatch adapter。
+9. 跨 session 使用是否足够频繁且摩擦稳定，值得增加 persistence/resume adapter；在此之前不让 dig 默认自动落盘。
 
 旧版路线保存在 [history/v2.4-roadmap.md](history/v2.4-roadmap.md)。

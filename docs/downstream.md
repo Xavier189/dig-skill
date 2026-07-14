@@ -23,9 +23,37 @@ session / agent work
        └───────────┴─────────── 可在新事实改变决策时回到 dig ─┘
 ```
 
-## Handoff 只传递状态
+这些分支不是必须六选一的终态。每次只解决当前最靠前的缺口：例如先 research 得到事实，事实改变方向时回到 dig；方向稳定后再判断是否需要 design；只有 rollout 真的需要协调时才增加 planning。
 
-短会话无需生成新文档。只有跨 agent、跨 session、存在精确约束或决定被修订时，才输出 Handoff Snapshot：
+## 先分清三件事
+
+`skill`、`subagent` 和文件分别解决能力、执行拓扑与状态延续问题。可以把它们理解成“操作手册/工具箱”“临时增派的同事”“交接单/档案”。它们可以组合，但互不自动触发。
+
+| 当前缺口 | 选择 | 适合的信号 | 不应成为触发条件 |
+|---|---|---|---|
+| 同类工作反复出现，每次都要重新学习领域规则、schema、工具或稳定步骤 | 窄 skill | 有清楚 trigger、可复用知识/资源、可检验 output contract | 任务大、刚做完 dig、只发生过一次 |
+| 一次执行中存在真正独立的 workstream，或高风险事项需要隔离上下文的第二视角 | subagent | 可并行、输入边界清楚、结果能独立验收，或 reviewer independence 有价值 | 文件多、步骤多、为了显得流程完整 |
+| 精确状态必须离开当前对话后继续存在 | durable artifact | 跨 session、长时间恢复、审批/审计、多人共享 | 每次 dig、每个 plan、同 session 内可直接传递 |
+
+### 何时才提取窄 skill
+
+优先按稳定的业务能力或专业能力拆，而不是按“dig 之后的第几步”拆。例如：
+
+- `invoice-reconciliation` 可以封装固定的账单 schema、匹配规则、异常分类和校验脚本；
+- `privacy-impact-review` 可以封装稳定的 privacy lens、证据要求和报告 contract；
+- `after-dig`、`big-task`、`do-design-then-plan` 只是编排名称，没有稳定领域能力，不应成为 skill。
+
+当前版本不新增通用 `technical-design`、`rollout-planning` 或业务 umbrella skill。先观察真实任务中是否反复出现“agent 每次都重新发明同一套方法、遗漏同一类检查、重复拼同一段工具代码”；有稳定重复后再提取，比先画完整 skill tree 更可靠。
+
+### 何时才用 subagent
+
+subagent 是一次运行中的 worker，不是下一阶段，也不会自动获得 dig 的 shared state。派发时必须把必要的 Handoff Snapshot、文件入口、允许修改的范围和验收证据一起传入。
+
+适合的例子：两个 agent 分别核查 API compatibility 和 database migration 影响；Security reviewer 独立审查 encryption design。不适合的例子：需求还在摇摆时让三个 agent 各自实现，或把一个局部改动机械拆成“设计 agent、编码 agent、审核 agent”。
+
+## Handoff 与落盘
+
+dig 默认不自动写文件。短会话无需生成新文档；需要跨 agent、跨 session、保留精确约束或追踪修订时，才 render Handoff Snapshot：
 
 ```markdown
 ## Ready state
@@ -39,6 +67,17 @@ session / agent work
 - `Carry forward` 只保留下游会用到的 confirmed decision 与 constraint。
 - 未决项必须保留真实状态，不能为了“可以开工”伪装成 confirmed。
 - 如果对话本身已完成用户目标，直接 stop，不制造 handoff 文件。
+
+Snapshot 放在哪里由延续方式决定：
+
+| 延续方式 | 推荐 carrier | dig 行为 |
+|---|---|---|
+| 同一 agent、同一 session | 当前 conversation context | 维护 shared state；通常不展示完整 Snapshot，不写文件 |
+| 同一 session、换 agent/subagent | dispatch message 中的 inline Snapshot | 只传对方完成任务所需状态；通常不写文件 |
+| 新 session、隔天继续、长任务恢复 | 项目约定的 file / issue / task state | 用户或授权 harness 要求持久化时写入；新 session 先读它 |
+| 审批、审计、多人长期共享 | spec / ADR / issue / decision record | 按组织 contract 落盘，而不是强行使用 dig 专属格式 |
+
+跨 session 时不能假定新 session 仍拥有旧对话。恢复者应先读取 durable snapshot，再核对 git state、代码、外部事实等会漂移的现状；Snapshot 保存的是当时已接受的决定，不保证所有事实永久有效。
 
 ## 下游路线
 
@@ -86,6 +125,25 @@ Software Architect 只评实际 software architecture；任务大、文件多或
 ### 7. Stop
 
 Discover 得到方向、Clarify 得到决定、Challenge 得到可信审查，可能已经是完整交付。用户没有要求继续时，到此结束。
+
+## 通俗路由示例
+
+| 用户场景 | 最小合理路线 | 窄 skill | subagent | 是否落盘 |
+|---|---|---|---|---|
+| “给这个接口多打一条已有格式的日志，字段也确定了” | 直接读代码 → 修改 → targeted test | 不需要 | 不需要 | 不需要 |
+| “我想做个能长期积累的个人项目，但完全不知道做什么” | dig Discover → 比较方向；选不出时做 cheap prototype；也可以直接 stop | 不急着建 | 通常不需要 | 当天聊完不写；明确下次继续时可保存 Direction Map |
+| “这三个页面我说不清喜欢哪种风格，看到才知道” | dig → 2–3 个 mock/sample → 根据反馈更新 shared state | 只有反复生成同类品牌稿且有稳定规范时才考虑 | 可并行做视觉参考，但不是默认 | 同 session 不写；品牌决策要复用时写 brief |
+| “把 8 个调用点改用已有 `getUserV2`，兼容与测试都已确认” | direct delivery → 针对性验证 | 不需要 | 不需要；8 个调用点本身不是并行理由 | 不写 plan |
+| “设计一份匿名员工调研，匿名边界和结果使用方式还没定” | dig Clarify → 必要的 policy research → 高风险时做 Privacy/HR/Legal review | 反复执行同类评估时可提取 domain skill | 只有独立专业判断有价值时使用 | 若需审批或下个 session 继续，写 Brief；绝不找 Software Architect |
+| “给生产身份证号做 envelope encryption、在线轮换和零停机迁移” | 查 KMS/现状证据 → technical design → Security/Privacy/DBA review → rollout 复杂时 planning | 已有稳定 domain skill 就复用，不为本任务临时造一个 | 适合独立 security review 或并行盘点 migration 影响 | 通常写 ADR/spec；跨 session rollout 再维护 durable task state |
+| “每月都要把三个供应商账单和内部订单对账” | 第一次先完成并验证；规则稳定且重复后提取 `invoice-reconciliation` | 适合，因为 schema、匹配规则和校验可复用 | 供应商输入互相独立且量大时可并行 | skill 保存方法；每次运行报告按审计需要保存，两者不是同一个文件 |
+| “这轮 dig 已确认账单导出需求，交给另一个 agent，明天继续” | render Handoff Snapshot；下一位 agent 读取后再选 direct/design/research | 不需要新 skill | 同 session 可把 Snapshot 直接放进派发消息 | 明天新 session 必须使用 durable carrier，例如 `docs/clarity/YYYY-MM-DD-billing-export.md` |
+
+三个容易混淆的对照：
+
+1. **Design 决定怎么做，planning 决定怎么协调执行。** 一个跨服务迁移可能两者都需要；一个单人当天完成的高风险算法选择可能需要 design，但不需要 plan。
+2. **Domain review 决定是否值得第二专业视角，subagent 只是承载这个视角的一种方式。** reviewer 也可以是人、工具或当前 agent 的 evidence-backed self-review。
+3. **Handoff Snapshot 是状态内容，file 只是 carrier。** 同 session 可以直接随消息传递；跨 session 才需要可靠的 durable carrier。
 
 ## 为什么删除 `big-task`
 

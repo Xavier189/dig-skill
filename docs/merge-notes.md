@@ -18,6 +18,7 @@
 - 加入 9 组 rebuild v1 对照结果、grading、benchmark 和 static review viewer。
 - 退役 `big-task` 固定编排，加入无前置、无强制后继的 downstream contract；
 - 加入 4 组 handoff regression、grading、benchmark 和 static review viewer。
+- 区分窄 skill、subagent 与 durable artifact 三个正交机制，明确 dig 不自动落盘，并加入八个端到端路由示例。
 
 ## 合并闸门
 

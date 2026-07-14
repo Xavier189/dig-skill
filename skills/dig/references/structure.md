@@ -119,6 +119,16 @@ A PRD, spec, ADR, user-story set, or implementation-plan input is a renderer req
 
 Do not write files by default. Persist only when the user or an authorized harness asks.
 
+Choose the carrier by the continuity need:
+
+- same agent and session: keep the state in conversation context;
+- another agent in the same session: include an inline Handoff Snapshot in the dispatch message;
+- another session, a long-running effort, or an audit trail: persist the snapshot in the project's file, issue, or task-state convention.
+
+Rendering a Handoff Snapshot and writing a file are separate actions. Never write a file merely because dig ran. A narrow skill or a subagent is also not a persistence mechanism: a skill supplies reusable capability, an agent performs work, and a durable artifact carries state across time.
+
+When resuming from a persisted snapshot, preserve its decisions and boundaries but verify drift-prone facts and current implementation state before acting.
+
 Default locations when no project convention overrides them:
 
 - `docs/discovery/YYYY-MM-DD-<slug>.md`

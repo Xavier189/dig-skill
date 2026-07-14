@@ -25,6 +25,8 @@ v2.4 把需求清晰度与任务大小解耦，并解决了非代码任务被送
 
 用户原始需求更宽：不知道想做什么时需要共同发现；已有 requirement/design 时需要检验缺陷。更深的问题不是“提问还不够好”，而是三种不确定性被压进了同一种提问流程。
 
+日常工作中的主输入并不是 greenfield 项目，而是产品经理的一句话需求、ticket、讨论结论或不完整 PRD。它们主要进入 Clarify；当文档已有矛盾、错误假设或危险边界时进入 Challenge。输入长度和文档形式都不是 trigger，material uncertainty/defect 才是。
+
 ## 3. 三类不确定性
 
 | 类型 | 用户状态 | 所需认知动作 | 典型失败 |
@@ -137,6 +139,7 @@ ledger 可保留原始 basis、normalized decision、replaces 和 downstream con
 ### 自动触发
 
 - 用户明确缺少方向或判断依据；
+- 一句话需求、ticket、brief 或 PRD 留下会改变产品行为、scope、risk 或 validation 的 owner decision；
 - 存在会改变 outcome 的 material ambiguity；
 - requirement/design 已出现 concrete material defect，静默执行不成立。
 
@@ -175,6 +178,8 @@ Dig 交付的是可消费的 shared state，不是下一条固定 workflow。需
 3. conversation message、file、issue 或 task state 决定 shared state 如何跨边界延续。
 
 因此 v1 不预建通用 post-dig skill tree、不建立固定 subagent graph，也不让 dig 默认自动落盘。窄 skill 只从反复出现且边界稳定的真实业务/专业模式中提取；subagent 按本次依赖与风险临时选择；durable artifact 只在跨 session、恢复、审批、审计或明确共享需要时产生。
+
+业务事实默认留在 workspace 的文档、schema、配置或权威系统；scope 内始终生效的短规则进入 `AGENTS.md`；只有具备明确 trigger、可复用 payload、可验收 boundary 且适合按需加载的能力才成为 skill。workspace 是默认 scope；去除项目假设后仍能安全服务无关项目的能力才提升为 global。source location 与 activation scope 分离，允许 repo 作为 source of truth、global 只保留 symlink。
 
 下游按五个信号独立判断：
 

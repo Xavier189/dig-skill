@@ -24,6 +24,18 @@ STRUCTURE 贯穿三种 mode，持续区分哪些是候选方向、已确认决�
 
 三种 mode 可以切换，但不会为了“流程完整”强制全走一遍。任务大小也不决定是否触发：清晰的大任务可以跳过 dig，模糊的小任务可以进入 Clarify，一句“我不知道自己想做什么”可以直接进入 Discover。
 
+## 日常工作主入口：一句话需求与不清晰 PRD
+
+dig 不把“做新项目”当默认场景。更常见的输入是产品经理的一句话、ticket、群聊结论或一份看似完整但仍有缺口的 PRD。
+
+| 输入 | 先做什么 | 什么时候用 dig |
+|---|---|---|
+| “订单支持撤回” | 先查现有订单状态、权限、退款/库存联动和已有约定 | 哪些状态可撤回、谁能撤回、撤回后如何补偿或通知等答案会改变行为时，用 Clarify |
+| “订单列表加导出” | 先查项目是否已有统一导出能力与字段/权限惯例 | 现有约定不能决定字段、数据范围、权限、数据量或同步/异步行为时，用 Clarify；都已继承时直接实现 |
+| 一份不清晰 PRD | 核对术语、状态、边界、acceptance criteria 与现状 | 缺 owner decision 用 Clarify；已有矛盾、错误假设或不可测试要求用 Challenge；只需整理则 STRUCTURE-only |
+
+因此，**短不等于模糊，长不等于完整**。dig 的 trigger 是 material uncertainty 或 material defect，不是字数、文档格式、文件数或任务大小。
+
 ## Discover：需求还不存在时，先让它成为可能
 
 Discover 不假设用户心里藏着一个等待被问出来的完整需求。
@@ -127,6 +139,7 @@ docs/challenges/YYYY-MM-DD-<slug>.md
 应该触发：
 
 - 用户明确说“不知道想做什么”、想 brainstorm/explore；
+- 一句话需求、ticket、brief 或 PRD 仍留下会改变产品行为、scope、risk 或验证方式的真实分叉；
 - intent、scope、constraint、success criteria、术语或 hidden decision 存在会改变结果的真实分叉；
 - 用户显式要求 dig、clarify、grill、challenge、stress-test 或审查 requirement/design；
 - 用户要求把散落讨论、修订决定或 requirements 结构化、对齐或转换为可靠摘要；
@@ -165,15 +178,17 @@ dig 之后也没有唯一的“下一步”：
 
 这些路线可以组合或回到 dig，但不能按“任务大”固定串成流水线。完整 handoff contract 见 [docs/downstream.md](docs/downstream.md)。
 
-### `skill`、`subagent`、落盘不是同一层
+### `AGENTS`、文档、`skill`、`subagent`、落盘不是同一层
 
 | 机制 | 解决什么 | 一句话例子 |
 |---|---|---|
-| 窄 skill | 重复出现的专业知识、稳定 workflow 或工具资源 | 每月反复做供应商对账，规则稳定后提取 `invoice-reconciliation` |
-| subagent | 本次执行的并行 worker 或独立专业视角 | 分别盘点 API compatibility 与 database migration；或独立 Security review |
-| durable artifact | 让精确状态跨 agent、session、审批或审计继续存在 | 明天换 session 继续时保存 Handoff Snapshot / issue / ADR |
+| `AGENTS.md` | 在其 scope 内几乎每次都要生效的短规则 | 本仓库统一使用某条 Maven 命令 |
+| 普通文档/reference | 项目事实、术语、schema、业务规则与当前决策 | 订单状态与撤回规则 |
+| 窄 skill | 按需触发的可复用方法、工具或专业能力 | 对状态机变更执行固定影响分析 |
+| subagent/custom agent | 本次独立 workstream，或反复需要的独立角色 | 独立盘点 payment 与 inventory 影响 |
+| durable artifact | 让任务状态跨 agent、session、审批或审计继续存在 | Handoff Snapshot / issue / ADR |
 
-dig 默认不自动写文件。同一 session 换 agent 时，把精简 Handoff Snapshot 放进派发消息即可；跨 session 时，由用户或授权 harness 按项目约定持久化，新 session 读取后还要核对会漂移的代码与事实。完整判断和八个端到端案例见 [下游说明](docs/downstream.md)。
+默认先放 workspace；只有去掉项目名、内部术语、私有 schema 和环境命令后，在无关项目里仍完整成立的能力，才适合 global。dig 默认不自动写文件。同一 session 换 agent 时，把精简 Handoff Snapshot 放进派发消息即可；跨 session 时再持久化。完整判断和工作场景案例见 [下游说明](docs/downstream.md)。
 
 ## 安装
 

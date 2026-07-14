@@ -57,5 +57,6 @@
 7. 哪些真实业务/专业任务稳定重复，足以提取窄 skill；不预先建立通用 post-dig skill tree。
 8. 跨 agent 的 inline Snapshot 是否足够，还是反复出现状态丢失，值得增加 dispatch adapter。
 9. 跨 session 使用是否足够频繁且摩擦稳定，值得增加 persistence/resume adapter；在此之前不让 dig 默认自动落盘。
+10. 一句话需求与不完整 PRD 的真实触发样本中，是否仍出现“因字数短而过度追问”或“因 PRD 格式完整而漏掉 material fork/defect”。
 
 旧版路线保存在 [history/v2.4-roadmap.md](history/v2.4-roadmap.md)。

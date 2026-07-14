@@ -55,3 +55,10 @@
 - 期望行为：dig 的触发只取决于用户真正想表达的需求是否清楚；清晰大任务可以跳过，模糊小任务也应触发；非代码任务不得因为经过 dig 就调用 Software Architect
 - 实际行为：任务规模决定了是否 dig，且 dig 被误当成整条大任务 workflow 的入口，导致非代码任务也推荐软件架构子 agent
 - 备注：结构性根因 = task size 与 requirement uncertainty 被合并。v2.4 用独立 clarity gate 解耦，memo 确认后结束 dig；决策记录 design.md D10
+
+### 2026-07-14 示例偏 greenfield，日常一句话需求与不清晰 PRD 不突出
+- 分类：触发边界、其他
+- 当时的指令原文：（脱敏摘要）日常工作没有那么多新项目，常见输入是产品/业务的一句话需求或不清晰 PRD；当前 skill 是否覆盖，skill/subagent 与 workspace/global 边界也不清楚
+- 期望行为：把 thin request / ticket / PRD 作为日常主入口；先查项目事实，剩余 material owner decision 进入 Clarify，显式矛盾进入 Challenge；不能按字数或文档格式触发
+- 实际行为：skill 的抽象语义能够覆盖，但 description 未点名该输入，README/downstream 示例先展示“完全不知道做什么项目”，造成产品重心偏 Discover 的错觉；能力载体与 scope 的说明也不足
+- 备注：已同步收紧 description、Clarify/Challenge references、README、downstream、design、roadmap 与本机全局路由；后续真实样本观察误触发/漏触发，再决定是否新增行为 eval

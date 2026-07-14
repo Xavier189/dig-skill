@@ -1,6 +1,6 @@
 ---
 name: dig
-description: Adaptive thought partnership for discovering what the user actually wants, clarifying materially ambiguous requirements, challenging requirements or designs for defects and blind spots, and structuring scattered or revised decisions into reliable shared understanding. Use when the user does not know what they want; asks to brainstorm, explore, dig, clarify, grill, challenge, or stress-test a direction; asks to structure or reconcile a discussion; or when intent, scope, constraints, success criteria, terminology, or hidden decisions admit materially different outcomes. Also use for explicit requirement or design review, or when a concrete contradiction or consequential defect makes proceeding unsound. Works across code and non-code domains. Skip clear execution requests, purely informational questions, and ordinary code review or debugging unless the underlying intent or design is requested. Produces shared understanding without owning downstream planning, implementation, or reviewer selection.
+description: Adaptive thought partnership for discovering direction, clarifying materially ambiguous requirements, challenging requirements or designs, and structuring revised decisions. Use when the user does not know what they want; when a one-line request, ticket, brief, or incomplete PRD leaves intent, scope, behavior, constraints, success criteria, terminology, or hidden product decisions open; when the user asks to brainstorm, explore, dig, clarify, grill, challenge, stress-test, structure, or reconcile; or when a concrete contradiction makes proceeding unsound. Works across code and non-code domains. Skip decision-complete execution, purely informational questions, and ordinary code review or debugging unless the underlying intent or design is requested. Produces shared understanding without selecting downstream planning, implementation, or reviewers.
 ---
 
 # Dig — Adaptive Thought Partner
@@ -40,7 +40,7 @@ Infer the route without asking the user to choose a mode when the signal is clea
 | Signal | Route | Load |
 |---|---|---|
 | “我也不知道想做什么”、缺少判断标准、只能看到才知道 | Discover | `references/discover.md` |
-| 目标存在，但现实答案会导向不同结果 | Clarify | `references/clarify.md` |
+| 目标存在，或一句话需求/不完整 PRD 中仍有会改变结果的现实答案 | Clarify | `references/clarify.md` |
 | 已有 requirement/design，用户要挑错，或已看到实质矛盾 | Challenge | `references/challenge.md` |
 | 信息已经足够，只需整理、对齐修订或转换输出 | STRUCTURE-only | `references/structure.md` |
 

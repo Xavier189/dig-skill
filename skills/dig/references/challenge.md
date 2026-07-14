@@ -2,6 +2,8 @@
 
 Use Challenge when the user explicitly asks for critique, review, grilling, stress-testing, or design validation, or when an already-visible material defect makes silent execution unsound.
 
+For an incomplete PRD, use Clarify for genuinely missing owner decisions and Challenge for contradictions, invalid assumptions, untestable claims, or unsafe boundaries. Document length and formality do not determine completeness.
+
 Challenge is not a software architecture ceremony. It applies to product ideas, policies, meetings, writing structures, operating procedures, technical designs, and any other consequential proposal.
 
 ## Start from the claim, not a questionnaire

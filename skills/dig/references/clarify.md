@@ -2,6 +2,14 @@
 
 Use Clarify when a meaningful goal exists but intent, scope, behavior, constraints, success evidence, terminology, or delegated decisions still admit materially different outcomes.
 
+## Common workplace entry: thin request or incomplete PRD
+
+A one-line request, ticket, or PRD is an input format, not evidence of clarity. Do not trigger Clarify merely because the input is short, and do not skip it merely because a PRD is long or polished.
+
+First inspect the project's existing behavior, domain terms, conventions, code, and authoritative documents. Let established facts resolve inherited details. Use Clarify only for remaining choices whose realistic answers would change product behavior, scope, validation, risk, or external commitments.
+
+If the document contains a visible contradiction, false assumption, or consequential defect, state the finding through Challenge instead of disguising it as a clarification question. Continue Clarify only for the owner decisions that remain after the defect is exposed.
+
 ## The bar for a question
 
 Ask only when at least two realistic answers would change the frame, deliverable, behavior, validation, or hard-to-reverse decision. If likely answers lead to the same action, do not ask.

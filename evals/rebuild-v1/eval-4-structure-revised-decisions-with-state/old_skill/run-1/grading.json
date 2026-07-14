@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "全公司和录像被明确标为已推翻/invalidated，而不是与新决定并列为 active requirement",
+      "passed": true,
+      "evidence": "明确写明旧范围和录像决定已被变更，并在 Boundaries 中声明不得保留为当前有效决定。"
+    },
+    {
+      "text": "只限产品部、不录像和 8 月 12 日被标为 confirmed",
+      "passed": true,
+      "evidence": "Decisions（已拍板）中记录仅限产品部、不录像和已确认的 8 月 12 日。"
+    },
+    {
+      "text": "预算 2 万被标为 assumed/unconfirmed，没有伪装成用户决定",
+      "passed": true,
+      "evidence": "Open items 明确 2 万元只是暂定值，未获得用户确认。"
+    },
+    {
+      "text": "场地外包被标为 deferred，并记录不开活动时不产生费用的默认；没有继续设计或写计划",
+      "passed": true,
+      "evidence": "Open items 记录场地外包暂缓和不举办则不产生费用，且未继续设计或写计划。"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "这些 assertions 验证了状态语义，但不要求显式 state label；因此旧版 prose 也能通过。若要专门衡量 ledger 精度，应另加 exact state-tag 与 replaces-link assertion。"
+  }
+}

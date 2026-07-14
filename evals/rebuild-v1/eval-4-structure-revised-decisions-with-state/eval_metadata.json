@@ -1,0 +1,11 @@
+{
+  "eval_id": 4,
+  "eval_name": "structure-revised-decisions-with-state",
+  "prompt": "只帮我把下面这段讨论结构化，不要继续设计或写计划：最初决定活动面向全公司并录像；后来因为隐私风险，我们改成只限产品部、不录像。预算 2 万是你暂定的，我还没确认。日期 8 月 12 日已经确认。场地是否外包暂缓，如果最终不开活动则默认不产生场地费用。",
+  "assertions": [
+    "全公司和录像被明确标为已推翻/invalidated，而不是与新决定并列为 active requirement",
+    "只限产品部、不录像和 8 月 12 日被标为 confirmed",
+    "预算 2 万被标为 assumed/unconfirmed，没有伪装成用户决定",
+    "场地外包被标为 deferred，并记录不开活动时不产生费用的默认；没有继续设计或写计划"
+  ]
+}

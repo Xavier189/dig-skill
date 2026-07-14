@@ -1,0 +1,9 @@
+{
+  "eval_id": 5,
+  "eval_name": "clear-one-step-request-skips",
+  "prompt": "把这句话改得更简洁，保留原意，只输出改写结果：我们目前正在对现有流程进行进一步的优化和改善。",
+  "assertions": [
+    "只输出简洁改写结果",
+    "没有提出问题、mode 分析、shared-understanding artifact 或 reviewer"
+  ]
+}

@@ -1,152 +1,221 @@
-# dig skill 设计说明
+# Dig Rebuild v1 设计说明
 
-日期：2026-07-02（v1）· 2026-07-03（v2）· 2026-07-12（v2.4）· 状态：v2.4 已上线
+日期：2026-07-14
+状态：candidate implementation on `rewrite/adaptive-dig-v1`
 
-## 1. 背景与问题定义
+## 1. North Star
 
-作者长期用 superpowers 的 brainstorming skill（历史调用 18 次，个人技能中最高频）加上"新会话直接进 plan mode"的习惯，来补偿同一个问题：**Claude 的提问太浅、细节挖掘太少**。
+Dig 是一个跨领域、可重入的 adaptive thought partner。它根据用户当前的不确定性，在 Discover、Clarify、Challenge 三种认知动作之间选择和切换，把模糊、未知或未经检验的想法转化成 shared understanding。
 
-四种实际经历的失败模式（作者自述，全部命中）：
+它不拥有下游 design、plan、implementation 或 reviewer。
 
-1. 做完才发现要的是别的——真实意图未被挖出
-2. 关键决策被静默代理，且决策错误
-3. 问了但问得浅，没问到藏在深处的点 ← **作者自认的病根**
-4. 成品与长期规划（"大盘子"）不匹配
+## 2. 为什么推倒重来
 
-诊断：1/2/4 是 3 的下游症状。提问质量 = 深度 × 完备性，两者都不足。若问得够深够细，其余三种失败会在事前暴露。
+v2.4 把需求清晰度与任务大小解耦，并解决了非代码任务被送往 Software Architect 的 downstream 污染。这一修正继续成立。
 
-## 2. 调研：三个参照物的光谱
+但 v2.4 仍把产品定义为“动手前的 requirements excavation”，核心流程固定为：单一 hypothesis → questions → clarity memo。它默认：
 
-| 参照物 | 机制 | 结论 |
+1. 用户已经拥有一个可以被追问出来的目标；
+2. 用户知道各选项意味着什么；
+3. 缺陷最终应转化成澄清问题；
+4. 所有 dig 都是另一项工作的前置阶段；
+5. 固定五节 memo 足以保存对话结果。
+
+这些前提只适用于“目标存在但有决策分叉”的 Clarify 场景。
+
+用户原始需求更宽：不知道想做什么时需要共同发现；已有 requirement/design 时需要检验缺陷。更深的问题不是“提问还不够好”，而是三种不确定性被压进了同一种提问流程。
+
+## 3. 三类不确定性
+
+| 类型 | 用户状态 | 所需认知动作 | 典型失败 |
+|---|---|---|---|
+| Direction uncertainty | 不知道目标、缺少语言或判断标准 | 发散、教育、reference/prototype、形成 frames | 过早收敛到 agent 的第一猜测 |
+| Decision uncertainty | 目标存在，但多个现实答案导向不同结果 | hypothesis、事实核查、提问、比较、拍板 | 参数题很多，真实分叉没上浮 |
+| Validity uncertainty | 设计明确，但可能错误、不完整或不自洽 | evidence、counterexample、failure analysis、alternatives | 把已知缺陷伪装成问题，或直接顺着错方案执行 |
+
+这三类分别映射到 Discover、Clarify、Challenge。它们可以串联，但不是固定阶段。
+
+## 4. 架构
+
+```text
+ORIENT
+  读取会改变 framing / question / critique 的证据
+      ↓
+ROUTE
+  Discover / Clarify / Challenge
+      ↓                         ↘ 必要时切换 mode
+WORK  ←─────────────────────────┘
+      ↕
+STRUCTURE
+  维护有状态的 shared model
+      ↓
+CONVERGE
+  使用 mode-specific completion
+      ↓
+RENDER（可选）
+  Direction Map / Clarity Memo / Challenge Report / Brief / Spec
+```
+
+`SKILL.md` 只放路由、共同原则、STRUCTURE 摘要与边界；各 mode 通过 `references/` progressive disclosure 加载，避免一个巨型 prompt 同时操纵三套行为。
+
+## 5. Mode 设计
+
+### 5.1 Discover
+
+目标：让 requirement 成为可能，而不是假设 requirement 已存在。
+
+关键机制：
+
+- 从真实 starting point 开始，不先声明唯一“真实目标”；
+- 根据场景采用 Facilitator、Creative Partner 或 Advisor stance，但不强制用户先选模式；
+- blind-spot pass 区分缺方向、缺语言、缺实例、缺判断依据；
+- teach/show-before-ask，避免用户对陌生选项盲选；
+- 生成多个后果不同的 plausible frames；
+- 使用 examples、counterexamples、references 和 cheap prototype；
+- divergence 与 convergence 分离，允许“继续探索”成为合法终点。
+
+### 5.2 Clarify
+
+目标：解决会改变结果的 material decisions。
+
+保留 v2.4 的有效机制：
+
+- facts lookup / decisions ask；
+- solution-disguised-as-requirement；
+- attackable hypothesis 与 named traps；
+- 独立问题 batch、依赖问题逐层；
+- question admission gate；
+- show-don't-ask；
+- delta-only reflection；
+- convergence by remaining forks，而不是轮数配额。
+
+调整：旧版 `✅ / 🔍 / ❓` 由跨 mode 的状态语义替换，避免 UI 标记与数据状态混为一体。
+
+### 5.3 Challenge
+
+目标：判断 requirement/design 是否成立，而不只是是否清楚。
+
+关键机制：
+
+- finding-first：已知缺陷直接说，不伪装成用户问题；
+- evidence + consequence + minimum correction；
+- owner decision 只用于价值冲突、风险承受和不可逆承诺；
+- lens 按上下文选择，不机械跑 checklist；
+- named methods 是工具，不是固定菜单；
+- 保留设计中成立的 strengths，使修订保持约束；
+- 非软件任务使用同一逻辑，不接 software reviewer。
+
+## 6. STRUCTURE
+
+STRUCTURE 不是第四个 mode，而是共享状态层。
+
+### 6.1 状态
+
+- `candidate`
+- `confirmed`
+- `assumed`
+- `invalidated`
+- `deferred`
+- `risk`
+
+状态解决两个根本问题：agent 假设被写成用户需求；后续总结把已推翻决定重新复活。
+
+### 6.2 信息模型
+
+按需记录 Intent、Stakeholders、Scenarios、Scope、Requirements、Constraints、Decisions、Assumptions & evidence、Risks & edge cases、Success evidence、Open items。
+
+这些是可选维度，不是要填满的模板。v1 已证明机械 checklist 会产生“看似完整、没有洞察”的 theater。
+
+### 6.3 Traceability
+
+短会话只在上下文维护。出现多轮、决定修订、精确数值/顺序/negative requirement、跨 session handoff 时启用 decision ledger。
+
+ledger 可保留原始 basis、normalized decision、replaces 和 downstream consequence。只有需要 coverage check 时才分配 stable IDs。
+
+## 7. 触发边界
+
+### 自动触发
+
+- 用户明确缺少方向或判断依据；
+- 存在会改变 outcome 的 material ambiguity；
+- requirement/design 已出现 concrete material defect，静默执行不成立。
+
+### 显式触发
+
+用户要求 dig、brainstorm、explore、clarify、grill、challenge、stress-test 或审查 requirement/design 时进入相应 mode。
+
+### 跳过
+
+- 清晰执行请求；
+- 纯信息问答；
+- 明确的一步改写/翻译/格式化；
+- 普通 code review、debugging、implementation review，除非目标是底层 requirement/design validity。
+
+关键边界：`decision-complete != decision-sound`，但 material defect gate 不能退化为 every-task review。
+
+## 8. 输出与 persistence
+
+输出是 renderer，不是流程终点：
+
+- Discover → Direction Map
+- Clarify → Clarity Memo / Requirements Brief
+- Challenge → Challenge Report / revised brief
+- 用户明确要求 → PRD / Spec / ADR / user stories
+
+默认不落盘。legacy 五节 clarity memo 保留为 adapter，而非 core contract。
+
+## 9. Reviewer 决策
+
+默认 inline、domain-aware challenge。
+
+Superpowers 曾将 spec/plan 交给 subagent reviewer，后续公开 release notes 记录其回归结果：约增加 25 分钟、没有可测质量提升，因此改为 inline self-review。该结果不能证明所有 reviewer 无效，但足以否决 reviewer-as-ritual。
+
+Dig 的 reviewer policy：
+
+- 只有显式要求、高风险或独立视角确有增益时 escalation；
+- reviewer 按 domain 选择；
+- Software Architect 只可能服务实际软件架构问题；
+- reviewer 不是任何 mode 的 terminal state。
+
+## 10. 外部参照与取舍
+
+| 参照 | 吸收 | 不吸收 |
 |---|---|---|
-| [superpowers/brainstorming](https://github.com/obra/superpowers) | 一次一问收集信息 → spec → writing-plans 流水线 | 提问是手段非目的、面向设计收敛而非意图挖掘；且在作者环境中终态断链（未装全家桶） |
-| [socratic-architect](https://github.com/roy-reshef/socratic-ai-prompt-skill) | 三层提问（澄清/挑战假设/视角转换），永不直接给答案 | 挖得深但纯思辨教练，不落地干活 |
-| [requirements-elicitation](https://github.com/andreaswasita/copilot-agents-dojo) | 六维追问 + 铁律"不接受伪装成需求的方案" + user story 产出 | 方法论最完整但仪式过重（个人开发者不需要 user story 与签核） |
+| Matt Pocock grilling | facts/decisions、dependency-aware questions、shared understanding | relentless 与全程 one-question doctrine |
+| Matt domain-modeling / wayfinder | precise terms、edge cases、fog-of-war、prototype | 普通会话默认 issue map |
+| Superpowers brainstorming | context-first、alternatives、incremental validation、inline self-review | every-project hard gate、forced spec/writing-plans |
+| BMAD | divergence 与 advanced elicitation 分离、stance、pre-mortem 等 lens | 100+ ideas、method menu、heavy memlog |
+| GSD discuss | specific gray areas、context awareness、batch/assumption pacing | scope-fixed implementation orientation |
+| GitHub Spec Kit | ambiguity/coverage/consistency lens、testability | software artifact pipeline 作为 core |
+| Anthropic finding-your-unknowns | blind spots、prototype、references、unknowns 可在全周期出现 | 把所有能力限制为 pre-implementation checklist |
 
-dig 取三者交集：比 brainstorming 挖得深，比 socratic-architect 务实（挖完要干活），比 requirements-elicitation 轻。
+## 11. 被否决方案
 
-### 2.1 事后对照（2026-07-07，v2.1 输入）
+### 单一巨型流程
 
-v2 上线后对照的两篇外部文章与一个同类仓库；吸收与否决的决策记录见 D7。
+否决原因：Discover 需要避免锚定，Clarify 需要收敛，Challenge 需要直接判断；同一默认动作无法同时满足三者。
 
-| 参照物 | 机制 | 对照结论 |
-|---|---|---|
-| [A field guide to Claude Fable: finding your unknowns](https://claude.com/blog/a-field-guide-to-claude-fable-finding-your-unknowns)（Thariq/Anthropic，2026-07-03，X 长文收录进官方博客） | map（prompt/context）≠ territory（真实约束），差值 = unknowns，按 Rumsfeld 四象限拆解；interview / brainstorm-prototype / blind spot pass / references / 实现期 implementation-notes / 事后 quiz 全周期手法 | 独立同源印证：其 interview 例句 "prioritize questions where my answer would change the architecture" 与 dig 提问门槛逐字重合，且立场是模型越强瓶颈越向"人澄清 unknowns 的能力"移——dig 类 skill 价值随模型进步上升。dig 多出假设先行、批量提问、收敛准入、memo 契约；它多出的 show-don't-ask 与实现期 Deviations 被 v2.1 吸收，blind spot pass 转观察项 |
-| [Designing Loops](https://x.com/ClaudeDevs/status/2074208949205881033)（Claude Code 官方博文，2026-07-06） | loop = agent 循环工作直到停止条件，按触发/停止/原语/适用任务四维分类（turn-based / goal-based / time-based / proactive）；质量靠可自验证的量化检查 + 把个别修复编码进系统 | 与 dig 是同一工作流的两端：dig 提高人参与的质量（灌入隐性知识），loop 减少人的参与（自主跑更久）——挖得净，loop 才跑得远。v2.1 的 Success criteria 可验证性引导来自"检查越量化越容易自验证"；"把个别修复编码进系统"正是 observations→design 修订循环的既有做法，获官方印证 |
-| [mattpocock/skills](https://github.com/mattpocock/skills)：grilling 系（grill-me / grill-with-docs）+ wayfinder | grilling：一次一问的严酷 interview 直到共识，"事实自查、决策必问"，每问带推荐答案，确认前不动工；grill-with-docs 附带产出 ADR 与 glossary；wayfinder（in-progress）：超单 session 的大工作在 issue tracker 建共享决策地图，fog of war 渐进立 ticket，一次 session 只解决一个 | grilling 与 dig 在"一次一问 vs 批量"上正面对立（Matt Pocock 明言 "Asking multiple questions at once is bewildering"）——验证 D1 否决项是真实存在的流派，属用户偏好分歧而非对错；其"事实自查、决策必问"分界线被 v2.1 吸收进提问门槛。wayfinder 恰好是 dig"任务过大转拆分"之后缺失的承接形态，远期联动候选（roadmap §5） |
+### 三个公开 skill
 
-## 3. 关键决策记录（含被否决项与代价）
+否决原因：最需要帮助的用户通常不知道自己处于哪种不确定性。保留一个 `dig` 入口，由内部 router 选择。
 
-### D1 挖掘风格：先拆解后批量精准提问 ｜ 可逆性：高
+### 固定输出 schema 控制流程
 
-- **选定**：DECOMPOSE → CHECKLIST 六维扫描 → 批量 ASK（每批 ≤4、带推荐、硬上限两轮）
-- **否决**：一次一问对话式（brainstorming 哲学）。作者明确反感挤牙膏；代价是放弃顺藤摸瓜的深钻能力，由 CHECKLIST 六维扫描补盲区
-- **否决**：对抗挑战式（socratic-architect 的降魔流）。作者不接受；代价是部分错误前提可能存活到纪要阶段，由"ASK 前先亮拆解图景供当场纠错"补偿
+否决原因：harness compatibility 属 renderer/adapter；让 schema 控制认知流程会重新制造 checklist theater。
 
-#### D1-R1 修订（2026-07-03，v2）｜ 可逆性：高
+### 默认独立 reviewer
 
-- 触发：v1 上线一天的真实使用反馈（observations.md 2026-07-03 三条）——流程被机械执行：提问偏参数没追真实诉求、✅🔍❓ 表与六维清单走过场、澄清后答案带出的新细节不被追问，两轮硬上限制度性砍断深挖。
-- 废除："Hard cap: two rounds"；DECOMPOSE 拆解表与 CHECKLIST 六维清单的独立步骤形态。
-- 替代：假设先行（三段可证伪陈述：真实目标 / 最易做错处 / 开做草案，✅🔍❓ 附着在草案分叉行上）；六维降为对假设的压力测试探针（禁止逐维填行）；收敛驱动 loop——新问题准入门槛 = 在问题内引用哪句答案 + 指明决定哪个分叉，连续两轮分叉不减 → 转提议拆任务，"开工"随时强制收敛。
-- 维持原判：否决"一次一问对话式"不变。loop 是多轮批量（每批 ≤4 带选项推荐），每轮存在的理由是上一轮答案改变了图景；已知问题必须当轮问完，禁止藏问题凑轮次。v1 用 CHECKLIST 补偿被放弃的"顺藤摸瓜"，v2 由 loop 本体承担该能力，补偿机制退役。
-- 新代价（有意接受）：单次 dig 变长、轮数不可预测；SKILL.md 77→~110 行，触发加载成本 +~40%；拆解表让位于假设后，当场纠错性依赖"sketch 一行一决策 + ≤15 行"的措辞约束（列为观察项）；frontmatter description 仍写 "Decomposes the request"，与正文 HYPOTHESIZE 存在术语漂移（description 属触发优化线，本轮不动）。
-- 回滚开关：恢复 "Hard cap: two rounds" 一句并删除 LOOP 节 = 回到 v1 节奏；假设先行与 loop 相互独立，可只回滚其一。
-- 本轮不造 eval：先真实使用观察（用户决策），iteration-2 对比待 loop 行为有观察数据后启动。
+否决原因：跨领域错误、成本高、收益不稳定。改为 inline challenge + risk-based escalation。
 
-### D2 介入方式：分级自动 + plan mode 联动 + 可手动 ｜ 已被 D10 supersede
+## 12. 验收标准
 
-- **否决**：强制全量前置（brainstorming 的 HARD-GATE 哲学）。小任务的打断成本 > 失误成本；代价是小型创建任务失去自动保护，兜底为 `/dig` 手动
-- **否决**：纯手动。最需要挖的时候恰是用户没意识到自己模糊的时候
+1. “我不知道想做什么”不会收到单一 implementation hypothesis。
+2. 用户没有知识基础时，agent 先提供 decision-relevant education/examples。
+3. Clarify 仍能识别 solution-disguised-as-requirement 和依赖问题。
+4. 显式 critique 直接输出 evidence-backed findings，而不是只问问题。
+5. 新旧决定在 structured state 中不会同时保持 active。
+6. 清晰请求能跳过 dig。
+7. 非代码任务不出现 Software Architect 或软件 pipeline。
+8. 任一 mode 完成后不自动进入 plan/implementation/reviewer。
 
-### D3 形态：新 skill + CLAUDE.md 纪律条目 ｜ 可逆性：高（删文件即回滚）
-
-- **否决 B**（改造现有 brainstorming）：骨架处处相反（一次一问 vs 批量、强制写 spec vs 可选落盘、转 writing-plans vs 断链），改造量 ≈ 重写还背历史包袱
-- **否决 C**（方法论全写进 CLAUDE.md）：常驻 +400~500 token，与作者刚完成的 context 瘦身矛盾；skill 的 progressive disclosure 平时只占 description ~120 token，触发时才加载 5KB 正文
-
-### D4 卸载 brainstorming ｜ 可逆性：中（可重装，但丢失触发惯性）
-
-- 理由：终态断链（writing-plans 未安装）+ 职责被 dig 完全接管 + 省 ~60 token/会话
-- 代价：其 "You MUST" 强命令式 description 的高触发可靠性，由 CLAUDE.md 纪律条目继承
-
-### D5 产出：纪要→无缝下游 + memory 沉淀 + 落盘默认关 ｜ 可逆性：高
-
-- 落盘不强制但留固定格式口子：作者有自研 harness 工程，frontmatter 三字段 + 五节固定标题是未来联动的解析契约
-- memory 沉淀防泛滥：每次 dig 至多 1-2 条、优先更新旧条目、跨项目事实建议用户手动进全局 CLAUDE.md（skill 不擅改全局配置）
-
-### D6 跨平台兼容：单文件通用化（2026-07-03）｜ 可逆性：高
-
-- 背景：开源后需支持 Codex/Cursor 等主流 coding agent（用户要求：CC 支持度最高，其余兼容，不支持 skill/斜杠注入的平台不管）。调研发现 SKILL.md 已是 [Agent Skills](https://agentskills.io) 开放标准（Anthropic 发布），Codex、Cursor、Gemini CLI、Copilot/VS Code 等数十家在官方采用名单：格式层兼容免费拿到，真正不可移植的只有正文 4 处 CC 专有引用。
-- **选定**：SKILL.md 仍是唯一事实源；4 处专有引用（AskUserQuestion / plan mode / memory / 全局 CLAUDE.md）改能力式措辞——CC 工具名保留置前，各附一句降级做法；语言策略 = 模型消费文本全英文（校准示例任务随之英文化）、用户显示层保留中英双格式（纪要五节标题的中文注释是 harness 解析契约，不动）；README 平台矩阵 CC+Codex+Cursor 详细、其余一句指向 agentskills.io + AGENTS.md 版纪律片段。
-- **否决**：adapters/ 平台适配层。N 份同步、漂移风险，破坏"仓库单一事实源"；代价是放弃按平台单独调优措辞的能力。
-- **否决**：SKILL.md 纯 CC 语境不动、降级只写 README——非 CC 模型看到的是含陌生工具名的指令，降级行为不可控；代价是 CC 用户也会读到降级从句（正文 +0 行，从句内联）。
-- 验收：Codex 实测冒烟**通过**（2026-07-03，codex-cli 0.142.5；模糊日志任务上完整产出三段假设（含两个任务特定 named trap）+ 单消息 4 问带选项/推荐/所测分叉 + 纪要确认前不动代码，~45k tokens）。安装路径实测收敛到跨 agent 共享目录 `~/.agents/skills/dig`（Codex 实测可发现，Cursor 官方文档亦列该目录），README 推荐一条软链服务多家；Cursor 文档级（项目 `.cursor/skills/`、用户 `~/.cursor/skills/` 为平台专属备选）。
-- 边界：不承诺非 CC 平台自动触发与行为质量等效，手动调用兜底；非 CC 反馈走 GitHub issue（带平台与版本）。
-
-### D7 v2.1：吸收外部同源实践（2026-07-07）｜ 可逆性：高（四处均为独立句子级改动，删句即回滚）
-
-- 触发：两篇外部文章对照分析（见 §2.1）——trq212《finding your unknowns》与 Claude Code 官方《Designing Loops》，加上从前者评论区顺藤挖出的 mattpocock/skills。
-- **选定**（SKILL.md 四处句子级吸收 + 两个观察项，不跑 eval 随 v2 同批观察）：
-  1. 提问门槛加"事实/决策"分界线：能自查（代码/文档/git 历史）的事实不问用户，问题只留给决策——来自 grilling，与"答案会改变做法"门槛正交互补（一个滤掉不改变做法的问题，一个滤掉不该由用户回答的问题）
-  2. ASK 节加 show-don't-ask 通道：品味类分叉（视觉/交互/措辞/命名）附 2-4 个具体草案让用户挑，不抽象提问——填补四象限中 unknown knowns（"看到才认得"）一格，问答对这类分叉天然低效；CC 上由 AskUserQuestion 的 option preview 承接
-  3. SYNTHESIZE 交接附实现期协议：memo 未覆盖的新分叉，低影响选保守默认、记入 Deviations、继续；触及数据模型/对外接口/不可逆时回来问——来自 trq212 核心论点"光提前规划不够，unknowns 会在实现深处冒出来"，是 🔍 delegated 语义向实现期的自然延伸；memo 五节标题契约未动
-  4. Success criteria 节加可验证性引导（measurable over sentiment）——来自 loops 文"检查越量化越容易自验证"，memo 是下游输入，可验证的标准让下游能自检
-  5. 观察项（不动 SKILL.md）：a) show-don't-ask 该用没用/被滥用；b) 用户一轮内连续答"不知道/你定"（unknown unknowns 密集、用户非需求权威的场景）——攒 3+ 条再决定是否给 LOOP 加教育模式分支（blind spot pass：先解释分叉的后果差异再问）
-- **否决**：全盘引入 Rumsfeld 四象限术语——SKILL.md 自有语言（✅🔍❓ + fork）已覆盖，叠第二套术语徒增加载与理解成本；代价是与外部文献的术语映射靠本记录承担
-- **否决**：引入完整 implementation-notes.md 流程（trq212 原方案）——dig 定位是前置挖掘，实现期流程超出边界；只取一句话协议作为交接纪律；代价是实现期记录的结构化程度低于原方案
-- **否决**：blind spot pass 立即入正文——触发场景（用户在陌生领域）的真实频率未知，先观察再加，避免 v1"清单走过场"教训在新分支上重演
-- **维持原判**：D1 否决"一次一问"不变——grilling 的存在恰好证明该流派真实而非稻草人，分歧在用户偏好（作者反挤牙膏）而非对错
-- 新代价（有意接受）：SKILL.md 108→110 行，三处原句加长，触发加载成本微增；show-don't-ask 给 ASK 步引入"判断分叉类型"的新自由度，误判（普通分叉滥做草案）列为观察项 5a
-- 定位叙事（非 SKILL.md）：README 引入"模型越强，瓶颈越从模型能力移向人澄清 unknowns 的能力"（trq212）与"dig 挖得净、loop 才跑得远"（两文合并图景）
-
-### D8 v2.2：批内独立性约束（2026-07-07）｜ 可逆性：高（一句话，删句即回滚）
-
-- 触发：用户对批量提问的结构性疑虑——一次给 4 问，Q1 的回答可能使 Q2 不该问，或使 Q2 的选项全错，批内表达不了这种依赖。
-- 分析：批内依赖三形态——**存在性依赖**（Q1 答案决定 Q2 该不该问）与**选项集依赖**（Q2 该问但选项随 Q1 变）是真问题；**仅推荐依赖**（问题与选项恒成立，只有推荐随 Q1 变）不是，条件式推荐即可解，卡它会把批量削成变相一次一问。现有机制已覆盖大半：loop 的 cite-the-answer 门槛本就是依赖问题的归宿（"born from answers"），假设先行使 ≤15 行草案的分叉行多为同层独立决策，AskUserQuestion 四问同框逐答也让用户能带着 Q1 的选择协调 Q2。缺口只在：SKILL.md 没有一句话禁止依赖问题混入同批，而 v1 教训 = 没写的纪律不被执行。
-- **选定 A**：ASK 节加批内独立性约束——存在或选项集依赖本批另一答案的问题不进本批，留给 loop（在那里它恰好满足 cite-the-answer 门槛）；仅推荐变化不算依赖，写条件式推荐留在批内。效果 = 独立问题保持并行（批量的长处）+ 依赖链交给 loop 逐层串行（一次一问的长处，grilling "resolving dependencies one-by-one" 的真正优势被结构性收编）；批量哲学不变。
-- **否决 B**（批内条件式问题，"若 Q1 选缓存：TTL？"）：选项组合爆炸、AskUserQuestion 无条件显隐能力、认知负担正是 grilling 指认的 bewildering 本尊。
-- **否决 C**（改回一次一问）：D1 既有否决维持——轮次爆炸 + 审讯感 + 丢失四问同框的全局视野（用户能看出这批问题共同勾勒的方向对不对，一次一问给不了）。
-- **否决 D**（不动措辞、信任模型自行处理）：v1 已证明没写的纪律靠不住。
-- 新代价（有意接受）：深依赖链每层多一轮（但每轮仍并行其余独立问题，且这正是 loop 的本职）；"独立性"判断引入新自由度——过严会把仅推荐依赖也拆批、批量退化为变相一次一问，列为观察项（README 观察清单 11）。
-
-### D9 v2.3：CONTEXT 读取门槛（2026-07-07）｜ 可逆性：高（一段话，删段即回滚）
-
-- 触发：用户对 CONTEXT 步成本的疑虑——session 开头大量读取"是否得不偿失"，以首个真实案例 `case/local-case-1.md`（并发监控改造）为据。
-- 案例复盘结论：该案例是深读的**正面样本**而非反例——诊断类任务（用户原话要求"仔细排查"），13 文件 1912 行零重复、顺藤摸瓜式定向排查、结论全部引用到（带行号）；排查推翻了提问的两个前提（bitmap 并非并发计数、"23 点开始不准"在代码中无对应机制），五个提问全部由排查产出。反事实：不读代码则顺着错误前提问出"bitmap 怎么优化"级伪问题，返工成本远超读取成本一个数量级。
-- 结构性缺口确认：提问侧有硬门槛（答案改变做法 + cite-the-answer + 收敛判据），读取侧零门槛（仅 "Read what's relevant" 一句）。本案例模型判断对了，但 v1 教训 = 没写的纪律不被执行；真实风险场景是需求类任务被同样深读（读的内容不改变任何问题）、dig 后换 session 读取沉没只剩纪要。
-- **选定 A+D**：CONTEXT 节加与提问对称的读取门槛——read only what could change the hypothesis or the questions，停止条件 = 能写出 named trap 与分叉（完全理解是工作阶段的事）；深度随任务类型分档：诊断/改造类挖掘即任务、深读正当且长排查前预告读什么为什么（体感优化）；新功能类读结构/入口/邻近惯例；方向/选型类文档即可。
-- **否决 B**（排查委托 Explore subagent、主会话只收摘要）：诊断类的高保真细节会被摘要抹掉（案例中"userData 塞 receivedTime 保证加减落同一 key"这类细节决定方案正确性）；总 token 不省、时间多一跳；仅适合新功能类结构侦察，不做默认。
-- **否决 C**（不动、攒反例再修）：A 成本仅一段话且不改变本案例行为（诊断类照样深读），等反例的收益不抵"没写的纪律不被执行"的风险。
-- 案例存档：observations.md 记为正面样本（"深读正当"界碑），未来疑似过度读取的反例以它为对照基准；case/ 目录含内部代码细节，不入公开仓库。
-- 新代价（有意接受）："任务类型分档"引入判断自由度——误判类型（把诊断类当功能类浅读，假设失去现实根基）列为观察项（README 观察清单 12）。
-
-### D10 v2.4：触发与任务规模解耦（2026-07-12）｜ 可逆性：高
-
-- 触发：真实使用中，task grading 把 dig 固定成“大任务流水线”的第一阶段（dig → 分段设计 → Software Architect → 落地计划），导致非代码任务也被送去软件架构评审；同时“小任务直接干”的规则会漏掉表达很短但存在多个现实解释的需求。
-- 根因：任务规模与需求清晰度是两个正交维度。规模决定 downstream execution 的强度；dig 只负责判断用户真正想要什么是否已经清楚。把两者绑定会同时制造“清晰大任务被强制挖”和“模糊小任务不准挖”两类错误。
-- **选定**：自动触发只看 intent / goal / scope / constraints / success criteria / hidden decisions 是否存在会改变交付方式的不确定性，与任务大小和代码/非代码领域无关；显式调用始终触发。
-- **终点边界**：clarity memo 确认后 dig 立即结束，只返回 memo；不指定 plan mode、implementation、reviewer、architecture review 或任何 task-size workflow。下游按领域、规模和风险独立路由。
-- **四象限验收**：清晰大任务跳过；模糊小任务触发；模糊非代码任务触发且不调用 Software Architect；清晰非代码任务跳过。显式 `/dig` 覆盖所有 skip。
-- **否决 A**（只给 Software Architect 加 non-code 排除）：只治 reviewer 误路由，保留规模绑定根因，模糊小任务仍会漏触发。
-- **否决 B**（“模糊或大任务”都触发）：继续让规模充当不确定性的错误代理，清晰大任务仍付出无意义澄清成本。
-- **否决 C**（只保留手动调用）：用户最需要 dig 时往往没意识到自己的要求存在隐藏分叉；放弃自动触发会失去核心价值。
-- 代价：自动触发从易判断的 size label 转向语义不确定性判断，边界更依赖模型；用全局 clarity gate 与正反例 eval 双兜底。回滚时恢复 v2.3 description 与 SYNTHESIZE 交接句即可。
-
-## 4. 失败模式自查
-
-| 失败模式 | 对策 |
-|---|---|
-| 自动触发失灵 | CLAUDE.md 纪律 + `/dig` 手动，双兜底 |
-| 挖掘太烦人 | clarity gate 只在真实分叉存在时触发 + 逐问准入门槛（cite-the-answer）+ 连续冒分叉转拆任务 + "开工"逃生口（v2 起两轮上限废除） |
-| 拆解方向跑偏 | ASK 前先亮三段假设（含标记分叉的开做草案），用户当场纠 |
-| 纪要被略过直接开干 | HARD-RULE：纪要确认前禁止实现/出 plan |
-| loop 不收敛 | 准入门槛两槽硬要求 + "no round quota" + too-big 信号；复发则按 D1-R1 回滚开关恢复上限 |
-| 假设先行被填表化 | "换个任务仍成立即是废话"自测句 + named-trap 正反例 + ≤15 行上限；观察分类"假设质量"跟踪 |
-
-## 5. 演进方向
-
-> 本节为 v1/v2 时期的快照。迭代现状、已发布版本（v2.1–v2.3）与后续计划以 [roadmap.md](roadmap.md) 为准。
-
-- **触发观察期**：收集"该触发没触发 / 不该触发触发了"的案例，迭代 description 措辞
-- **harness 联动**：落盘参数化（status 字段扩展、按条件自动落盘）
-- **门槛调节**：若小任务失误率偏高，删除 description 的 Skip 句回到全量哲学
-- **v2 观察期**：loop 收敛轮数分布、假设任务特异性（vs 模板化）、"开工"使用频率、校准示例是否被照抄到不相干任务
+旧版完整决策记录见 [history/v2.4-design.md](history/v2.4-design.md)。

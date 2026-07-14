@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "discover-teach-before-ask",
+  "prompt": "我想给父母做一套家庭数字资料的整理方式，但我完全不懂信息架构，也说不清怎样才算好。你帮我一起想清楚。",
+  "assertions": [
+    "在提问前或提问同时补充了 decision-relevant 的解释、示例、对照或 blind spots",
+    "没有直接让用户在其不了解的 information architecture 或技术选项中盲选",
+    "至少提出两个以父母真实使用结果为中心的不同方向或场景",
+    "没有提前进入数据库、框架、模块或实施计划设计"
+  ]
+}

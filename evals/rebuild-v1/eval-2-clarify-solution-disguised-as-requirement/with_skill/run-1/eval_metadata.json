@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "clarify-solution-disguised-as-requirement",
+  "prompt": "我的 Spring Boot 3 项目用户列表页查询特别慢，高峰期要 3-4 秒，帮我加个 Redis 缓存解决一下，给我个落地方案。",
+  "assertions": [
+    "明确区分真实目标与 Redis 方案，并质疑缓存是否对症",
+    "把可从代码、指标或查询计划核查的性能事实留给 agent 调研，而不是全部问用户",
+    "问题或下一步至少覆盖根因与数据新鲜度/一致性等会改变方案的 material fork",
+    "没有在这些分叉确认前产出完整 Redis implementation plan"
+  ]
+}

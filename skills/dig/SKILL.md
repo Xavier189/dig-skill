@@ -1,114 +1,95 @@
 ---
 name: dig
-description: Socratic requirements excavation for uncovering what the user actually wants before work begins. Use whenever intent, goals, scope, constraints, success criteria, or hidden decisions are unclear or admit materially different interpretations, regardless of task size or domain. Also use whenever the user explicitly asks to dig, clarify, excavate, or challenge the requirements. Do not trigger merely because a task is large, architectural, or complex when the request is already decision-complete. Skip clear requests and purely informational questions unless explicitly invoked. Produces a clarity memo the user confirms before downstream work resumes.
+description: Adaptive thought partnership for discovering what the user actually wants, clarifying materially ambiguous requirements, challenging requirements or designs for defects and blind spots, and structuring scattered or revised decisions into reliable shared understanding. Use when the user does not know what they want; asks to brainstorm, explore, dig, clarify, grill, challenge, or stress-test a direction; asks to structure or reconcile a discussion; or when intent, scope, constraints, success criteria, terminology, or hidden decisions admit materially different outcomes. Also use for explicit requirement or design review, or when a concrete contradiction or consequential defect makes proceeding unsound. Works across code and non-code domains. Skip clear execution requests, purely informational questions, and ordinary code review or debugging unless the underlying intent or design is requested. Produces shared understanding without owning downstream planning, implementation, or reviewer selection.
 ---
 
-# Dig — Socratic Requirements Excavation
+# Dig — Adaptive Thought Partner
 
-Surface what the user actually wants before any work begins. The stated request is a starting clue, not the requirement. Hidden intent, unstated constraints, and decisions silently delegated to you are where delivered work goes wrong.
+Turn uncertainty into shared understanding that is explicit, structured, and tested rather than merely plausible.
 
-<HARD-RULE>
-Once dig is invoked, do not produce the requested deliverable or present a final plan until the clarity memo (Step 4) is confirmed by the user. Explicit invocation always counts, even when the request appears clear. After confirmation, end the dig and return control to the caller; task sizing, planning, implementation, and review belong to the downstream workflow.
-</HARD-RULE>
+Dig has three cognitive modes:
 
-Match the user's language; keep technical terms in their original form.
+- **Discover** — help the user find a direction when they lack a goal, vocabulary, examples, or a basis for choosing.
+- **Clarify** — expose and resolve decisions that would materially change the outcome.
+- **Challenge** — test an existing requirement or design for contradictions, false assumptions, missing boundaries, failure modes, and better alternatives.
 
-## The bar every question must clear
+Use the smallest mode or combination that fits. Task size does not choose the mode. The modes may transition as the conversation changes, but never run all three as ceremony.
 
-Ask only what would change what you deliver. Before asking anything, name two realistic answers that would lead to different approaches; if every likely answer leads to the same action, you already know enough — don't ask. And a fact you can look up yourself — in code, provided materials, connected sources, official sources, docs, or history — never goes to the user, however much it would change the approach: look it up; questions are reserved for decisions, which are the user's alone. This bar outranks every step below: a step performed without it is theater.
+## Boundary
 
-## Process
+When dig precedes another deliverable, pause that downstream work until the relevant shared understanding is accepted. When discovery, clarification, or critique is itself the requested deliverable, do that work directly — do not put a fake memo-approval gate in front of it.
 
-### 0. CONTEXT — absorb before hypothesizing
+Dig ends when its current thinking job is complete. Do not prescribe plan mode, implementation, architecture review, Software Architect, or any other downstream workflow. Those choices belong to the task's domain, risk, and the user's instructions.
 
-Read what's relevant: materials the task touches, available sources, and — if your platform keeps persistent memory — stored long-term goals and recurring preferences. Look for the user's bigger picture — a deliverable that satisfies the literal request but conflicts with their real objective is still a failure.
+Match the user's language and preserve technical terms in their original form.
 
-Reading has the same bar as asking: read only what could change the hypothesis or the questions, and stop once you can name the traps and forks — full understanding is the downstream work phase's job, not this step's. Depth follows the uncertainty: for diagnose-and-rework requests the excavation IS the point — dig until the mechanism is pinned, and say what you are about to read and why, so the silence before the first question is accounted for; for build-or-change requests read the relevant structure, inputs, and neighboring conventions; for decisions, research, or strategy, read the evidence and existing commitments that could change the choice.
+## 1. ORIENT — ground before interacting
 
-### 1. HYPOTHESIZE — commit to an interpretation the user can attack
+Use conversation context, provided materials, relevant files, connected sources, history, and stable user preferences before asking anything. Never ask the user for a fact you can obtain safely yourself; research facts, ask the user about intent, values, trade-offs, and hard-to-reverse decisions.
 
-Before asking anything, present a working hypothesis in three parts. Write every part so the user could point at a line and say "no — that's wrong". Self-test: if a sentence would survive unchanged in a different task's hypothesis, it is filler — delete it.
+Read only what could change the framing, the questions, or the critique. Stop once you can name the important unknowns or defects; full implementation understanding belongs downstream.
 
-1. **What you actually want** — the outcome behind the stated request, in one or two sentences. If the request is a solution ("add a Redis cache"), state the problem you believe it is meant to solve ("the list page is slow at peak") — the gap between those two is where digs pay off.
-2. **Where this goes wrong** — the one or two places THIS task is most likely to fail or be misread: a named trap ("paginated filtered lists are the worst case for caching — key explosion, low hit rate"), never a generic risk ("scope may creep").
-3. **If forced to start now, I would…** — a concrete sketch, one decision per line, each line marked:
-   - ✅ explicit — the user already said it
-   - 🔍 delegated — you'd default to X, but the user should ratify (strategy, structure, trade-offs, public commitments, anything hard to reverse); recommend, never silently decide
-   - ❓ ambiguous — you can't even pick a default
+Reflect the starting point briefly so the user can correct it. Do not ask generic questions already answered by context.
 
-Keep the whole hypothesis under ~15 lines — it must be correctable on sight. The sketch is bait: a concrete plan draws corrections that an abstract list of unknowns never will.
+## 2. ROUTE — identify the uncertainty
 
-Before showing it, stress-test it from six angles: real goal (is the ask a means to something unstated?), scope (what does the user assume is in or out that you don't?), success criteria (would you both agree it worked?), failure (what breaks first, and who notices?), dependencies & constraints (what must exist, or must not change?), long-term fit (does the sketch fight the user's bigger picture?). These are attack angles, not sections to fill — never write one line per angle. Most angles won't bite; the two or three that could overturn part 1 or reroute part 3 are exactly where your questions come from.
+Infer the route without asking the user to choose a mode when the signal is clear:
 
-If the stress-test leaves more than ~8 unresolved forks, the task is too big for one dig — propose splitting it into sub-tasks instead of interrogating.
+| Signal | Route | Load |
+|---|---|---|
+| “我也不知道想做什么”、缺少判断标准、只能看到才知道 | Discover | `references/discover.md` |
+| 目标存在，但现实答案会导向不同结果 | Clarify | `references/clarify.md` |
+| 已有 requirement/design，用户要挑错，或已看到实质矛盾 | Challenge | `references/challenge.md` |
+| 信息已经足够，只需整理、对齐修订或转换输出 | STRUCTURE-only | `references/structure.md` |
 
-### 2. ASK — batched questions grown from the weakest points
+Important distinctions:
 
-Present the hypothesis, then ask — via AskUserQuestion in Claude Code, or as a numbered list in a single message on platforms without a structured question tool: up to 4 questions per batch, ordered by impact, each with concrete options and a recommendation. Never drip-feed one question per turn. Ask everything you already know is open now — the loop below exists for questions born from answers, not for rationing known ones. And batch only independent questions: one whose existence or option set depends on how another question in this batch is answered is not askable yet — hold it for the loop, where it is exactly a question born from that answer and passes the gate by citing it. Recommendation-only coupling is not dependence: keep the question in the batch and write the recommendation conditionally ("if peak-only, X; otherwise Y").
+- A decision-complete request may still be unsound. Enter Challenge only when the user asks for it or a material defect is already visible; do not turn every clear request into mandatory review.
+- A user who lacks the knowledge to choose does not need a better multiple-choice question first. Teach, research, show references, or prototype before asking.
+- A vague preference and a missing fact are different: show concrete alternatives for the former; look up the latter.
 
-Every question must:
+## 3. WORK — follow the active mode
 
-- name what it tests — which part of the hypothesis, which 🔍/❓ fork. A question you can't tie to the hypothesis (including "anything else I should know?" filler) is a checklist reflex: cut it.
-- clear the bar above — some realistic answer must change the approach.
-- refuse solutions disguised as requirements — trace "add a cache" back to the slowness it is meant to fix before designing the cache.
+Read and apply only the active mode reference. If a later answer changes the uncertainty type, say what changed, load the new reference, and transition cleanly.
 
-Some forks cannot be asked, only shown. When a fork is a taste call the user will only recognize on sight — visual style, interaction feel, wording, naming — an abstract question buys nothing ("what style do you want?" returns "not sure"): attach 2-4 concrete sketches for the user to react to (as option previews in AskUserQuestion on Claude Code; inline in the message elsewhere) instead of asking for a description they cannot give. A taste fork is not resolved merely because you can choose a plausible default; do not bury that default in the memo before the user has seen alternatives.
+Across all modes:
 
-If the stress-test leaves no 🔍 or ❓ standing, say so and go straight to the memo — a dig with zero questions is a legitimate outcome, not a failure to perform.
+1. **Make your reasoning attackable.** Present frames, hypotheses, or findings concretely enough for the user to reject.
+2. **Follow consequence, not a checklist.** Ask or investigate only where different answers, facts, or failures would change the frame, decision, or evaluation.
+3. **Use recognition over recall.** When the user will know only on sight, show 2–4 examples, sketches, references, or cheap prototypes.
+4. **Preserve fog honestly.** If a question cannot yet be stated sharply, mark it `not yet specified`; do not manufacture precision.
+5. **Reflect deltas.** After meaningful input, state only what changed in the shared model and why.
 
-Calibrate every batch against **Shallow vs deep** at the end of this file.
+### Question pacing
 
-### 3. LOOP — dig until answers stop moving the hypothesis
+- Ask a dependent question by itself when its answer changes the existence or options of the next question.
+- Batch 2–4 independent, concrete questions when seeing them together helps the user understand the decision surface.
+- Use the user's preferred pace when known. “One at a time” and “batch everything” are tools, not doctrines.
+- Recommendations are useful in Clarify and advisory moments. In early Discover work, avoid anchoring the user before they have seen the meaningful space. In Challenge, lead with evidence-backed findings and ask only where owner judgment is actually required.
 
-Each answer can expose a fork that was invisible before it. A loop of batches is not drip-feeding: a new round is justified only by new information from the last one. After every batch:
+## 4. STRUCTURE — maintain shared state
 
-1. **Update the hypothesis out loud, delta only** — "your answer on X changes the sketch: …". Never restate what didn't move.
-2. **Admission gate for follow-ups** — a new question earns its place only if it states, inside itself: (a) which answer opened it — quote or closely paraphrase the user's words — and (b) which fork it decides. Shape: "You said writes must be visible immediately — that rules out plain TTL, so: invalidate on write, or drop caching for this query?" If you can't fill both slots, you are re-running a checklist, not following a thread: drop it.
-3. **Converge** when a round's answers open no admissible follow-ups and every 🔍/❓ is resolved or explicitly deferred. Say you've converged and move to the memo — never pad a final round to look thorough. There is no round cap and no round quota: one round often suffices; the gate decides, not ambition.
-4. **Too big?** If two consecutive rounds each open as many new forks as they close, stop interrogating — the request is several tasks wearing one sentence. Propose a split and dig only the first sub-task.
-5. **Escape hatch** — if the user says "开工", "start", "just do it", or equivalent, stop asking immediately: fold every unresolved item into the memo's Open items with the default you will apply, and present the memo for its usual confirmation. This stops questions, not show-don't-ask: if an unresolved taste fork would materially change the result, include 2-4 concrete sketches in or immediately before the memo and mark the recommended default, so the user can correct it during confirmation.
+Keep a lightweight structured model throughout the conversation. Distinguish user-confirmed requirements from agent assumptions and rejected ideas:
 
-### 4. SYNTHESIZE — the clarity memo
+- `candidate` — a direction still being explored
+- `confirmed` — explicitly ratified by the user or authoritative source
+- `assumed` — a provisional agent default, visibly unconfirmed
+- `invalidated` — superseded or disproved; never silently revive it
+- `deferred` — deliberately postponed
+- `risk` — a known concern or accepted trade-off
 
-Present a memo the user can verify in ~10 seconds, exactly five sections:
+For a short exchange, maintain this in context and render only what helps. For multi-round work, revised decisions, handoff, or persistence, read `references/structure.md` and update the model incrementally so a final summary cannot erase precise constraints.
 
-- **Goal（真实目标）** — the actual objective, one or two sentences
-- **Decisions（已拍板）** — each ratified decision, one line each
-- **Boundaries（明确不做）** — explicit exclusions
-- **Success criteria（成功标准）** — checks the result can be verified against; prefer observable or measurable evidence over vague sentiment ("participants can name the three decisions and owners", not "the workshop feels useful")
-- **Open items（开放项）** — deferred questions, risks, remaining assumptions
+## 5. CONVERGE — use mode-specific completion
 
-Get explicit confirmation, then end the dig. Return the memo to the caller as downstream input; do not prescribe plan mode, implementation, a reviewer, architecture review, or any task-size workflow. Those choices are independent of requirements excavation and must follow the task's domain, size, and risk. No dig catches every fork before work resumes: when downstream work hits a fork the memo does not cover, take the conservative option, log it under a `Deviations` note, and keep going; but stop and come back to ask when it changes an external contract, public commitment, irreversible action, or anything else hard to reverse.
+- **Discover completes** when the user has a meaningful direction, shortlist, or explicit decision to remain exploratory.
+- **Clarify completes** when every material fork is resolved, delegated with a visible default, or deferred.
+- **Challenge completes** when material findings are accepted, corrected, rejected with rationale, or recorded as accepted risks.
 
-### 5. SETTLE — persist what outlives the task
+Render the lightest useful artifact from `references/structure.md`: Direction Map, Clarity Memo, Challenge Report, Requirements Brief, or no file at all. A PRD/spec is an optional renderer only when requested, never the automatic terminal state.
 
-- Long-lived information only: cross-task goals (e.g. an ongoing side project this task serves), recurring preferences, domain background. Nothing task-local.
-- Only persist memory when the user or an authorized harness explicitly requests it. At most 1-2 memory writes per dig; check existing memories first and prefer updating over creating. No persistent memory on your platform? Skip the writes.
-- Clearly cross-project facts: suggest the user add them to the global instructions file (CLAUDE.md, AGENTS.md, or your platform's equivalent) — do not edit global config yourself.
-- Memo persistence is OFF by default. When the user asks to save (or a harness integration requests it), write to `docs/clarity/YYYY-MM-DD-<slug>.md` with frontmatter `task`/`date`/`status` and the five memo sections as fixed headings — that structure is the machine-readable contract.
+If the user says “开工”, “继续”, or equivalent, stop optional excavation. Preserve unresolved material items and defaults in the shared model, then return control downstream. Still stop for an external contract, public commitment, irreversible action, safety boundary, or other decision the user must own.
 
-## Shallow vs deep — calibrate here
+## Reviewer policy
 
-User request: "Our user list page takes 3-4 seconds at peak. Add a Redis cache for it — give me an implementation plan."
-
-Shallow — each looks professional; none changes whether caching is even the right move:
-
-- "Redis or Caffeine?"
-- "What TTL — 5 minutes or 30?"
-- "Cache the full page response, or per-user entries?"
-
-These pick parameters on top of an unexamined plan; they accept the disguised solution as the requirement.
-
-Deep — each names the fork it decides:
-
-- "Is the page slow only at peak, or always?" — always-slow points at the query itself, where an index might fix it outright; peak-only points at pool/concurrency, where a cache barely helps. Decides whether Redis is the right project at all.
-- "After someone edits a user, how stale may the list be?" — "must be fresh immediately" makes invalidation the real project and query optimization probably cheaper; "minutes are fine" makes plain TTL viable. Decides the shape — or the existence — of the cache design.
-- "Has anyone measured where the 3-4 seconds go?" — if not, the sketch starts with EXPLAIN and pool metrics, not Redis; a 30-minute index beats a permanent consistency tax. Decides step 1 of the work.
-
-A legitimate round-2 follow-up, in the admissible shape:
-
-- "You said it's only slow at peak and the connection pool maxes out — that moves the diagnosis from 'slow query' to 'connection starvation', so: raise the pool, or first find what's hogging connections?"
-
-Copy the moves, never the content. The deep moves are: trace the intent, price the consequence, attack your own sketch. Never reuse these literal questions on a task that is not this task.
-
-A non-software request follows the same logic. "Book an offsite at a countryside villa" may disguise different goals: rewarding the team, repairing collaboration, or making a concrete decision. Dates, headcount, and budget matter, but none decides whether an overnight villa is the right format; the intended change in the team does.
+Default to inline, domain-aware challenge. An independent reviewer is an escalation for explicit user request, high stakes, or a genuinely valuable independent perspective. Select it by domain; never route a non-software task to Software Architect, and never make any reviewer a mandatory consequence of dig.

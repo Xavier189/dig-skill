@@ -1,80 +1,120 @@
 {
   "skill_name": "dig",
-  "version_under_test": "v2.4",
+  "version_under_test": "rebuild-v1",
   "evals": [
     {
       "id": 0,
-      "name": "ambiguous-small-task-triggers",
-      "prompt": "把登录页的提交按钮改得更专业一点，这应该是个小改动，直接帮我改吧",
-      "expected_output": "任务虽小，但“更专业”存在会改变交付的视觉与文案分叉，因此进入 dig；给出具体草案供用户反应，而不是直接修改或空问风格",
+      "name": "discover-no-direction-without-anchoring",
+      "prompt": "最近下班后总觉得时间浪费了，想做点对自己长期有积累的事，但我也不知道具体想做什么。别急着给执行计划，帮我把真正值得尝试的方向想出来。",
+      "expected_output": "进入 Discover；从真实 starting point 和判断标准出发，给出多个后果不同的 plausible frames 或 blind-spot exploration，不把 agent 的第一个猜测写成用户唯一真实目标。",
       "files": [],
       "assertions": [
-        "尽管用户称为小改动并要求直接修改，输出仍因“更专业”存在真实分叉而执行 dig",
-        "输出包含任务特定的三段 hypothesis，或在无问题时直接形成五节 clarity memo",
-        "对视觉或文案 taste call 给出 2-4 个具体草案，而不是只问“想要什么风格”",
-        "未直接声称已经修改按钮"
+        "识别这是 direction uncertainty，并采用 Discover/探索行为而不是 Clarify 的单一实现假设",
+        "在要求用户选择前提供 2-4 个后果不同的方向、判断维度、示例或 blind-spot explanation",
+        "没有把某一个方向断言为用户唯一的真实目标，也没有直接给完整执行计划",
+        "没有推荐 plan mode、implementation、Software Architect 或固定下游流程"
       ]
     },
     {
       "id": 1,
-      "name": "decision-complete-large-task-skips",
-      "prompt": "按以下已确认决策直接写迁移执行清单，不要重新讨论方案：保持 PostgreSQL；使用双写 7 天；每批迁移 5000 行；错误率超过 0.1% 自动停止；回滚只切读流量，不删除新库数据；变更窗口是周日 02:00-04:00；负责人和审批人已经确定。",
-      "expected_output": "请求虽然复杂且影响大，但已经 decision-complete，因此不启动 dig、不要求 clarity memo，直接输出符合给定决策的执行清单",
+      "name": "discover-teach-before-ask",
+      "prompt": "我想给父母做一套家庭数字资料的整理方式，但我完全不懂信息架构，也说不清怎样才算好。你帮我一起想清楚。",
+      "expected_output": "识别用户缺少选择依据；先解释与结果相关的维度并展示具体例子或 contrasting frames，再提出用户有能力回答的问题，不让用户盲选技术架构。",
       "files": [],
       "assertions": [
-        "未启动 hypothesis/ASK/clarity memo 流程",
-        "未因为任务大或涉及架构而要求重新确认既定决策",
-        "直接输出迁移执行清单，并保留用户给出的阈值、窗口和回滚约束"
+        "在提问前或提问同时补充了 decision-relevant 的解释、示例、对照或 blind spots",
+        "没有直接让用户在其不了解的 information architecture 或技术选项中盲选",
+        "至少提出两个以父母真实使用结果为中心的不同方向或场景",
+        "没有提前进入数据库、框架、模块或实施计划设计"
       ]
     },
     {
       "id": 2,
-      "name": "ambiguous-non-code-no-architect",
-      "prompt": "帮我策划一次部门复盘会，最近大家协作有点乱，我希望这次能真正解决问题",
-      "expected_output": "进入跨领域需求挖掘，追溯复盘会真正要改变什么；不得引入 Software Architect、软件架构评审、并发或代码实现流程",
+      "name": "clarify-solution-disguised-as-requirement",
+      "prompt": "我的 Spring Boot 3 项目用户列表页查询特别慢，高峰期要 3-4 秒，帮我加个 Redis 缓存解决一下，给我个落地方案。",
+      "expected_output": "进入 Clarify；把 Redis 视为待验证方案，先核查性能事实、真实瓶颈和一致性决策，再决定缓存是否成立。",
       "files": [],
       "assertions": [
-        "输出提出可证伪的真实目标假设，并指出至少一个与部门协作场景相关的 named trap",
-        "问题会区分不同结果会导致的会议形式分叉，而非只问日期、人数和预算",
-        "未推荐 Software Architect、架构评审、DBA、代码实现或 docs/plans",
-        "未在用户回答前给出完整活动方案"
+        "明确区分真实目标与 Redis 方案，并质疑缓存是否对症",
+        "把可从代码、指标或查询计划核查的性能事实留给 agent 调研，而不是全部问用户",
+        "问题或下一步至少覆盖根因与数据新鲜度/一致性等会改变方案的 material fork",
+        "没有在这些分叉确认前产出完整 Redis implementation plan"
       ]
     },
     {
       "id": 3,
-      "name": "clear-non-code-skips",
-      "prompt": "把这句话改得更简洁，保留原意，只输出改写结果：我们目前正在对现有流程进行进一步的优化和改善。",
-      "expected_output": "这是清晰的非代码请求，直接改写，不启动 dig",
+      "name": "challenge-non-code-design-finding-first",
+      "prompt": "这是我设计的部门复盘会：领导先用 40 分钟总结问题，然后每个人按顺序说明自己哪里做错了，最后由领导决定整改项。我的目标是让大家以后更主动暴露协作问题。请明确用 dig 审核这个设计，看有没有缺陷。",
+      "expected_output": "进入 Challenge，直接指出流程与目标之间的激励/心理安全冲突及其后果，保留成立之处并给最小修订；只对真正的 owner trade-off 提问。",
       "files": [],
       "assertions": [
-        "只输出简洁改写结果",
-        "未启动 hypothesis、提问或 clarity memo"
+        "先给出至少一个具体 finding、依据和后果，而不是只用问题反问用户",
+        "识别公开自我归责、领导定调或单向裁决与主动暴露问题目标之间的实质张力",
+        "给出至少一个保持目标但降低缺陷的具体修订或实验，并说明 trade-off",
+        "没有调用或推荐 Software Architect、架构评审、代码实现或 docs/plans"
       ]
     },
     {
       "id": 4,
-      "name": "explicit-invocation-overrides-skip",
-      "prompt": "请明确使用 dig 帮我再挖一下这个需求，即使你觉得已经很清楚：把 README 一级标题从 Dig 改成 dig（探骊），其他内容不动。",
-      "expected_output": "显式调用覆盖清晰请求的 skip；执行 dig，若没有真实分叉则说明零问题收敛并直接给出五节 clarity memo，等待确认后才修改",
+      "name": "structure-revised-decisions-with-state",
+      "prompt": "只帮我把下面这段讨论结构化，不要继续设计或写计划：最初决定活动面向全公司并录像；后来因为隐私风险，我们改成只限产品部、不录像。预算 2 万是你暂定的，我还没确认。日期 8 月 12 日已经确认。场地是否外包暂缓，如果最终不开活动则默认不产生场地费用。",
+      "expected_output": "执行 STRUCTURE-only；把旧决定标为 invalidated，把新范围和日期标为 confirmed，预算标为 assumed，场地标为 deferred，并保留对应默认/后果。",
       "files": [],
       "assertions": [
-        "没有因为请求清晰而跳过显式 dig",
-        "没有制造无意义问题；若无真实分叉，明确零问题收敛",
-        "输出五节 clarity memo 并等待确认",
-        "未声称已经修改 README"
+        "全公司和录像被明确标为已推翻/invalidated，而不是与新决定并列为 active requirement",
+        "只限产品部、不录像和 8 月 12 日被标为 confirmed",
+        "预算 2 万被标为 assumed/unconfirmed，没有伪装成用户决定",
+        "场地外包被标为 deferred，并记录不开活动时不产生费用的默认；没有继续设计或写计划"
       ]
     },
     {
       "id": 5,
-      "name": "solution-disguised-as-requirement",
-      "prompt": "我的 Spring Boot 3 项目用户列表页查询特别慢，高峰期要 3-4 秒，帮我加个 Redis 缓存解决一下，给我个落地方案",
-      "expected_output": "识别 Redis 是预设方案而非真实目标，先追溯慢的根因与一致性约束；确认 memo 前不产出最终实现",
+      "name": "clear-one-step-request-skips",
+      "prompt": "把这句话改得更简洁，保留原意，只输出改写结果：我们目前正在对现有流程进行进一步的优化和改善。",
+      "expected_output": "这是清晰的一步请求，直接改写，不进入 Discover、Clarify、Challenge 或 STRUCTURE ceremony。",
       "files": [],
       "assertions": [
-        "输出包含任务特定的三段 hypothesis，而不是机械化拆解表",
-        "至少一个问题追溯性能根因并质疑缓存是否对症",
-        "关键决策带推荐，但未静默替用户拍板",
-        "未产出依赖用户答案的完整 Redis 实现或落地计划"
+        "只输出简洁改写结果",
+        "没有提出问题、mode 分析、shared-understanding artifact 或 reviewer"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "explicit-dig-clear-request-zero-theater",
+      "prompt": "请明确使用 dig 检查一下这个要求：把 README 一级标题从 Dig 改成 dig（探骊），其他内容不动。不要实际修改文件。",
+      "expected_output": "显式调用生效，但不制造不存在的分叉；说明要求已清楚、轻量结构化当前理解并停止，不进入 plan/reviewer/implementation。",
+      "files": [],
+      "assertions": [
+        "响应显式执行 dig，而不是完全忽略 skill",
+        "没有制造无意义问题或虚构风险",
+        "准确保留只改一级标题、其他内容不动、不得实际修改三个边界",
+        "没有进入 implementation、plan mode 或 reviewer"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "material-defect-auto-challenge",
+      "prompt": "按这个已经确认的方案直接写一份发给员工的通知：通知里公开每个人的绩效分数和全员排名，目的是减少大家对评价结果的猜疑；其他细节都定了，不要重新讨论。",
+      "expected_output": "尽管请求 decision-complete，仍因公开个人绩效带来的明显隐私、激励与组织风险做最小必要 Challenge；直接说明 defect 和 safer alternatives，不扩张成完整流程。",
+      "files": [],
+      "assertions": [
+        "识别公开个人分数和排名是 material defect，而没有因 decision-complete 直接照写通知",
+        "直接说明至少一个具体风险、后果和更小风险的替代方案",
+        "只暂停需要 owner 承担的关键决定，没有重新审问全部已确认细节",
+        "没有推荐 Software Architect 或软件工程流程"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "decision-complete-large-task-still-skips",
+      "prompt": "按以下已确认决策直接写迁移执行清单，不要重新讨论方案：保持 PostgreSQL；使用双写 7 天；每批迁移 5000 行；错误率超过 0.1% 自动停止；回滚只切读流量，不删除新库数据；变更窗口是周日 02:00-04:00；负责人和审批人已经确定。",
+      "expected_output": "请求复杂但没有可见矛盾且 decision-complete，跳过 dig，直接输出执行清单并保留全部阈值和边界。",
+      "files": [],
+      "assertions": [
+        "没有因任务大、迁移或架构关键词而启动 dig ceremony",
+        "直接输出执行清单",
+        "保留双写 7 天、5000 行、0.1%、回滚和窗口等明确约束",
+        "没有要求 Software Architect 或重新确认既定决策"
       ]
     }
   ]

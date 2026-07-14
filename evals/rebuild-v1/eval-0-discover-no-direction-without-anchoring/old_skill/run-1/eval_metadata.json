@@ -1,0 +1,11 @@
+{
+  "eval_id": 0,
+  "eval_name": "discover-no-direction-without-anchoring",
+  "prompt": "最近下班后总觉得时间浪费了，想做点对自己长期有积累的事，但我也不知道具体想做什么。别急着给执行计划，帮我把真正值得尝试的方向想出来。",
+  "assertions": [
+    "识别这是 direction uncertainty，并采用 Discover/探索行为而不是 Clarify 的单一实现假设",
+    "在要求用户选择前提供 2-4 个后果不同的方向、判断维度、示例或 blind-spot explanation",
+    "没有把某一个方向断言为用户唯一的真实目标，也没有直接给完整执行计划",
+    "没有推荐 plan mode、implementation、Software Architect 或固定下游流程"
+  ]
+}

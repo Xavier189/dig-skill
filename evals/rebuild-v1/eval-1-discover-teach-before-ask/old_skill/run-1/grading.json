@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "在提问前或提问同时补充了 decision-relevant 的解释、示例、对照或 blind spots",
+      "passed": true,
+      "evidence": "先解释找得到、放得进、丢不了、交得出四个判断维度及例子。"
+    },
+    {
+      "text": "没有直接让用户在其不了解的 information architecture 或技术选项中盲选",
+      "passed": true,
+      "evidence": "问题均使用父母操作和家庭资料场景，没有要求用户理解 information architecture 术语。"
+    },
+    {
+      "text": "至少提出两个以父母真实使用结果为中心的不同方向或场景",
+      "passed": true,
+      "evidence": "列出找资料、避免丢失、家庭交接、家庭回忆等多个真实使用场景。"
+    },
+    {
+      "text": "没有提前进入数据库、框架、模块或实施计划设计",
+      "passed": true,
+      "evidence": "没有进入数据库、框架、模块或实施计划设计。"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1
+  },
+  "claims": [],
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Assertions are specific and verifiable against the response; no material eval gap observed."
+  }
+}

@@ -1,8 +1,8 @@
-# Challenge — Stress-Test Requirements and Designs
+# Challenge — Stress-Test Proposals and Decisions
 
 Use Challenge when the user explicitly asks for critique, review, grilling, stress-testing, or design validation, or when an already-visible material defect makes silent execution unsound.
 
-For an incomplete PRD, use Clarify for genuinely missing owner decisions and Challenge for contradictions, invalid assumptions, untestable claims, or unsafe boundaries. Document length and formality do not determine completeness.
+The same starting point may contain both missing owner decisions and visible defects. Use Clarify for the former and Challenge for contradictions, invalid assumptions, untestable claims, or unsafe boundaries. Source, format, domain, lifecycle phase, and size do not determine validity.
 
 Challenge is not a software architecture ceremony. It applies to product ideas, policies, meetings, writing structures, operating procedures, technical designs, and any other consequential proposal.
 
@@ -75,4 +75,4 @@ Challenge completes when each material finding is:
 - deferred with an explicit consequence; or
 - recorded as an accepted `risk`.
 
-Render a Challenge Report or a revised Requirements Brief when useful. Do not automatically invoke a reviewer, write an implementation plan, or begin implementation.
+Render a Challenge Report, revised Decision Brief, Requirements Brief, or proposal when useful. Do not automatically invoke a reviewer, write an implementation plan, or begin implementation.

@@ -25,6 +25,8 @@
 - [x] Boundary：无 Software Architect、无自动 plan/implementation
 - [x] candidate 与 v2.4 baseline 对照
 - [x] 生成 benchmark 与 static review viewer
+- [x] input-agnostic metamorphic eval：route 9/9，assertions 34/35
+- [ ] Clarify final evidence-gate rerun：已修正文案，2026-07-14 因 Codex 额度耗尽未能复验
 
 ## Phase 3：收敛与合并准备
 
@@ -57,6 +59,8 @@
 7. 哪些真实业务/专业任务稳定重复，足以提取窄 skill；不预先建立通用 post-dig skill tree。
 8. 跨 agent 的 inline Snapshot 是否足够，还是反复出现状态丢失，值得增加 dispatch adapter。
 9. 跨 session 使用是否足够频繁且摩擦稳定，值得增加 persistence/resume adapter；在此之前不让 dig 默认自动落盘。
-10. 一句话需求与不完整 PRD 的真实触发样本中，是否仍出现“因字数短而过度追问”或“因 PRD 格式完整而漏掉 material fork/defect”。
+10. 跨 source、carrier、domain、lifecycle phase 与 task size 的真实样本中，same thinking state 是否保持 same gate；重点观察局部反馈是否再次被错误提升为核心 trigger。
+11. STRUCTURE-only 是否误吞普通改写、文件整理、数据转换或摘要任务。
+12. Clarify 的 evidence gate 是否稳定阻止“没有现状证据就先处方化”；额度恢复后优先重跑 invariance ID 14。
 
 旧版路线保存在 [history/v2.4-roadmap.md](history/v2.4-roadmap.md)。

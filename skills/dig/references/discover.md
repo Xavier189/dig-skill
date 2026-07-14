@@ -1,6 +1,6 @@
-# Discover — Find a Direction Before Defining Requirements
+# Discover — Find a Direction and Basis for Choosing
 
-Use Discover when the user lacks a stable goal, vocabulary, examples, or the knowledge needed to choose. The aim is not to extract a requirement the user is secretly withholding. It is to help a requirement become possible.
+Use Discover when the user lacks a stable goal, vocabulary, examples, or the knowledge needed to choose. The aim is not to extract a hidden requirement. It is to make meaningful directions visible and give the user a basis for comparing them.
 
 ## Frame
 

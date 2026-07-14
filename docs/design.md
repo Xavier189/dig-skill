@@ -23,9 +23,9 @@ v2.4 把需求清晰度与任务大小解耦，并解决了非代码任务被送
 
 这些前提只适用于“目标存在但有决策分叉”的 Clarify 场景。
 
-用户原始需求更宽：不知道想做什么时需要共同发现；已有 requirement/design 时需要检验缺陷。更深的问题不是“提问还不够好”，而是三种不确定性被压进了同一种提问流程。
+用户原始需求更宽：不知道想做什么时需要共同发现；已有 proposal/decision 时需要检验缺陷。更深的问题不是“提问还不够好”，而是三种不确定性被压进了同一种提问流程。
 
-日常工作中的主输入并不是 greenfield 项目，而是产品经理的一句话需求、ticket、讨论结论或不完整 PRD。它们主要进入 Clarify；当文档已有矛盾、错误假设或危险边界时进入 Challenge。输入长度和文档形式都不是 trigger，material uncertainty/defect 才是。
+任何具体输入都只是 starting point，不是产品主入口。产品经理的一句话、自发重构、完整 PRD、代码库、个人项目、部署请求、资料目录和非代码方案，都使用同一个 state gate。`source / carrier / domain / lifecycle phase / task size` 不选择 mode；真正的 trigger 是 direction、decision 或 validity uncertainty。
 
 ## 3. 三类不确定性
 
@@ -37,6 +37,14 @@ v2.4 把需求清晰度与任务大小解耦，并解决了非代码任务被送
 
 这三类分别映射到 Discover、Clarify、Challenge。它们可以串联，但不是固定阶段。
 
+### 3.1 路由不变量
+
+1. **Same thinking state, same gate**：来源、载体、领域、生命周期和大小改变时，只要思考状态不变，路由就不变。
+2. **Facts are not owner decisions**：只缺现状、根因、可行性或其他可核查事实时先 inspect/research/diagnose/prototype；证据暴露新的决定或缺陷时才进入 dig。
+3. **Alternatives are not automatically ambiguity**：agent 可在既定 contract 内自行处理的局部、可逆选择，不升级成 Clarify。
+4. **STRUCTURE preserves decision state**：STRUCTURE-only 只保存、对齐或交接 shared decisions，不承接普通改写、格式化、文件整理、数据转换或内容摘要。
+5. **Examples are calibration, not policy**：真实反馈先表达成被破坏的不变量；具体场景进入 [scenarios.md](scenarios.md) 与 eval，而不是直接写成新的核心 trigger。
+
 ## 4. 架构
 
 ```text
@@ -44,9 +52,12 @@ ORIENT
   读取会改变 framing / question / critique 的证据
       ↓
 ROUTE
-  Discover / Clarify / Challenge
-      ↓                         ↘ 必要时切换 mode
-WORK  ←─────────────────────────┘
+  ├─ Discover / Clarify / Challenge
+  ├─ stable shared decisions → STRUCTURE-only → RENDER
+  ├─ fact-only gap → inspect / research / diagnose / prototype
+  └─ action-ready, no visible material defect → skip
+      ↓                                      ↘ 必要时切换 mode
+WORK  ←───────────────────────────────────────┘
       ↕
 STRUCTURE
   维护有状态的 shared model
@@ -64,7 +75,7 @@ RENDER（可选）
 
 ### 5.1 Discover
 
-目标：让 requirement 成为可能，而不是假设 requirement 已存在。
+目标：让有意义的方向与选择依据成为可能，而不是假设完整目标已经存在。
 
 关键机制：
 
@@ -95,7 +106,7 @@ RENDER（可选）
 
 ### 5.3 Challenge
 
-目标：判断 requirement/design 是否成立，而不只是是否清楚。
+目标：判断 proposal/decision 是否成立，而不只是是否清楚。
 
 关键机制：
 
@@ -110,6 +121,8 @@ RENDER（可选）
 ## 6. STRUCTURE
 
 STRUCTURE 不是第四个 mode，而是共享状态层。
+
+STRUCTURE-only 也不是通用“整理模式”。只有 thinking 已完成，且需要保留方向、决定、假设、边界或风险的状态语义时才单独使用；普通文案改写、文件归类、数据转换和内容摘要直接执行。
 
 ### 6.1 状态
 
@@ -139,20 +152,22 @@ ledger 可保留原始 basis、normalized decision、replaces 和 downstream con
 ### 自动触发
 
 - 用户明确缺少方向或判断依据；
-- 一句话需求、ticket、brief 或 PRD 留下会改变产品行为、scope、risk 或 validation 的 owner decision；
-- 存在会改变 outcome 的 material ambiguity；
-- requirement/design 已出现 concrete material defect，静默执行不成立。
+- 任意 starting point 仍有会改变 outcome、scope、constraint、risk、success evidence 或 external commitment 的 human-owned decision；
+- proposal/decision 已出现 concrete material defect，静默执行不成立。
 
 ### 显式触发
 
-用户要求 dig、brainstorm、explore、clarify、grill、challenge、stress-test 或审查 requirement/design 时进入相应 mode。
+用户要求 dig、brainstorm、explore、clarify、grill、challenge、stress-test 或审查 proposal/decision 时进入相应 mode。用户要求 structure/reconcile 时，仅在对象是 shared-decision state 时使用 STRUCTURE-only。
+
+显式调用但状态已 action-ready 时，执行最小 state check、说明没有 material fork/visible defect 并停止；不制造问题，也不借 STRUCTURE-only 增加 ceremony。
 
 ### 跳过
 
 - 清晰执行请求；
-- 纯信息问答；
+- 纯信息问答与事实/根因调查；
 - 明确的一步改写/翻译/格式化；
-- 普通 code review、debugging、implementation review，除非目标是底层 requirement/design validity。
+- 明确的文件整理、数据转换或内容汇总；
+- 普通 code review、debugging、implementation review，除非目标是底层 intent/proposal/decision validity。
 
 关键边界：`decision-complete != decision-sound`，但 material defect gate 不能退化为 every-task review。
 
@@ -163,6 +178,7 @@ ledger 可保留原始 basis、normalized decision、replaces 和 downstream con
 - Discover → Direction Map
 - Clarify → Clarity Memo / Requirements Brief
 - Challenge → Challenge Report / revised brief
+- 跨领域 shared decisions → Decision Brief
 - 用户明确要求 → PRD / Spec / ADR / user stories
 
 默认不落盘。legacy 五节 clarity memo 保留为 adapter，而非 core contract。
@@ -179,17 +195,9 @@ Dig 交付的是可消费的 shared state，不是下一条固定 workflow。需
 
 因此 v1 不预建通用 post-dig skill tree、不建立固定 subagent graph，也不让 dig 默认自动落盘。窄 skill 只从反复出现且边界稳定的真实业务/专业模式中提取；subagent 按本次依赖与风险临时选择；durable artifact 只在跨 session、恢复、审批、审计或明确共享需要时产生。
 
-业务事实默认留在 workspace 的文档、schema、配置或权威系统；scope 内始终生效的短规则进入 `AGENTS.md`；只有具备明确 trigger、可复用 payload、可验收 boundary 且适合按需加载的能力才成为 skill。workspace 是默认 scope；去除项目假设后仍能安全服务无关项目的能力才提升为 global。source location 与 activation scope 分离，允许 repo 作为 source of truth、global 只保留 symlink。
+领域事实留在承载这些事实的 workspace 文档、schema、配置或权威系统；scope 内始终生效的短规则进入 `AGENTS.md`；只有具备明确 trigger、可复用 payload、可验收 boundary 且适合按需加载的能力才成为 skill。选择能容纳全部假设的最窄 activation scope：带项目或团队假设的能力留在对应 workspace，明确跨无关项目仍安全成立的能力可以直接 global。source location 与 activation scope 分离，允许 repo 作为 source of truth、installed entry 使用 symlink。
 
-下游按五个信号独立判断：
-
-1. 缺的是事实、可行性证据还是 owner decision；
-2. 用户真正要的 deliverable；
-3. 改动的可逆性、耦合与 blast radius；
-4. 安全、合规、数据、金钱或公共承诺风险；
-5. 是否需要跨步骤、跨人或跨 session 协调。
-
-由此选择 research/prototype、direct delivery、design、planning、domain review 或 stop。它们不是顺序阶段，也不由 task size 单独触发。完整规则见 [downstream.md](downstream.md)。
+下游按正交维度独立判断 shared understanding、evidence、solution shaping、execution topology、coordination、assurance 与 persistence。由此组合 research/prototype、direct delivery、design、planning、domain review 或 stop；它们不是顺序阶段，也不由 task size 单独触发。完整规则见 [downstream.md](downstream.md)。
 
 原 `big-task` skill 被退役，因为它把本应正交的 dig、design、review 与 plan 重新绑成固定链。其 alternatives、failure/recovery、reversibility、YAGNI 等有效原则转入 risk-based design route，不再作为强制 ceremony。
 
@@ -252,5 +260,9 @@ Dig 的 reviewer policy：
 8. 任一 mode 完成后不自动进入 plan/implementation/reviewer。
 9. dig 可以作为 session 第一动作，且不会要求先经过其他 skill。
 10. handoff 保存边界与风险，但不会把后继固化成 `big-task` 或任何单一 workflow。
+11. 同一 thinking state 跨 source、carrier、domain、lifecycle phase 与 task size 保持同一路由。
+12. 只缺事实或根因时先调查；action-ready 且没有已见 material defect 时跳过 dig，不为证明 sound 而先 review。
+13. STRUCTURE-only 不误触发普通改写、文件整理、数据转换或内容摘要。
+14. 新场景反馈优先扩展校准案例与 metamorphic eval；只有不变量失效才修改核心 router。
 
 旧版完整决策记录见 [history/v2.4-design.md](history/v2.4-design.md)。

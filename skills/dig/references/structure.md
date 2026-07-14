@@ -2,7 +2,9 @@
 
 STRUCTURE is the cross-cutting state layer for Discover, Clarify, and Challenge. It prevents a polished final summary from erasing exact decisions, negative requirements, revised assumptions, or unresolved risk.
 
-It does not discover, clarify, or challenge by itself. It records what those modes establish.
+It does not discover, clarify, or challenge by itself. It records shared decisions already established by those modes, prior conversation, or an authoritative source.
+
+STRUCTURE-only is intentionally narrow: use it to preserve, reconcile, or hand off shared understanding about directions, decisions, assumptions, boundaries, and risks after the thinking is already done. It is not a router for arbitrary rewriting, formatting, file organization, data conversion, summarization, or content transformation; clear requests for those results should be executed directly.
 
 ## Information model
 
@@ -99,6 +101,10 @@ Choose the lightest artifact that serves the user.
 
 Use the relevant information-model sections and include state labels wherever a reader might mistake an assumption for a requirement.
 
+### Decision Brief
+
+Use the relevant information-model sections when the work is not naturally expressed as product or software requirements. Preserve the same state semantics without forcing the result into PRD language.
+
 ### Handoff Snapshot
 
 Use only when another agent, tool, session, or durable artifact must consume the result:
@@ -129,10 +135,12 @@ Rendering a Handoff Snapshot and writing a file are separate actions. Never writ
 
 When resuming from a persisted snapshot, preserve its decisions and boundaries but verify drift-prone facts and current implementation state before acting.
 
-Default locations when no project convention overrides them:
+Example locations for a code repository when no project convention overrides them:
 
 - `docs/discovery/YYYY-MM-DD-<slug>.md`
 - `docs/clarity/YYYY-MM-DD-<slug>.md`
 - `docs/challenges/YYYY-MM-DD-<slug>.md`
+
+For a notes vault, personal project, operations workspace, or ordinary folder, use its established organization instead of creating a `docs/` hierarchy merely because dig ran.
 
 For an existing harness that requires the legacy five-section clarity contract, render `Goal / Decisions / Boundaries / Success criteria / Open items` as an adapter. Keep that compatibility shape out of the reasoning core.

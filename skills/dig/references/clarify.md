@@ -1,20 +1,28 @@
-# Clarify — Resolve Material Requirement Decisions
+# Clarify — Resolve Consequential Decisions
 
-Use Clarify when a meaningful goal exists but intent, scope, behavior, constraints, success evidence, terminology, or delegated decisions still admit materially different outcomes.
+Use Clarify when a meaningful outcome exists but intent, scope, resulting behavior, constraints, success evidence, terminology, or delegated decisions still admit materially different outcomes.
 
-## Common workplace entry: thin request or incomplete PRD
+## Starting points do not select the mode
 
-A one-line request, ticket, or PRD is an input format, not evidence of clarity. Do not trigger Clarify merely because the input is short, and do not skip it merely because a PRD is long or polished.
+A sentence, document, proposed refactor, deployment request, folder, existing system, or conversation is a starting point, not evidence of clarity. Its source, format, domain, lifecycle phase, and size do not trigger or skip Clarify.
 
-First inspect the project's existing behavior, domain terms, conventions, code, and authoritative documents. Let established facts resolve inherited details. Use Clarify only for remaining choices whose realistic answers would change product behavior, scope, validation, risk, or external commitments.
+First inspect the relevant current state, materials, conventions, code or files, and authoritative sources. Let established facts and safe inherited defaults resolve agent-owned details. Use Clarify only for remaining choices whose realistic answers would change the outcome, scope, validation, risk, or external commitments and therefore require human ownership.
 
-If the document contains a visible contradiction, false assumption, or consequential defect, state the finding through Challenge instead of disguising it as a clarification question. Continue Clarify only for the owner decisions that remain after the defect is exposed.
+If the starting point contains a visible contradiction, false assumption, or consequential defect, state the finding through Challenge instead of disguising it as a clarification question. Continue Clarify only for the owner decisions that remain after the defect is exposed.
+
+## Evidence gate before a working hypothesis
+
+Before prescribing a frame or asking for a commitment, test whether current-state evidence could materially change the diagnosis or option set. If it could, inspect that evidence first. When it is unavailable, name and request the smallest source pointer, then keep any dependent frame `candidate`; do not turn a reported symptom into an assumed cause or target design.
+
+Examples of such evidence include recent change paths, actual wait stages, frequency and severity distributions, current exceptions, usage traces, and authoritative constraints. The list is illustrative: request only evidence with enough information value to change the next decision.
 
 ## The bar for a question
 
-Ask only when at least two realistic answers would change the frame, deliverable, behavior, validation, or hard-to-reverse decision. If likely answers lead to the same action, do not ask.
+Ask only when at least two realistic answers would change the frame, deliverable, resulting behavior, validation, or hard-to-reverse decision. If likely answers lead to the same action, do not ask.
 
 Facts are not user questions. Inspect provided materials, code, documentation, connected sources, official sources, and history first. The user owns intent and trade-offs; the agent owns safe factual reconnaissance.
+
+When the relevant evidence is not accessible, request the smallest pointer or source that would make it inspectable: a repository path, document, metric view, example record, or responsible source. Do not ask the user to manually reconstruct code paths, file inventories, current metrics, or process facts that an agent could inspect from such a source. Lived experience that is not encoded anywhere may still require user input; label it as experience, not verified current state.
 
 ## Build an attackable working hypothesis
 
@@ -80,4 +88,4 @@ Clarify completes when every material fork is:
 - explicitly `deferred`; or
 - converted into a research/prototype action because it is not yet answerable.
 
-Render a Clarity Memo or Requirements Brief only when it helps the user or downstream consumer. Confirmation applies to the shared decisions, not to a mandatory document shape.
+Render a Clarity Memo, Decision Brief, or Requirements Brief only when it helps the user or downstream consumer. Confirmation applies to the shared decisions, not to a mandatory document shape.

@@ -24,21 +24,24 @@ STRUCTURE 贯穿三种 mode，持续区分哪些是候选方向、已确认决�
 
 三种 mode 可以切换，但不会为了“流程完整”强制全走一遍。任务大小也不决定是否触发：清晰的大任务可以跳过 dig，模糊的小任务可以进入 Clarify，一句“我不知道自己想做什么”可以直接进入 Discover。
 
-## 日常工作主入口：一句话需求与不清晰 PRD
+## 入口由思考状态决定
 
-dig 不把“做新项目”当默认场景。更常见的输入是产品经理的一句话、ticket、群聊结论或一份看似完整但仍有缺口的 PRD。
+dig 不把任何来源、格式、领域或工作阶段当成默认入口。产品经理给的一句话、自己想做的重构、已有 PRD、一个代码库、待部署的博客、待整理的资料目录或非代码方案，都先经过同一个 gate：**当前真正缺什么？**
 
-| 输入 | 先做什么 | 什么时候用 dig |
+| 当前缺口 | 最小动作 |
 |---|---|---|
-| “订单支持撤回” | 先查现有订单状态、权限、退款/库存联动和已有约定 | 哪些状态可撤回、谁能撤回、撤回后如何补偿或通知等答案会改变行为时，用 Clarify |
-| “订单列表加导出” | 先查项目是否已有统一导出能力与字段/权限惯例 | 现有约定不能决定字段、数据范围、权限、数据量或同步/异步行为时，用 Clarify；都已继承时直接实现 |
-| 一份不清晰 PRD | 核对术语、状态、边界、acceptance criteria 与现状 | 缺 owner decision 用 Clarify；已有矛盾、错误假设或不可测试要求用 Challenge；只需整理则 STRUCTURE-only |
+| 没有方向、词汇、例子或选择依据 | Discover |
+| outcome 已存在，但仍有会改变结果的人类决策 | Clarify |
+| proposal/decision 需要检验，或已有 material defect | Challenge |
+| thinking 已完成，只需保存、对齐或交接 shared decisions | STRUCTURE-only |
+| 只缺事实、根因、现状或可行性证据 | inspect / research / diagnose / prototype；证据暴露决策或有效性问题时再进入 dig |
+| 已 action-ready，且没有可见 material defect | 跳过 dig，直接进入交付与比例适当的 verification |
 
-因此，**短不等于模糊，长不等于完整**。dig 的 trigger 是 material uncertainty 或 material defect，不是字数、文档格式、文件数或任务大小。
+因此，**同一种任务可以进入不同路线，不同领域也可以进入同一种路线**。短不等于模糊，长不等于完整；greenfield、维护、重构、升级、部署和资料整理也都不是 trigger。跨领域成对案例见 [场景校准矩阵](docs/scenarios.md)；这些案例用于证明抽象，不定义新规则。
 
-## Discover：需求还不存在时，先让它成为可能
+## Discover：方向尚未形成时，先建立选择依据
 
-Discover 不假设用户心里藏着一个等待被问出来的完整需求。
+Discover 不假设用户心里藏着一个等待被问出来的完整目标。
 
 它会先判断用户缺的是方向、词汇、参考物，还是选择依据，然后使用：
 
@@ -48,7 +51,7 @@ Discover 不假设用户心里藏着一个等待被问出来的完整需求。
 - recognition over recall：用样例、对照、场景或 cheap prototype 让用户“看到才知道”；
 - deliberate convergence：只有当用户能比较方向时才收敛。
 
-Discover 可以结束于一个方向、一个 shortlist、一项待验证的 hypothesis，或“现在不值得继续”的明确判断，不强制生成 PRD。
+Discover 可以结束于一个方向、一个 shortlist、一项待验证的 hypothesis，或“现在不值得继续”的明确判断，不强制把结果翻译成 PRD。
 
 ## Clarify：只问真的会改变结果的问题
 
@@ -84,7 +87,7 @@ pre-mortem、inversion、counterexample、first principles 等是按需工具，
 
 Challenge 适用于软件设计，也适用于会议方案、制度、内容结构、运营流程、产品方向等非代码任务。
 
-## STRUCTURE：需求结构化，而不是机械填表
+## STRUCTURE：保存 shared understanding，而不是机械填表
 
 dig 在对话中维护一份轻量 shared model，可能包含：
 
@@ -120,17 +123,20 @@ dig 在对话中维护一份轻量 shared model，可能包含：
 - Direction Map
 - Clarity Memo
 - Challenge Report
+- Decision Brief
 - Requirements Brief
 - PRD / Spec（仅在明确需要时）
 - 不落盘，只在对话中形成 shared understanding
 
-默认不写文件。用户或授权 harness 要求持久化时，默认目录为：
+默认不写文件。用户或授权 harness 要求持久化时，代码仓库可以采用：
 
 ```text
 docs/discovery/YYYY-MM-DD-<slug>.md
 docs/clarity/YYYY-MM-DD-<slug>.md
 docs/challenges/YYYY-MM-DD-<slug>.md
 ```
+
+笔记库、博客、个人项目、运维 workspace 或普通目录应沿用自己的组织方式，不因运行 dig 自动创建 `docs/`。
 
 旧 harness 需要 `Goal / Decisions / Boundaries / Success criteria / Open items` 五节契约时，可以把它作为 renderer adapter；这个兼容格式不再控制内部思考流程。
 
@@ -139,10 +145,9 @@ docs/challenges/YYYY-MM-DD-<slug>.md
 应该触发：
 
 - 用户明确说“不知道想做什么”、想 brainstorm/explore；
-- 一句话需求、ticket、brief 或 PRD 仍留下会改变产品行为、scope、risk 或验证方式的真实分叉；
-- intent、scope、constraint、success criteria、术语或 hidden decision 存在会改变结果的真实分叉；
-- 用户显式要求 dig、clarify、grill、challenge、stress-test 或审查 requirement/design；
-- 用户要求把散落讨论、修订决定或 requirements 结构化、对齐或转换为可靠摘要；
+- 任意 starting point 仍留下会改变 outcome、scope、constraint、risk、success evidence 或 external commitment 的 human-owned decision；
+- 用户显式要求 dig、clarify、grill、challenge、stress-test 或审查 proposal/decision；
+- 用户要求保存、对齐或交接已经形成的 shared decisions 及其状态；
 - 请求虽清晰，但已经看到会让静默执行不成立的 material contradiction/defect。
 
 应该跳过：
@@ -150,9 +155,12 @@ docs/challenges/YYYY-MM-DD-<slug>.md
 - decision-complete、没有可见实质缺陷的执行请求；
 - 纯信息问答；
 - 简单改写、翻译、格式化等明确的一步任务；
+- 只需整理文件、转换数据或汇总内容，且没有 shared-decision state 需要保存的明确任务；
 - 普通 code review、debugging 或 implementation review——除非用户要审查的是其底层 intent/requirement/design。
 
 `decision-complete` 不等于 `decision-sound`，但这也不授权 dig 把所有清晰任务变成强制 review。
+
+显式调用 dig 时至少执行一次最小 state check；若没有 direction、decision 或 validity problem，直接说明请求已 action-ready 并停止。不要为了证明“sound”而额外 review，也不要把清晰请求偷塞进 STRUCTURE-only。
 
 ## 与下游流程的边界
 
@@ -172,11 +180,11 @@ dig 之后也没有唯一的“下一步”：
 | 缺事实或可行性证据 | inspect / research / cheap prototype | evidence 或实验结果 |
 | 状态清楚、改动局部且可逆 | direct delivery | 完成交付 + verification |
 | 实现选择会改变 contract、data、coupling 或 recovery | design | inline design；必要时 ADR/spec |
-| 多步骤、跨 session、需要协调或恢复 | planning | 可执行 task state；不默认落盘 |
+| 多步骤且需要依赖/进度协调，或跨 session、需要恢复 | planning | 可执行 task state；不默认落盘 |
 | 高风险或需要独立专业判断 | domain review | findings + accepted/rejected risks |
 | 当前思考本身已经完成目标 | stop | Direction Map / Brief / 无文件 |
 
-这些路线可以组合或回到 dig，但不能按“任务大”固定串成流水线。完整 handoff contract 见 [docs/downstream.md](docs/downstream.md)。
+这些路线属于不同维度，可以组合或回到 dig，不能按“任务大”固定串成流水线。完整 handoff contract 见 [docs/downstream.md](docs/downstream.md)。
 
 ### `AGENTS`、文档、`skill`、`subagent`、落盘不是同一层
 
@@ -188,7 +196,7 @@ dig 之后也没有唯一的“下一步”：
 | subagent/custom agent | 本次独立 workstream，或反复需要的独立角色 | 独立盘点 payment 与 inventory 影响 |
 | durable artifact | 让任务状态跨 agent、session、审批或审计继续存在 | Handoff Snapshot / issue / ADR |
 
-默认先放 workspace；只有去掉项目名、内部术语、私有 schema 和环境命令后，在无关项目里仍完整成立的能力，才适合 global。dig 默认不自动写文件。同一 session 换 agent 时，把精简 Handoff Snapshot 放进派发消息即可；跨 session 时再持久化。完整判断和工作场景案例见 [下游说明](docs/downstream.md)。
+选择能容纳全部假设的最窄 activation scope：带项目、团队或资料集假设的内容留在对应 workspace；明确跨无关项目仍安全成立的能力可以直接 global，不必先经历“从 workspace 晋升”的仪式。dig 默认不自动写文件。同一 session 换 agent 时，把精简 Handoff Snapshot 放进派发消息即可；跨 session 时再持久化。完整判断见 [下游说明](docs/downstream.md)。
 
 ## 安装
 
@@ -215,8 +223,10 @@ ln -s "$(pwd)/dig-skill/skills/dig" ~/.agents/skills/dig
 
 ```markdown
 Use dig when the user lacks a direction, when materially different interpretations
-would change the outcome, or when the user asks to challenge a requirement/design.
-Skip clear execution requests unless a concrete material defect is already visible.
+would change the outcome, or when the user asks to challenge a proposal/decision.
+Source, format, domain, lifecycle phase, and task size do not select dig. Skip
+action-ready execution and fact-only investigation unless they expose an underlying
+decision or validity problem.
 Dig never selects downstream planning, implementation, or reviewers.
 ```
 
@@ -232,7 +242,7 @@ skills/dig/
     └── structure.md
 ```
 
-完整产品决策见 [docs/design.md](docs/design.md)，下游衔接见 [docs/downstream.md](docs/downstream.md)，落地与验收记录见 [docs/rebuild-v1-plan.md](docs/rebuild-v1-plan.md)，未来合并说明见 [docs/merge-notes.md](docs/merge-notes.md)。旧 v2.4 设计记录保存在 [docs/history/v2.4-design.md](docs/history/v2.4-design.md)。
+完整产品决策见 [docs/design.md](docs/design.md)，下游衔接见 [docs/downstream.md](docs/downstream.md)，跨领域校准案例见 [docs/scenarios.md](docs/scenarios.md)，落地与验收记录见 [docs/rebuild-v1-plan.md](docs/rebuild-v1-plan.md)，未来合并说明见 [docs/merge-notes.md](docs/merge-notes.md)。旧 v2.4 设计记录保存在 [docs/history/v2.4-design.md](docs/history/v2.4-design.md)。
 
 ## 验证
 
@@ -244,9 +254,11 @@ skills/dig/
 - 明确 critique 直接给 findings；
 - 修改过的决定不在 summary 中复活；
 - 清晰请求不会因为任务大小或“可能还有盲区”被误触发；
+- 同一 thinking state 跨来源、格式、领域和生命周期保持相同 gate；
+- STRUCTURE-only 不吞掉普通改写、文件整理或数据转换任务；
 - 非代码任务不出现 Software Architect 或软件流程。
 
-历史 benchmark 位于 `evals/iteration-1/`、`evals/iteration-2/`。rebuild v1 的量化结果见 [benchmark](evals/rebuild-v1/benchmark.md)，逐项新旧输出可在 [static review viewer](evals/rebuild-v1/review.html) 中检查。无前置与 downstream handoff 的追加回归见 [handoff benchmark](evals/handoff-v1/benchmark.md) 和 [handoff viewer](evals/handoff-v1/review.html)。
+历史 benchmark 位于 `evals/iteration-1/`、`evals/iteration-2/`。rebuild v1 的量化结果见 [benchmark](evals/rebuild-v1/benchmark.md)，逐项新旧输出可在 [static review viewer](evals/rebuild-v1/review.html) 中检查。无前置与 downstream handoff 的追加回归见 [handoff benchmark](evals/handoff-v1/benchmark.md) 和 [handoff viewer](evals/handoff-v1/review.html)。跨领域 state-gate 与 STRUCTURE 负边界结果见 [invariance benchmark](evals/invariance-v1/benchmark.md)。
 
 ## License
 

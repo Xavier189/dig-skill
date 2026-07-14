@@ -1,6 +1,6 @@
 ---
 name: dig
-description: Adaptive thought partnership for discovering direction, clarifying materially ambiguous requirements, challenging requirements or designs, and structuring revised decisions. Use when the user does not know what they want; when a one-line request, ticket, brief, or incomplete PRD leaves intent, scope, behavior, constraints, success criteria, terminology, or hidden product decisions open; when the user asks to brainstorm, explore, dig, clarify, grill, challenge, stress-test, structure, or reconcile; or when a concrete contradiction makes proceeding unsound. Works across code and non-code domains. Skip decision-complete execution, purely informational questions, and ordinary code review or debugging unless the underlying intent or design is requested. Produces shared understanding without selecting downstream planning, implementation, or reviewers.
+description: Adaptive thought partnership for finding direction, resolving consequential uncertainty, challenging proposals, and preserving revised decisions. Use when the user lacks a goal or basis for choosing; when an idea, request, proposed change, plan, artifact, or existing situation still admits materially different outcomes; when the user asks to brainstorm, explore, dig, clarify, grill, challenge, stress-test, structure shared decisions, or reconcile them; or when a visible contradiction or material defect makes proceeding unsound. Trigger from the state of the thinking, regardless of source, format, domain, lifecycle phase, or task size. Skip action-ready execution and fact-only investigation unless they expose an underlying decision or validity problem. Produces shared understanding without selecting downstream planning, implementation, or reviewers.
 ---
 
 # Dig — Adaptive Thought Partner
@@ -10,14 +10,14 @@ Turn uncertainty into shared understanding that is explicit, structured, and tes
 Dig has three cognitive modes:
 
 - **Discover** — help the user find a direction when they lack a goal, vocabulary, examples, or a basis for choosing.
-- **Clarify** — expose and resolve decisions that would materially change the outcome.
-- **Challenge** — test an existing requirement or design for contradictions, false assumptions, missing boundaries, failure modes, and better alternatives.
+- **Clarify** — expose and resolve human-owned decisions that would materially change the outcome.
+- **Challenge** — test an existing proposal or decision for contradictions, false assumptions, missing boundaries, failure modes, and better alternatives.
 
 Use the smallest mode or combination that fits. Task size does not choose the mode. The modes may transition as the conversation changes, but never run all three as ceremony.
 
 ## Boundary
 
-Dig has no prerequisite. It may be the first useful action in a session or at the start of an agent's work whenever uncertainty or an untested design is the real problem.
+Dig has no prerequisite. It may be the first useful action in a session or at the start of an agent's work whenever unresolved direction, consequential choice, or validity is the real problem.
 
 When dig precedes another deliverable, pause that downstream work until the relevant shared understanding is accepted. When discovery, clarification, or critique is itself the requested deliverable, do that work directly — do not put a fake memo-approval gate in front of it.
 
@@ -40,13 +40,18 @@ Infer the route without asking the user to choose a mode when the signal is clea
 | Signal | Route | Load |
 |---|---|---|
 | “我也不知道想做什么”、缺少判断标准、只能看到才知道 | Discover | `references/discover.md` |
-| 目标存在，或一句话需求/不完整 PRD 中仍有会改变结果的现实答案 | Clarify | `references/clarify.md` |
-| 已有 requirement/design，用户要挑错，或已看到实质矛盾 | Challenge | `references/challenge.md` |
-| 信息已经足够，只需整理、对齐修订或转换输出 | STRUCTURE-only | `references/structure.md` |
+| 有意义的 outcome 已存在，但仍有会改变结果、必须由人承担的现实选择 | Clarify | `references/clarify.md` |
+| 已有 proposal/decision，用户要检验，或已看到实质矛盾或缺陷 | Challenge | `references/challenge.md` |
+| thinking job 已完成，只需保存、对齐或交接 shared decisions 及其状态 | STRUCTURE-only | `references/structure.md` |
+
+Source, carrier, domain, lifecycle phase, and task size are never routing keys. A request from a product manager and a self-initiated refactor use the same gate; a sentence, document, repository, folder, or conversation is only a starting point.
 
 Important distinctions:
 
+- If only inspectable facts, current state, feasibility evidence, or root cause are missing, inspect, research, diagnose, or prototype first. Enter dig only if the evidence reveals unresolved direction, human-owned choice, or a material validity problem.
+- If the requested outcome and consequential commitments are clear and no material defect is already visible, skip dig and continue downstream. Do not review merely to prove soundness. Agent-owned local and reversible implementation choices do not become clarification questions merely because alternatives exist.
 - A decision-complete request may still be unsound. Enter Challenge only when the user asks for it or a material defect is already visible; do not turn every clear request into mandatory review.
+- An explicit dig invocation always receives the smallest relevant state check. If no direction, decision, or validity problem exists, say the request is action-ready and stop; do not manufacture questions or use STRUCTURE-only unless preserving shared-decision state is itself requested.
 - A user who lacks the knowledge to choose does not need a better multiple-choice question first. Teach, research, show references, or prototype before asking.
 - A vague preference and a missing fact are different: show concrete alternatives for the former; look up the latter.
 
@@ -71,7 +76,7 @@ Across all modes:
 
 ## 4. STRUCTURE — maintain shared state
 
-Keep a lightweight structured model throughout the conversation. Distinguish user-confirmed requirements from agent assumptions and rejected ideas:
+Keep a lightweight structured model throughout the conversation. Distinguish user-confirmed commitments from agent assumptions and rejected ideas:
 
 - `candidate` — a direction still being explored
 - `confirmed` — explicitly ratified by the user or authoritative source
@@ -88,7 +93,7 @@ For a short exchange, maintain this in context and render only what helps. For m
 - **Clarify completes** when every material fork is resolved, delegated with a visible default, or deferred.
 - **Challenge completes** when material findings are accepted, corrected, rejected with rationale, or recorded as accepted risks.
 
-Render the lightest useful artifact from `references/structure.md`: Direction Map, Clarity Memo, Challenge Report, Requirements Brief, or no file at all. A PRD/spec is an optional renderer only when requested, never the automatic terminal state.
+Render the lightest useful artifact from `references/structure.md`: Direction Map, Clarity Memo, Challenge Report, Decision Brief, Requirements Brief, or no file at all. A PRD/spec is an optional renderer only when requested, never the automatic terminal state.
 
 If the user says “开工”, “继续”, or equivalent, stop optional excavation. Preserve unresolved material items and defaults in the shared model, then return control downstream. Still stop for an external contract, public commitment, irreversible action, safety boundary, or other decision the user must own.
 
@@ -96,7 +101,7 @@ If the user says “开工”, “继续”, or equivalent, stop optional excava
 
 Dig has no mandatory successor. When another agent, tool, or later session will continue, pass the smallest useful handoff:
 
-- the accepted direction or requirement state;
+- the accepted direction or decision state;
 - consequential `assumed`, `deferred`, and `risk` items;
 - boundaries and success evidence that downstream work must preserve.
 

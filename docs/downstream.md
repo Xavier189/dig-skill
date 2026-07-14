@@ -6,41 +6,34 @@ dig 没有前置流程，也没有强制后继。它负责把未知、分叉或�
 
 “没有前置”指没有必须先跑的业务 skill 或 workflow；host 的 system/developer/user instructions、权限、安全边界和必要上下文仍然是 ambient constraints。
 
-```text
-session / agent work
-        │
-        ├─ 已清楚且 sound ───────────────────────→ downstream work
-        │
-        └─ direction / decision / validity uncertainty
-                           │
-                          dig
-                           │
-                    shared state ready
-                           │
-       ┌───────────┬───────┼────────┬─────────┬──────────┐
-    evidence    prototype  direct   design   planning  domain review
-       │           │       delivery    │         │          │
-       └───────────┴─────────── 可在新事实改变决策时回到 dig ─┘
-```
+dig 与下游不是一棵单选流程树，而是几组正交判断：
 
-这些分支不是必须六选一的终态。每次只解决当前最靠前的缺口：例如先 research 得到事实，事实改变方向时回到 dig；方向稳定后再判断是否需要 design；只有 rollout 真的需要协调时才增加 planning。
+| 维度 | 选项 |
+|---|---|
+| Shared understanding | dig Discover / Clarify / Challenge / narrow STRUCTURE-only / skip |
+| Evidence | inspect / research / diagnose / prototype / none |
+| Solution shaping | direct / compact design / durable design |
+| Execution topology | primary agent / subagent / human or tool reviewer |
+| Coordination | inline task state / plan |
+| Assurance | proportionate verification / domain review |
+| Persistence | conversation / inline Snapshot / durable carrier |
 
-## 日常工作中最常见的入口
+这些维度可以组合。例如一个明确的博客部署可以跳过 dig，同时需要 inspect 当前配置、直接修改、维护简短 plan 并做 smoke test；一个模糊的小重构可能先 Clarify，却完全不需要 subagent、durable design 或落盘。
+
+## 任意 starting point 使用同一个 gate
 
 ```text
-一句话需求 / ticket / PRD
-            │
-            ├─ 先查现有代码、业务规则、文档与惯例
-            │
-            ├─ 现状已决定全部关键行为 ─────────────→ direct delivery
-            ├─ 仍有会改变结果的 owner decision ───→ dig Clarify
-            ├─ 已有矛盾、错误假设或危险边界 ───────→ dig Challenge
-            └─ 只需整理已知决定 ───────────────────→ STRUCTURE-only
+idea / request / document / repo / folder / existing situation
+                              │
+             ├─ 只缺事实、根因或可行性 ──→ inspect / research / diagnose / prototype
+             ├─ 缺方向或选择依据 ─────────→ dig Discover
+             ├─ 缺 human-owned decision ──→ dig Clarify
+             ├─ 要检验或已有 material defect → dig Challenge
+             ├─ 只需保存 shared decisions ─→ narrow STRUCTURE-only
+             └─ action-ready、无已见 material defect → skip dig
 ```
 
-例如“订单支持撤回”不应该直接展开成 implementation plan，也不应该因为只有六个字就机械追问。agent 先查当前状态机、取消/退款/库存逻辑、权限与审计惯例；查得到的是事实，自己查。剩下“哪些状态允许撤回”“谁能撤回”“已付款后采用退款还是禁止”“是否通知相关方”这类会改变产品行为的决定，再交给产品 owner 澄清。
-
-一份 PRD 也不因格式完整而自动可信：遗漏真实分叉时用 Clarify；“任何时候可撤回”与“审批后不可变更”同时存在时直接给 Challenge finding；内容已经 decision-complete 时跳过 dig。
+来源、载体、领域、生命周期阶段和任务大小都不选择路线。查得到的事实由 agent 自己查；局部、可逆且不改变 contract 的实现选择由 agent 自己承担；只有会 materially 改变结果且必须由人负责的选择才进入 Clarify。跨领域成对案例见 [scenarios.md](scenarios.md)。
 
 ## 先分清三件事
 
@@ -54,7 +47,7 @@ session / agent work
 
 ### 何时才提取窄 skill
 
-业务知识本身通常先是文档、schema、配置或权威数据源，不自动成为 skill。只有下面四项全部成立，才进入 skill 候选：
+领域知识本身通常先是文档、schema、配置、分类体系、操作惯例或权威数据源，不自动成为 skill。只有下面四项全部成立，才进入 skill 候选：
 
 1. **Trigger 可识别**：能说清什么请求或情境应加载它；
 2. **Reusable payload 存在**：包含通用模型不会稳定掌握的方法、规则、schema、脚本、模板或工具集成；
@@ -83,7 +76,7 @@ session / agent work
 
 ### 工作区还是全局
 
-默认从 workspace-local 开始。以下四问全部回答“是”，才适合提升为 global：
+选择能够容纳全部假设的最窄 activation scope。下面四问全部回答“是”时，能力适合 global；如果一开始就明确跨无关项目成立，可以直接 global，不必先经历 workspace-local 的“晋升流程”：
 
 1. 去掉仓库名、公司名和内部术语后，能力仍完整成立；
 2. 放进两个无关项目也不会给出错误假设或危险命令；
@@ -92,19 +85,13 @@ session / agent work
 
 | Scope | 放什么 | 典型例子 |
 |---|---|---|
-| workspace | 跟随代码版本演进、团队共享、带项目/domain 假设的 instructions、docs、skill、script | `order-change-impact`、本项目 release/runbook、订单领域 reference |
+| workspace | 跟随当前工作对象演进、带项目/domain/资料集假设的 instructions、docs、skill、script | `order-change-impact`、博客 runbook、笔记库分类约定、订单领域 reference |
 | global | 跨无关项目仍成立的个人偏好、通用方法、格式/工具能力、通用 custom agent role | `dig`、`diagnose`、`humanizer-zh`、通用 `database-optimizer` role |
 | hybrid | global 方法 + workspace 事实/adapter | global privacy-review 方法读取当前项目的数据分类与 retention 文档 |
 
-“源码放在工作目录”与“能力全局生效”也不是一回事。当前 `dig` 的 source of truth 在这个 Git 仓库，`~/.agents/skills/dig` 只是 global symlink；这既能版本管理，又避免复制两份。项目专属能力则保留在项目仓库，不做 global activation。
+“源码放在哪里”与“能力在哪些任务中激活”也不是一回事。canonical source 可以位于可版本管理的独立仓库，installed entry 使用 symlink；workspace-specific source 则跟随对应 workspace，不做 global activation。具体 discovery 路径属于 host integration detail，不属于 dig contract；本项目的安装方式见 [README](../README.md#安装)。
 
-一种清晰的目录布局是：
-
-| Activation scope | Canonical source | Integration |
-|---|---|---|
-| workspace skill | 当前 repo 的 `.agents/skills/<name>/` 或统一的 `skills/<name>/` | 随 repo 提交，由项目 instructions 或 client 的 workspace discovery 加载；不建立 global symlink |
-| global skill | 独立、可版本管理的 source repo | symlink 到当前环境的 `~/.agents/skills/<name>`，避免 source 与 installed copy 分叉 |
-| Codex global custom agent | `~/.codex/agents/<name>.toml` | user-level role；不得嵌入单一项目才成立的假设 |
+workspace 也不等于代码仓库：它可以是博客、notes vault、资料目录、运维环境或个人项目。判断依据始终是这些假设在哪个边界内成立，而不是目录里有没有源码。
 
 ### 何时才用 subagent
 
@@ -121,9 +108,7 @@ subagent 是一次运行中的 worker，不是下一阶段，也不会自动获�
 
 任一不成立，继续由当前 agent 完成。适合的例子：订单撤回规则确认后，两个 agent 分别盘点 payment 与 inventory 影响；Security reviewer 独立审查 encryption design。不适合的例子：需求还在摇摆时让三个 agent 各自实现，或把一个局部改动机械拆成“设计 agent、编码 agent、审核 agent”。
 
-ad hoc subagent 通常不需要创建配置文件。只有某个独立角色反复出现，并且确实需要稳定的独立 instructions、tools、model 或权限边界时，才创建 custom agent。方法需要被当前 agent 直接应用时做 skill；工作需要交给另一个独立 context 时才考虑 agent。同一领域可以同时有 skill 和 agent，但两者解决的问题不同。
-
-以 Codex 的 user-level custom agent 为例，`~/.codex/agents/*.toml` 属于 global scope，适合 `database-optimizer` 这类跨项目角色。绑定单一业务域的 `order-domain-agent` 默认不应放 global；优先保留在项目 harness/instructions 中，除非当前 client 明确支持并需要 workspace agent definition。
+ad hoc subagent 通常不需要创建配置文件。只有某个独立角色反复出现，并且确实需要稳定的独立 instructions、tools、model 或权限边界时，才创建 custom agent。方法需要被当前 agent 直接应用时做 skill；工作需要交给另一个独立 context 时才考虑 agent。同一领域可以同时有 skill 和 agent，但两者解决的问题不同。custom agent 的 scope 同样遵循“容纳全部假设的最窄边界”，具体配置位置由 host 决定。
 
 ## Handoff 与落盘
 
@@ -186,7 +171,7 @@ prototype 用于获得决策证据，不静默升级成 production implementatio
 
 ### 5. Planning
 
-plan 是 coordination state，不是设计完成后的奖章。只在工作多步骤、长时间运行、需要恢复/交接、并行依赖或复杂 rollout 时使用。
+plan 是 coordination state，不是设计完成后的奖章。只在多步骤工作确实需要依赖/进度协调，或工作长时间运行、需要恢复/交接、存在并行依赖或复杂 rollout 时使用。
 
 默认在当前 task state 中维护；只有用户、团队约定或跨 session handoff 需要时才落盘。不得默认创建 `docs/plans/`。
 
@@ -202,17 +187,7 @@ Discover 得到方向、Clarify 得到决定、Challenge 得到可信审查，�
 
 ## 通俗路由示例
 
-| 用户场景 | 最小合理路线 | 窄 skill | subagent | 是否落盘 |
-|---|---|---|---|---|
-| “订单支持撤回” | 查当前状态机与既有规则 → Clarify 状态、角色、补偿和通知等 owner decision | 不为一次需求新建；若状态机影响分析长期重复，再做 workspace skill | 需求稳定后，payment/inventory 影响可并行盘点 | 同 session 不写；需产品确认或跨 session 时写 Brief/issue |
-| PRD 同时写“任何时候可撤回”和“审批后不可变更” | Challenge 先指出 contract 矛盾 → Clarify 真正状态边界 → 再决定 design/direct | 不需要 | 矛盾未解决前不派发 | 修订后的 requirement 应回写 PRD/issue |
-| “订单列表加导出” | 查已有导出惯例；若字段、权限、范围、数据量都能继承则 direct，否则只 Clarify 剩余分叉 | 已有 export skill 就复用，不临时造 | 通常不需要 | 仅在有新业务决定或跨 session 时记录 |
-| “给这个接口多打一条已有格式的日志，字段也确定了” | 直接读代码 → 修改 → targeted test | 不需要 | 不需要 | 不需要 |
-| “把 8 个调用点改用已有 `getUserV2`，兼容与测试都已确认” | direct delivery → 针对性验证 | 不需要 | 不需要；8 个调用点本身不是并行理由 | 不写 plan |
-| “给生产身份证号做 envelope encryption、在线轮换和零停机迁移” | 查 KMS/现状证据 → technical design → Security/Privacy/DBA review → rollout 复杂时 planning | 已有稳定 domain skill 就复用，不为本任务临时造一个 | 适合独立 security review 或并行盘点 migration 影响 | 通常写 ADR/spec；跨 session rollout 再维护 durable task state |
-| “每月都要把三个供应商账单和内部订单对账” | 第一次先完成并验证；规则稳定且重复后提取 `invoice-reconciliation` | 适合，因为 schema、匹配规则和校验可复用 | 供应商输入互相独立且量大时可并行 | skill 保存方法；每次运行报告按审计需要保存，两者不是同一个文件 |
-| “这轮 dig 已确认账单导出需求，交给另一个 agent，明天继续” | render Handoff Snapshot；下一位 agent 读取后再选 direct/design/research | 不需要新 skill | 同 session 可把 Snapshot 直接放进派发消息 | 明天新 session 必须使用 durable carrier，例如 `docs/clarity/YYYY-MM-DD-billing-export.md` |
-| “我完全不知道业余时间想做什么” | dig Discover → 比较方向；必要时 cheap prototype；也可以 stop | 不急着建 | 通常不需要 | 明确下次继续时才保存 Direction Map |
+完整的 product、refactor、optimization、upgrade、mini app、blog、folder organization 与非代码对照见 [场景校准矩阵](scenarios.md)。它刻意使用成对案例验证两件事：同一表面任务可因思考状态不同而走不同路线；相同思考状态跨领域仍走同一路线。案例不定义 trigger。
 
 三个容易混淆的对照：
 

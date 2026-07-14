@@ -19,7 +19,9 @@
 - 退役 `big-task` 固定编排，加入无前置、无强制后继的 downstream contract；
 - 加入 4 组 handoff regression、grading、benchmark 和 static review viewer。
 - 区分窄 skill、subagent 与 durable artifact 三个正交机制，明确 dig 不自动落盘，并加入端到端路由示例。
-- 将一句话需求、ticket 与不完整 PRD 提升为日常工作主入口，并补齐 AGENTS/document/skill/custom-agent 的 workspace/global 放置边界。
+- 将 route 改为 input-agnostic state gate：source、carrier、domain、lifecycle phase 与 task size 均不选 mode；具体工作场景降级为跨领域 calibration/eval。
+- 收紧 STRUCTURE-only，只保存 shared-decision state，不接管普通改写、文件整理、数据转换或摘要。
+- 补齐 AGENTS/document/skill/custom-agent 的 activation scope 边界：选择容纳全部假设的最窄 scope，source location 与 activation scope 分离。
 
 ## 合并闸门
 
@@ -28,6 +30,8 @@
 - [x] skill frontmatter 通过两套 validator；
 - [x] JSON、Markdown 本地链接和 diff whitespace 检查通过；
 - [x] downstream handoff：14/14 assertions；
+- [x] state-gate metamorphic eval：route 9/9，assertions 34/35；
+- [ ] ID 14 final evidence-gate rerun（文案已修，2026-07-14 因 Codex 额度耗尽未能复验）；
 - [x] `main` 保持在 base commit；
 - [ ] 用户审核 [review viewer](../evals/rebuild-v1/review.html)；
 - [ ] 用户明确决定合并。

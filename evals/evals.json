@@ -166,6 +166,122 @@
         "没有把 Software Architect、逐段确认和 docs/plans 作为无条件固定链",
         "说明 plan/implementation 应在关键设计与风险边界成立后按协调需要决定"
       ]
+    },
+    {
+      "id": 13,
+      "name": "clarify-self-refactor-material-choice",
+      "prompt": "我自己维护的项目最近每次改业务都要同时碰很多地方。我想做一次重构，但还没想清楚是重划模块边界、抽公共层，还是先只改最痛的链路。这轮不要写代码，先帮我把真正要解决的问题和取舍想清楚。",
+      "expected_output": "自发 refactor 仍有会改变结果的 human-owned choice，先查现状并进入 Clarify，而不是因它是内部重构就直接实现或套固定架构流程。",
+      "files": [],
+      "assertions": [
+        "识别重构手段背后的 outcome、边界与 material trade-off，而不是把三个手段直接当实现清单",
+        "把 coupling、change pattern 等可查现状留给 agent inspect；证据不可访问时只请求最小 source pointer，不让用户重构整份事实",
+        "把模块边界、公共层和痛点链路视为待验证手段，没有把所有 implementation alternatives 都升级成 owner decision",
+        "没有自动进入 implementation、planning 或 Software Architect review"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "clarify-non-code-process-material-choice",
+      "prompt": "我们每次发版审批都要等两三天，我想把流程优化一下。目标是更快，但哪些检查能自动化、哪些必须保留人工、出了问题谁承担风险都还没定。先帮我把方案边界想清楚。",
+      "expected_output": "非代码流程中存在与 refactor 同类的 consequential owner decisions，进入 Clarify 并保留领域边界，不调用 software reviewer。",
+      "files": [],
+      "assertions": [
+        "识别速度、控制、责任与风险承担之间会改变结果的真实分叉",
+        "区分可调查的当前审批耗时/等待节点/失败数据与必须由 owner 决定的风险取舍；证据不可访问时明确请求来源或标为 unknown",
+        "使用 Clarify 式工作而不是因非代码领域跳过 shared-understanding work",
+        "没有推荐 Software Architect、代码实现或固定 big-task 流程"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "skip-clear-local-refactor",
+      "prompt": "这次重构范围已确认：仅把 UserDisplayNameFormatter 里两个重复的 private 分支改为调用现有 normalizeName；public API、异常和输出不变，只改这个类并跑现有测试。现在只告诉我下一步最小合理动作，不实际改代码。",
+      "expected_output": "清晰、局部、可逆的 refactor 跳过 dig，直接建议读取目标代码、外科手术式修改和 targeted verification。",
+      "files": [],
+      "assertions": [
+        "直接给出读取目标类/测试并核对行为等价的最小执行动作，而不是重新讨论需求",
+        "没有重开 public API、异常、输出或单类范围等已确认边界，也没有给出冲突动作",
+        "没有因 refactor 关键词启动 Discover、Clarify、Challenge 或 design ceremony",
+        "没有要求 Software Architect、subagent 或落盘 plan"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "skip-clear-personal-blog-deploy",
+      "prompt": "个人博客方案已确认：使用 Hugo，现有 Markdown 不改变格式；部署到 Cloudflare Pages，main 分支 push 自动发布，域名和 DNS 已准备好。现在只告诉我下一步最小合理动作，不实际部署，也不要重新选型。",
+      "expected_output": "清晰的个人博客部署跳过 dig；先检查现有配置和平台要求，再按已确认方案执行与验证，不重新做方向探索。",
+      "files": [],
+      "assertions": [
+        "下一步直接服务于已选 Hugo/Cloudflare Pages 路线的 inspect、初始化或 build verification，而不是重新讨论方向",
+        "没有要求改变 Markdown 格式，也没有重开 Hugo、Cloudflare Pages、main 自动发布或域名/DNS 选择",
+        "没有因个人项目、部署或多步骤关键词重新 Discover/Clarify 或选型",
+        "没有强制独立 reviewer、big-task 或 durable plan"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "inspect-fact-only-performance-regression",
+      "prompt": "接口行为、SLO、预算和一致性要求都已确认；只是 /orders/search 的 P95 从 220ms 涨到 1.8s，根因未知。先判断下一步该做什么，不要提出新架构，也不要改代码。",
+      "expected_output": "识别为 factual/root-cause uncertainty，先 diagnose/inspect；在证据暴露新的 owner trade-off 前不执行 dig。",
+      "files": [],
+      "assertions": [
+        "明确下一步是收集 trace、查询计划、资源指标或变更记录等根因证据",
+        "没有把根因未知误判为用户需求不明确或要求用户猜原因",
+        "没有在证据前提出 Redis、拆服务等新架构",
+        "在诊断证据出现前没有重新进入 dig 或向 owner 提出新的 trade-off 问题"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "discover-personal-miniapp-without-basis",
+      "prompt": "我想业余做一个自己的小程序，既想练技术，也希望真的有人愿意用，但我没有题目，也不知道该按兴趣、可验证需求还是变现来选方向。别急着给技术栈和计划，先帮我找到值得尝试的方向。",
+      "expected_output": "个人 mini app 的方向与选择依据都不存在，进入 Discover，提供可比较 frames 而不是提前给技术栈或 implementation plan。",
+      "files": [],
+      "assertions": [
+        "识别 direction uncertainty，并帮助形成兴趣、真实使用、验证成本或收益等判断依据",
+        "提供多个后果不同的方向、frame 或探索方法，没有锚定 agent 的第一个点子",
+        "在用户有判断基础前不要求其对陌生技术或商业选项盲选",
+        "没有提前给技术栈、完整计划或固定 downstream pipeline"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "discover-folder-organization-without-basis",
+      "prompt": "我想整理一个积了几年的学习资料文件夹，里面有课程、PDF、代码、截图和很多重复版本；但我还不知道整理后最重要的结果是什么，也没有删除和保留的判断依据。先帮我找到整理目标和选择标准，暂时不要动文件。",
+      "expected_output": "资料整理同样因缺方向和判断依据进入 Discover；先检查可见结构并建立结果 frames，不提前强加 taxonomy 或执行文件操作。",
+      "files": [],
+      "assertions": [
+        "识别缺的是整理目标和判断依据，而不只是缺一个目录分类表",
+        "给出多个结果导向的 frame 或标准，例如检索、复习、复用、归档与风险控制",
+        "没有把单一 taxonomy、批量删除或重命名方案当成用户已确认目标",
+        "没有实际移动文件或提前进入执行计划"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "skip-clear-folder-transform-not-structure",
+      "prompt": "按以下已定规则整理学习资料文件夹：一级目录只用 Inbox、Active、Reference、Archive；先生成移动清单；重复项只移到 _duplicates，不删除；命名统一为 YYYY-MM-DD-topic；先 dry-run，不修改原文件。只告诉我下一步最小动作，不实际操作。",
+      "expected_output": "规则明确的文件整理不是 STRUCTURE-only；跳过 dig，建议 inspect、生成 dry-run manifest 并验证边界。",
+      "files": [],
+      "assertions": [
+        "直接建议检查目录并生成不写入的 dry-run 移动清单",
+        "没有重开既定 taxonomy 或放松重复项不删除、先 dry-run、不修改原文件等安全边界",
+        "没有因‘整理’或‘结构化’字样进入 STRUCTURE shared-state ceremony",
+        "没有提出 taxonomy owner questions、subagent、reviewer 或落盘 plan"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "skip-clear-csv-transform-not-structure",
+      "prompt": "只按已定规则转换下面两份 CSV：以 orders 为左表，按 order_id 连接 status；保留 orders 全部行；未匹配状态写 missing；金额以 orders 为准。只输出结果 CSV，不要解释，也不要重新确认规则。\n\norders:\norder_id,amount\nA1,100\nA2,200\n\nstatus:\norder_id,status\nA1,paid",
+      "expected_output": "这是明确的数据转换，不是 STRUCTURE shared-state；直接输出合并后的两行 CSV。",
+      "files": [],
+      "assertions": [
+        "只输出 header 与 A1、A2 两行结果 CSV",
+        "A1 状态为 paid，A2 状态为 missing，金额分别保持 100 和 200",
+        "没有提问、mode 分析、STRUCTURE artifact、reviewer 或 planning"
+      ]
     }
   ]
 }

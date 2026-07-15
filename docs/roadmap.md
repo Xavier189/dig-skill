@@ -25,8 +25,8 @@
 - [x] Boundary：无 Software Architect、无自动 plan/implementation
 - [x] candidate 与 v2.4 baseline 对照
 - [x] 生成 benchmark 与 static review viewer
-- [x] input-agnostic metamorphic eval：route 9/9，assertions 34/35
-- [ ] Clarify final evidence-gate rerun：已修正文案，2026-07-14 因 Codex 额度耗尽未能复验
+- [x] input-agnostic metamorphic eval：route 9/9，assertions 35/35
+- [x] Clarify final evidence-gate rerun：2026-07-15 使用 isolated fresh session 复验通过
 
 ## Phase 3：收敛与合并准备
 
@@ -61,6 +61,6 @@
 9. 跨 session 使用是否足够频繁且摩擦稳定，值得增加 persistence/resume adapter；在此之前不让 dig 默认自动落盘。
 10. 跨 source、carrier、domain、lifecycle phase 与 task size 的真实样本中，same thinking state 是否保持 same gate；重点观察局部反馈是否再次被错误提升为核心 trigger。
 11. STRUCTURE-only 是否误吞普通改写、文件整理、数据转换或摘要任务。
-12. Clarify 的 evidence gate 是否稳定阻止“没有现状证据就先处方化”；额度恢复后优先重跑 invariance ID 14。
+12. 在真实样本中继续观察 Clarify evidence gate 是否稳定阻止“没有现状证据就先处方化”；synthetic invariance ID 14 已通过。
 
 旧版路线保存在 [history/v2.4-roadmap.md](history/v2.4-roadmap.md)。

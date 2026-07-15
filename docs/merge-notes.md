@@ -30,8 +30,8 @@
 - [x] skill frontmatter 通过两套 validator；
 - [x] JSON、Markdown 本地链接和 diff whitespace 检查通过；
 - [x] downstream handoff：14/14 assertions；
-- [x] state-gate metamorphic eval：route 9/9，assertions 34/35；
-- [ ] ID 14 final evidence-gate rerun（文案已修，2026-07-14 因 Codex 额度耗尽未能复验）；
+- [x] state-gate metamorphic eval：route 9/9，assertions 35/35；
+- [x] ID 14 final evidence-gate rerun：2026-07-15 isolated fresh session 复验通过；
 - [x] `main` 保持在 base commit；
 - [ ] 用户审核 [review viewer](../evals/rebuild-v1/review.html)；
 - [ ] 用户明确决定合并。

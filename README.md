@@ -1,6 +1,6 @@
 # Sensemaking（探骊）
 
-> Turn uncertainty into shared understanding.
+> Turn uncertainty into shared understanding. —— 把不确定性转化为共同理解。
 
 Sensemaking 是一个跨领域的 adaptive thought-partner skill：当方向尚未形成时帮助探索，当现实选择仍会改变结果时帮助澄清，当已有方案需要检验时帮助挑战，并在必要时保存已经形成的 shared decisions。
 

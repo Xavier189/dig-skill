@@ -2,24 +2,24 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "Sensemaking Routing",
-    "subtitle": "Route by the state of thinking, then return control",
+    "title": "Sensemaking 路由图",
+    "subtitle": "按当前思考状态选择路线，完成后归还控制权",
     "output": "sensemaking-routing.html",
     "viewBox": [1080, 820]
   },
   "components": [
-    { "id": "start", "type": "external", "label": "Starting Point", "sublabel": "idea / request / artifact", "pos": [40, 270], "size": [140, 64] },
-    { "id": "gate", "type": "security", "label": "Thinking State", "sublabel": "what is actually missing?", "pos": [230, 270], "size": [150, 64] },
-    { "id": "discover", "type": "frontend", "label": "Discover", "sublabel": "direction + basis", "pos": [460, 70], "size": [140, 64] },
-    { "id": "clarify", "type": "backend", "label": "Clarify", "sublabel": "owner decisions", "pos": [460, 190], "size": [140, 64] },
-    { "id": "challenge", "type": "security", "label": "Challenge", "sublabel": "validity + defects", "pos": [460, 310], "size": [140, 64] },
-    { "id": "evidence", "type": "database", "label": "Evidence First", "sublabel": "inspect / diagnose", "pos": [460, 460], "size": [140, 64] },
-    { "id": "deliver", "type": "cloud", "label": "Direct Delivery", "sublabel": "action-ready", "pos": [460, 580], "size": [140, 64] },
-    { "id": "state", "type": "messagebus", "label": "Shared State", "sublabel": "structure only if useful", "pos": [700, 190], "size": [150, 64] },
-    { "id": "downstream", "type": "external", "label": "Downstream", "sublabel": "chooses the next action", "pos": [900, 310], "size": [150, 64] }
+    { "id": "start", "type": "external", "label": "任意起点", "sublabel": "想法 / 需求 / 方案", "pos": [40, 270], "size": [140, 64] },
+    { "id": "gate", "type": "security", "label": "判断当前缺口", "sublabel": "到底还缺什么？", "pos": [230, 270], "size": [150, 64] },
+    { "id": "discover", "type": "frontend", "label": "发现方向", "sublabel": "Discover · 判断依据", "pos": [460, 70], "size": [150, 64] },
+    { "id": "clarify", "type": "backend", "label": "澄清选择", "sublabel": "Clarify · 人来取舍", "pos": [460, 190], "size": [150, 64] },
+    { "id": "challenge", "type": "security", "label": "检验方案", "sublabel": "Challenge · 缺陷与有效性", "pos": [460, 310], "size": [170, 64] },
+    { "id": "evidence", "type": "database", "label": "先查证据", "sublabel": "inspect / diagnose", "pos": [460, 460], "size": [150, 64] },
+    { "id": "deliver", "type": "cloud", "label": "直接交付", "sublabel": "action-ready", "pos": [460, 580], "size": [150, 64] },
+    { "id": "state", "type": "messagebus", "label": "共同理解", "sublabel": "按需结构化保存", "pos": [710, 190], "size": [150, 64] },
+    { "id": "downstream", "type": "external", "label": "下游工作", "sublabel": "自主选择下一动作", "pos": [910, 310], "size": [140, 64] }
   ],
   "boundaries": [
-    { "kind": "region", "label": "Shared-understanding work", "wraps": ["discover", "clarify", "challenge", "state"], "pad": 24 }
+    { "kind": "region", "label": "共同理解工作", "wraps": ["discover", "clarify", "challenge", "state"], "pad": 24 }
   ],
   "connections": [
     { "from": "start", "to": "gate", "variant": "emphasis" },
@@ -38,18 +38,18 @@
   "cards": [
     {
       "dot": "cyan",
-      "title": "Routing invariant",
+      "title": "路由不变量",
       "items": [
-        "Source, format, domain, lifecycle, and task size are not routing keys",
-        "Facts are investigated; consequential human choices are clarified"
+        "来源、格式、领域、阶段和任务规模都不决定路线",
+        "事实由 agent 调查；影响结果的人类取舍才需要澄清"
       ]
     },
     {
       "dot": "emerald",
-      "title": "Boundary",
+      "title": "能力边界",
       "items": [
-        "Use only the smallest useful mode",
-        "No automatic design, plan, implementation, or reviewer"
+        "只使用最小必要 mode",
+        "不自动进入设计、计划、实现或独立评审"
       ]
     }
   ]

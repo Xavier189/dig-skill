@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Sensemaking Routing",
+    "subtitle": "Route by the state of thinking, then return control",
+    "output": "sensemaking-routing.html",
+    "viewBox": [1080, 820]
+  },
+  "components": [
+    { "id": "start", "type": "external", "label": "Starting Point", "sublabel": "idea / request / artifact", "pos": [40, 270], "size": [140, 64] },
+    { "id": "gate", "type": "security", "label": "Thinking State", "sublabel": "what is actually missing?", "pos": [230, 270], "size": [150, 64] },
+    { "id": "discover", "type": "frontend", "label": "Discover", "sublabel": "direction + basis", "pos": [460, 70], "size": [140, 64] },
+    { "id": "clarify", "type": "backend", "label": "Clarify", "sublabel": "owner decisions", "pos": [460, 190], "size": [140, 64] },
+    { "id": "challenge", "type": "security", "label": "Challenge", "sublabel": "validity + defects", "pos": [460, 310], "size": [140, 64] },
+    { "id": "evidence", "type": "database", "label": "Evidence First", "sublabel": "inspect / diagnose", "pos": [460, 460], "size": [140, 64] },
+    { "id": "deliver", "type": "cloud", "label": "Direct Delivery", "sublabel": "action-ready", "pos": [460, 580], "size": [140, 64] },
+    { "id": "state", "type": "messagebus", "label": "Shared State", "sublabel": "structure only if useful", "pos": [700, 190], "size": [150, 64] },
+    { "id": "downstream", "type": "external", "label": "Downstream", "sublabel": "chooses the next action", "pos": [900, 310], "size": [150, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Shared-understanding work", "wraps": ["discover", "clarify", "challenge", "state"], "pad": 24 }
+  ],
+  "connections": [
+    { "from": "start", "to": "gate", "variant": "emphasis" },
+    { "from": "gate", "to": "discover", "variant": "emphasis", "fromSide": "right", "toSide": "left", "via": [[405, 302], [405, 102]] },
+    { "from": "gate", "to": "clarify", "variant": "emphasis", "fromSide": "right", "toSide": "left", "via": [[420, 302], [420, 222]] },
+    { "from": "gate", "to": "challenge", "variant": "security", "fromSide": "right", "toSide": "left", "via": [[435, 302], [435, 342]] },
+    { "from": "gate", "to": "evidence", "variant": "dashed", "fromSide": "bottom", "toSide": "left", "via": [[395, 412], [420, 412], [420, 492]] },
+    { "from": "gate", "to": "deliver", "fromSide": "bottom", "toSide": "left", "via": [[395, 432], [405, 432], [405, 612]] },
+    { "from": "discover", "to": "state", "variant": "emphasis", "fromSide": "right", "toSide": "top", "route": "orthogonal-h" },
+    { "from": "clarify", "to": "state", "variant": "emphasis" },
+    { "from": "challenge", "to": "state", "variant": "security", "fromSide": "right", "toSide": "bottom", "route": "orthogonal-h" },
+    { "from": "state", "to": "downstream", "variant": "emphasis", "fromSide": "right", "toSide": "top", "route": "orthogonal-h" },
+    { "from": "evidence", "to": "downstream", "variant": "dashed", "fromSide": "right", "toSide": "left", "route": "orthogonal-h" },
+    { "from": "deliver", "to": "downstream", "fromSide": "right", "toSide": "bottom", "route": "orthogonal-h" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Routing invariant",
+      "items": [
+        "Source, format, domain, lifecycle, and task size are not routing keys",
+        "Facts are investigated; consequential human choices are clarified"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Boundary",
+      "items": [
+        "Use only the smallest useful mode",
+        "No automatic design, plan, implementation, or reviewer"
+      ]
+    }
+  ]
+}

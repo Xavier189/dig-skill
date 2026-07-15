@@ -1,264 +1,100 @@
-# dig（探骊）— 把还没想清楚的事，想深、说清、经得起质疑
+# Sensemaking（探骊）
 
-dig 是一个跨领域的 adaptive thought-partner skill。
+> Turn uncertainty into shared understanding.
 
-它不只在“需求模糊”时追问：当你不知道自己想做什么，它帮助发现方向；当你已有粗略目标，它帮助澄清真实分叉；当你已经给出需求或设计，它帮助找出缺陷、盲区、矛盾和未决点。
+Sensemaking 是一个跨领域的 adaptive thought-partner skill：当方向尚未形成时帮助探索，当现实选择仍会改变结果时帮助澄清，当已有方案需要检验时帮助挑战，并在必要时保存已经形成的 shared decisions。
 
-```text
-                   ┌─ Discover：发现方向
-原始想法与上下文 ──┼─ Clarify：澄清决策 ──→ STRUCTURE ──→ 可选输出
-                   └─ Challenge：检验设计
-```
+它不按任务大小、代码/非代码、输入格式或工作阶段触发，也不接管后续 design、plan、implementation 或 reviewer 路由。
 
-STRUCTURE 贯穿三种 mode，持续区分哪些是候选方向、已确认决定、agent 假设、已推翻内容、暂缓项和已知风险。它防止一份看起来完整的总结把对话里的精确约束重新抹平。
+![Sensemaking routing](docs/assets/sensemaking-routing.svg)
 
-遵循 [Agent Skills](https://agentskills.io) 开放格式，可安装到 Claude Code、Codex、Cursor 及其他兼容客户端。
+## 一个入口，四种最小动作
 
-## 它解决的不是一种问题
-
-| 用户状态 | 真正需要的动作 | dig mode |
+| 当前真正缺什么 | 路线 | 结果 |
 |---|---|---|
-| “我也不知道想做什么” | 补认知、展示可能性、发现判断标准 | Discover |
-| “大方向有了，但很多细节没想清” | 找出会改变结果的分叉并拍板 | Clarify |
-| “方案已经写好了，帮我看看有没有问题” | 用证据、反例、失败场景和替代方案检验 | Challenge |
+| 没有方向、词汇、例子或选择依据 | **Discover** | 可比较的方向、判断标准或待验证 hypothesis |
+| outcome 已存在，但仍有 consequential human-owned choice | **Clarify** | 已确认、委托或暂缓的 material decisions |
+| proposal/decision 需要检验，或已有 material defect | **Challenge** | findings、修订建议与 accepted risks |
+| thinking 已完成，只需保存、对齐或交接 | **STRUCTURE-only** | 带状态的 shared understanding |
+| 只缺事实、根因或可行性证据 | inspect / research / diagnose / prototype | evidence；必要时再进入 Sensemaking |
+| 已 action-ready，且没有可见 material defect | skip | 直接交付并做比例适当的 verification |
 
-三种 mode 可以切换，但不会为了“流程完整”强制全走一遍。任务大小也不决定是否触发：清晰的大任务可以跳过 dig，模糊的小任务可以进入 Clarify，一句“我不知道自己想做什么”可以直接进入 Discover。
+同一种表面任务可能走不同路线：一句话需求可能已经足够清楚，也可能藏着会改变 outcome 的分叉；大型迁移可能 decision-complete，也可能只缺事实证据。route 只由当前 thinking state 决定。
 
-## 入口由思考状态决定
+## 三种 thinking mode
 
-dig 不把任何来源、格式、领域或工作阶段当成默认入口。产品经理给的一句话、自己想做的重构、已有 PRD、一个代码库、待部署的博客、待整理的资料目录或非代码方案，都先经过同一个 gate：**当前真正缺什么？**
+### Discover
 
-| 当前缺口 | 最小动作 |
-|---|---|---|
-| 没有方向、词汇、例子或选择依据 | Discover |
-| outcome 已存在，但仍有会改变结果的人类决策 | Clarify |
-| proposal/decision 需要检验，或已有 material defect | Challenge |
-| thinking 已完成，只需保存、对齐或交接 shared decisions | STRUCTURE-only |
-| 只缺事实、根因、现状或可行性证据 | inspect / research / diagnose / prototype；证据暴露决策或有效性问题时再进入 dig |
-| 已 action-ready，且没有可见 material defect | 跳过 dig，直接进入交付与比例适当的 verification |
+用户缺少方向或判断基础时，不假设其心里藏着一个完整目标。先补充 blind spots、examples 和 decision-relevant knowledge，再展示 2–4 个后果真正不同的 frames，让用户有能力比较后再收敛。
 
-因此，**同一种任务可以进入不同路线，不同领域也可以进入同一种路线**。短不等于模糊，长不等于完整；greenfield、维护、重构、升级、部署和资料整理也都不是 trigger。跨领域成对案例见 [场景校准矩阵](docs/scenarios.md)；这些案例用于证明抽象，不定义新规则。
+### Clarify
 
-## Discover：方向尚未形成时，先建立选择依据
+先读取可获得的上下文并核查事实，只把会 materially 改变 outcome、scope、risk、success evidence 或 external commitment 的选择交给用户。问题按依赖关系组织；taste call 用具体草案帮助识别，不要求用户凭空描述。
 
-Discover 不假设用户心里藏着一个等待被问出来的完整目标。
+### Challenge
 
-它会先判断用户缺的是方向、词汇、参考物，还是选择依据，然后使用：
+对已经看见的矛盾、错误假设、失败路径或不安全边界直接给 finding、依据、后果和最小修正。只在修正涉及价值取舍、风险承担或不可逆承诺时提问。
 
-- blind-spot pass：解释用户还不知道该问什么；
-- multiple frames：给出 2–4 个后果真正不同的方向，不用单一“真实目标”锚定；
-- teach/show-before-ask：用户没有判断基础时先解释、调研或展示；
-- recognition over recall：用样例、对照、场景或 cheap prototype 让用户“看到才知道”；
-- deliberate convergence：只有当用户能比较方向时才收敛。
+## Shared state
 
-Discover 可以结束于一个方向、一个 shortlist、一项待验证的 hypothesis，或“现在不值得继续”的明确判断，不强制把结果翻译成 PRD。
-
-## Clarify：只问真的会改变结果的问题
-
-Clarify 保留了 dig v2.4 中验证最充分的能力：
-
-- 先读相关上下文；能查到的事实不问用户；
-- 把方案追溯回它试图解决的问题，不接受 solution-disguised-as-requirement；
-- 提出可证伪的 outcome、task-specific traps 和 current sketch；
-- 独立问题每批 2–4 个，依赖问题逐层追；
-- 每问都必须能说明不同答案会怎样改变结果；
-- taste call 不空问，给具体草案或示例；
-- 回答只更新 delta，旧假设被推翻后明确标为 invalidated。
-
-Clarify 的终点不是“问够若干轮”，而是所有 material fork 已确认、以显式默认委托、暂缓，或转化为 research/prototype 行动。
-
-## Challenge：已有设计时，直接挑出问题
-
-Challenge 不把已经看见的缺陷伪装成问题让用户重新回答。它先给 finding，再说明依据、后果和最小修正；只有价值取舍、风险承受或不可逆承诺仍需用户决定时才提问。
-
-会按任务选择少数有效 lens：
-
-- goal fit 与 proxy optimization；
-- internal consistency；
-- assumptions 与 evidence；
-- boundaries、negative cases、failure/recovery；
-- stakeholders 与 incentives；
-- terminology 与 domain model；
-- success/testability；
-- reversibility 与 cheaper experiment；
-- materially different alternatives。
-
-pre-mortem、inversion、counterexample、first principles 等是按需工具，不是固定菜单。
-
-Challenge 适用于软件设计，也适用于会议方案、制度、内容结构、运营流程、产品方向等非代码任务。
-
-## STRUCTURE：保存 shared understanding，而不是机械填表
-
-dig 在对话中维护一份轻量 shared model，可能包含：
-
-- Intent
-- Stakeholders
-- Scenarios
-- Scope
-- Requirements
-- Constraints
-- Decisions
-- Assumptions & evidence
-- Risks & edge cases
-- Success evidence
-- Open items
-
-只记录当前任务真正需要的部分。每个 consequential item 使用明确状态：
+STRUCTURE 是贯穿各 mode 的轻量状态层，不是固定表单。它按需记录 intent、scope、requirements、constraints、decisions、assumptions、risks、success evidence 和 open items，并区分：
 
 | 状态 | 含义 |
 |---|---|
 | `candidate` | 仍在探索的方向 |
 | `confirmed` | 用户或权威来源已确认 |
 | `assumed` | agent 的显式临时默认 |
-| `invalidated` | 已被推翻或替代，不可悄悄复活 |
-| `deferred` | 有意暂缓，并记录默认或后果 |
+| `invalidated` | 已被推翻，不可悄悄复活 |
+| `deferred` | 有意暂缓，并保留默认或后果 |
 | `risk` | 已知问题或接受的 trade-off |
 
-短对话不展示内部标签。多轮讨论、决定被修改、精确数字/顺序/negative requirement 很重要，或需要跨 session handoff 时，才启用轻量 decision ledger。
+短对话只需在当前 context 中维护。多轮修订、跨 agent/session、审批或追溯确实需要时，才输出 Direction Map、Clarity Memo、Challenge Report、Decision Brief、Requirements Brief 或 Handoff Snapshot。默认不写文件。
 
-## 输出不是固定流水线
+## 边界
 
-按用户需要选择最轻的 renderer：
-
-- Direction Map
-- Clarity Memo
-- Challenge Report
-- Decision Brief
-- Requirements Brief
-- PRD / Spec（仅在明确需要时）
-- 不落盘，只在对话中形成 shared understanding
-
-默认不写文件。用户或授权 harness 要求持久化时，代码仓库可以采用：
-
-```text
-docs/discovery/YYYY-MM-DD-<slug>.md
-docs/clarity/YYYY-MM-DD-<slug>.md
-docs/challenges/YYYY-MM-DD-<slug>.md
-```
-
-笔记库、博客、个人项目、运维 workspace 或普通目录应沿用自己的组织方式，不因运行 dig 自动创建 `docs/`。
-
-旧 harness 需要 `Goal / Decisions / Boundaries / Success criteria / Open items` 五节契约时，可以把它作为 renderer adapter；这个兼容格式不再控制内部思考流程。
-
-## 触发与跳过
-
-应该触发：
-
-- 用户明确说“不知道想做什么”、想 brainstorm/explore；
-- 任意 starting point 仍留下会改变 outcome、scope、constraint、risk、success evidence 或 external commitment 的 human-owned decision；
-- 用户显式要求 dig、clarify、grill、challenge、stress-test 或审查 proposal/decision；
-- 用户要求保存、对齐或交接已经形成的 shared decisions 及其状态；
-- 请求虽清晰，但已经看到会让静默执行不成立的 material contradiction/defect。
-
-应该跳过：
-
-- decision-complete、没有可见实质缺陷的执行请求；
-- 纯信息问答；
-- 简单改写、翻译、格式化等明确的一步任务；
-- 只需整理文件、转换数据或汇总内容，且没有 shared-decision state 需要保存的明确任务；
-- 普通 code review、debugging 或 implementation review——除非用户要审查的是其底层 intent/requirement/design。
-
-`decision-complete` 不等于 `decision-sound`，但这也不授权 dig 把所有清晰任务变成强制 review。
-
-显式调用 dig 时至少执行一次最小 state check；若没有 direction、decision 或 validity problem，直接说明请求已 action-ready 并停止。不要为了证明“sound”而额外 review，也不要把清晰请求偷塞进 STRUCTURE-only。
-
-## 与下游流程的边界
-
-dig 只负责 discovery、clarity、challenge 和 shared-state structure。
-
-- dig 没有必须先跑的业务 skill，可以是 session 或 agent 工作的第一步；system instructions、权限、安全边界和必要上下文仍然有效。
-- 对话或 critique 本身是交付物时，直接完成，不先设置 memo gate。
-- dig 作为前置工作时，在 shared understanding 被接受前不开始依赖这些决定的下游交付。
-- 完成后立即归还控制权，不指定 plan mode、implementation、architecture review 或 task-size workflow。
-- 默认 inline、domain-aware challenge；独立 reviewer 是高风险或显式要求时的 escalation。
-- 非软件任务永远不会因为 dig 被路由到 Software Architect。
-
-dig 之后也没有唯一的“下一步”：
-
-| 当前剩余需要 | 合理后继 | 典型产物 |
-|---|---|---|
-| 缺事实或可行性证据 | inspect / research / cheap prototype | evidence 或实验结果 |
-| 状态清楚、改动局部且可逆 | direct delivery | 完成交付 + verification |
-| 实现选择会改变 contract、data、coupling 或 recovery | design | inline design；必要时 ADR/spec |
-| 多步骤且需要依赖/进度协调，或跨 session、需要恢复 | planning | 可执行 task state；不默认落盘 |
-| 高风险或需要独立专业判断 | domain review | findings + accepted/rejected risks |
-| 当前思考本身已经完成目标 | stop | Direction Map / Brief / 无文件 |
-
-这些路线属于不同维度，可以组合或回到 dig，不能按“任务大”固定串成流水线。完整 handoff contract 见 [docs/downstream.md](docs/downstream.md)。
-
-### `AGENTS`、文档、`skill`、`subagent`、落盘不是同一层
-
-| 机制 | 解决什么 | 一句话例子 |
-|---|---|---|
-| `AGENTS.md` | 在其 scope 内几乎每次都要生效的短规则 | 本仓库统一使用某条 Maven 命令 |
-| 普通文档/reference | 项目事实、术语、schema、业务规则与当前决策 | 订单状态与撤回规则 |
-| 窄 skill | 按需触发的可复用方法、工具或专业能力 | 对状态机变更执行固定影响分析 |
-| subagent/custom agent | 本次独立 workstream，或反复需要的独立角色 | 独立盘点 payment 与 inventory 影响 |
-| durable artifact | 让任务状态跨 agent、session、审批或审计继续存在 | Handoff Snapshot / issue / ADR |
-
-选择能容纳全部假设的最窄 activation scope：带项目、团队或资料集假设的内容留在对应 workspace；明确跨无关项目仍安全成立的能力可以直接 global，不必先经历“从 workspace 晋升”的仪式。dig 默认不自动写文件。同一 session 换 agent 时，把精简 Handoff Snapshot 放进派发消息即可；跨 session 时再持久化。完整判断见 [下游说明](docs/downstream.md)。
+- 可以是 session 或 agent 工作的第一步，没有业务 skill 前置。
+- 完成当前 thinking job 后立即结束，不指定固定 successor。
+- task size 不是 workflow selector；清晰的大任务可以跳过，模糊的小任务可以进入。
+- facts 由 agent 调查；intent、价值取舍、风险承担和 hard-to-reverse decisions 由用户决定。
+- reviewer 只在显式要求、高风险或独立专业视角确有价值时使用，并按实际 domain 选择。
+- Software Architect 只评 software architecture，绝不因为经过 Sensemaking 而自动出现。
 
 ## 安装
 
-```bash
-git clone https://github.com/Xavier189/dig-skill.git
-```
-
-### Claude Code
-
-```bash
-ln -s "$(pwd)/dig-skill/skills/dig" ~/.claude/skills/dig
-```
-
-### Codex / Cursor 共享目录
+在仓库根目录执行：
 
 ```bash
 mkdir -p ~/.agents/skills
-ln -s "$(pwd)/dig-skill/skills/dig" ~/.agents/skills/dig
+ln -s "$(pwd)/skills/sensemaking" ~/.agents/skills/sensemaking
 ```
 
-也可以复制目录而不使用 symlink。自动触发能力取决于具体客户端；显式调用始终是可靠兜底。
+Claude Code 也可以使用专属目录：
 
-建议在全局 instructions 中只放简短路由纪律，不复制完整流程：
-
-```markdown
-Use dig when the user lacks a direction, when materially different interpretations
-would change the outcome, or when the user asks to challenge a proposal/decision.
-Source, format, domain, lifecycle phase, and task size do not select dig. Skip
-action-ready execution and fact-only investigation unless they expose an underlying
-decision or validity problem.
-Dig never selects downstream planning, implementation, or reviewers.
+```bash
+ln -s "$(pwd)/skills/sensemaking" ~/.claude/skills/sensemaking
 ```
 
-## 项目结构
+复制目录同样可用；symlink 更便于让仓库版本作为 single source of truth。自动触发能力取决于 host，显式调用 `$sensemaking` 是可靠兜底。
 
-```text
-skills/dig/
-├── SKILL.md
-└── references/
-    ├── discover.md
-    ├── clarify.md
-    ├── challenge.md
-    └── structure.md
-```
+## 文档
 
-完整产品决策见 [docs/design.md](docs/design.md)，下游衔接见 [docs/downstream.md](docs/downstream.md)，跨领域校准案例见 [docs/scenarios.md](docs/scenarios.md)，落地与验收记录见 [docs/rebuild-v1-plan.md](docs/rebuild-v1-plan.md)，未来合并说明见 [docs/merge-notes.md](docs/merge-notes.md)。旧 v2.4 设计记录保存在 [docs/history/v2.4-design.md](docs/history/v2.4-design.md)。
+| 文档 | 何时阅读 |
+|---|---|
+| [产品设计](docs/design.md) | 理解核心模型、边界和被否决方案 |
+| [下游路由](docs/routing.md) | 判断 skill、subagent、design、plan、review 与落盘边界 |
+| [跨领域示例](docs/examples.md) | 用成对案例校准 route invariant |
+| [维护资料入口](docs/internal/README.md) | 维护或演进 skill 时查研究依据、eval 与图源 |
+
+Skill 本体位于 [`skills/sensemaking/`](skills/sensemaking/)，只保留 agent 执行所需的指令与按需加载 references；仓库说明与维护材料不会注入每次调用的 context。
 
 ## 验证
 
-行为 eval 覆盖：
+```bash
+python3 /path/to/skill-creator/scripts/quick_validate.py skills/sensemaking
+python3 -m json.tool evals/evals.json >/dev/null
+```
 
-- 不知道方向时不被单一 hypothesis 锚定；
-- 用户缺知识时先 teach/show 再 ask；
-- solution-disguised-as-requirement 被追溯；
-- 明确 critique 直接给 findings；
-- 修改过的决定不在 summary 中复活；
-- 清晰请求不会因为任务大小或“可能还有盲区”被误触发；
-- 同一 thinking state 跨来源、格式、领域和生命周期保持相同 gate；
-- STRUCTURE-only 不吞掉普通改写、文件整理或数据转换任务；
-- 非代码任务不出现 Software Architect 或软件流程。
-
-历史 benchmark 位于 `evals/iteration-1/`、`evals/iteration-2/`。rebuild v1 的量化结果见 [benchmark](evals/rebuild-v1/benchmark.md)，逐项新旧输出可在 [static review viewer](evals/rebuild-v1/review.html) 中检查。无前置与 downstream handoff 的追加回归见 [handoff benchmark](evals/handoff-v1/benchmark.md) 和 [handoff viewer](evals/handoff-v1/review.html)。跨领域 state-gate 与 STRUCTURE 负边界结果见 [invariance benchmark](evals/invariance-v1/benchmark.md)。
+行为校准覆盖 Discover、Clarify、Challenge、STRUCTURE-only、skip、fact-only investigation、跨领域不变量和下游边界。用例定义见 [`evals/evals.json`](evals/evals.json)，维护说明见 [evaluation.md](docs/internal/evaluation.md)。
 
 ## License
 

@@ -16,9 +16,11 @@ Sensemaking 解决的是 thinking state，不是某一种输入：产品需求�
 | Decision uncertainty | 哪些现实选择必须由人承担，且会改变结果？ | Clarify |
 | Validity uncertainty | 当前 proposal/decision 是否存在实质缺陷？ | Challenge |
 
-另有两种情况不应被吞进来：
+先确定用户本轮请求的活动。显式调用或要求分析讨论、挖掘遗漏时，先检查相关目标、假设与结果边界，不以实现简单或尚未发现缺陷为由跳过。没有实质问题时允许零提问，简短给出检查依据。
 
-- **Fact uncertainty**：缺事实、根因、现状或可行性证据，先 inspect/research/diagnose/prototype。
+未要求探索或检验时，以下情况直接处理：
+
+- **Fact-only uncertainty**：缺事实、根因、现状或可行性证据，先 inspect/research/diagnose/prototype。用户同时要求讨论时，调查属于 sensemaking 内部活动。
 - **Action-ready**：consequential decisions 已清楚且没有可见 material defect，直接交付。
 
 ### Route invariant
@@ -43,7 +45,7 @@ Clarify 服务于“已有 outcome，但仍有 consequential human-owned choices
 
 Challenge 服务于明确 critique 请求或已经可见的 material defect。它使用少量相关 lens 检验 goal fit、consistency、evidence、boundaries、failure/recovery、stakeholders、testability、reversibility 与 alternatives。
 
-finding 必须说明 defect、basis、consequence 与最小 correction；只有 owner trade-off 未决时才提问。完成条件是 material findings 已修正、驳回、转为决定、暂缓或接受为 risk。
+finding 必须说明 defect、basis、consequence 与最小 correction；推荐依赖未确认目标或取舍时保持条件性，并核对方案相对现状的实际变化。完成条件是 material findings 已修正、驳回、转为决定、暂缓或接受为 risk。
 
 ## STRUCTURE
 
@@ -66,7 +68,9 @@ STRUCTURE-only 只用于保存、对齐或交接已经形成的 shared-decision 
 4. **Dependency-aware pacing**：依赖问题逐层追，独立问题可批量展示。
 5. **Attackable reasoning**：frame、hypothesis 与 finding 必须具体到可以被反驳。
 6. **Honest fog**：暂时无法精确定义的内容保持 open，不制造虚假确定性。
-7. **Delta reflection**：后续轮次只说明 shared model 的变化。
+7. **Delta reflection**：后续轮次只说明 shared model 的变化，只确认回答实际覆盖的决定。
+8. **Bounded investigation**：证据已足以支持关键问题或有限结论时，回到讨论，不等待完整实现调查。
+9. **Activity continuity**：“继续”继承当前活动；既有实现授权持续有效，讨论中的局部同意不扩大授权。
 
 ## 输出与 persistence
 
@@ -103,3 +107,5 @@ Sensemaking 完成 thinking job 即归还控制权。剩余工作可以是 evide
 8. 任一 mode 完成后不自动进入 design、plan、implementation 或 reviewer。
 9. STRUCTURE-only 不吞掉普通内容转换和文件操作。
 10. route invariant 在跨领域成对案例中保持成立。
+11. 显式探讨会检查遗漏与假设；短小请求不会仅因看似可实现而退出。
+12. 调查、用户回答和“继续”不会自行把讨论切换为实现；已授权执行也不被追加确认门槛。

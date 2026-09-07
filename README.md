@@ -2,16 +2,18 @@
 
 > Turn uncertainty into shared understanding. —— 把不确定性转化为共同理解。
 
-Sensemaking 是一个跨领域的 **adaptive thought-partner skill**。它不替你写实现，也不接管 design / plan / review 流水线——只在真正卡住时，把不确定性变成可讨论、可拍板、可交接的 shared understanding：
+Sensemaking 是一个跨领域的 **adaptive thought-partner skill**，帮助你挖掘尚未表达的目标、遗漏条件和方案盲点。带着一个小想法来讨论，也可以从这里开始：
 
 - **缺方向** → 找到可比较的方向与判断依据（Discover）
 - **有会改变结果的人责选择** → 把决策上浮并收敛（Clarify）
 - **已有方案可能不成立** → 用证据挑战硬伤（Challenge）
 - **thinking 已完成** → 必要时保存带状态的 shared decisions（STRUCTURE）
 
-它不按任务大小、代码/非代码、输入格式或工作阶段触发。完成当前 thinking job 后立即结束，把控制权交还下游。
+它不按任务大小、代码/非代码、输入格式或工作阶段触发。明确要求探讨时，先检查假设与结果边界；清晰的执行请求直接交付。完成讨论后按用户已有授权继续，不自动启动 design / plan / review 流水线。
 
 ![Sensemaking routing](docs/assets/sensemaking-routing.svg)
+
+探讨中获取的证据会回到当前讨论；是否继续交付，由用户请求和已有授权决定。
 
 ---
 
@@ -32,13 +34,14 @@ Sensemaking 只处理这几类 **thinking-state** 问题。产品需求、个人
 
 ## 什么场景下使用
 
-判断标准只有一条：**当前真正缺的是方向、会改变结果的人责决策，还是对已有方案的有效性检验？**
+先看用户本轮要求什么，再判断缺少方向、关键决策还是有效性证据。**显式要求挖掘或讨论时，即使方案看似可实现，也先检查相关假设与边界。**
 
 ### 该用
 
 | 场景 | 缺什么 | 路线 | 得到什么 |
 |---|---|---|---|
 | “想做个小程序，但不知道解决什么问题” | 方向与判断标准 | **Discover** | 2–4 个后果不同的方向，能比较后再选 |
+| “有一点改造想法，不知道是否可行，结合源码和我讨论” | 方案前提、遗漏条件与可行性证据 | **Clarify / Challenge**，内含调查 | 查到关键证据就回到讨论，让答案影响方案 |
 | “订单支持撤回”——谁可撤、何时可撤、补偿怎么做都未拍板 | material forks | **Clarify** | 关键决策被确认、委托默认或明确暂缓 |
 | “接口慢了，帮我优化”——查完发现有 SLO / 成本 / 一致性取舍 | 先事实，后 owner trade-off | diagnose → **Clarify** | 不靠猜根因；取舍上浮给人 |
 | “改业务总碰很多地方，重划模块还是先改最痛链路？” | 选择依据未稳定 | inspect → **Discover / Clarify** | 可见的改造策略与边界 |
@@ -53,7 +56,7 @@ Sensemaking 只处理这几类 **thinking-state** 问题。产品需求、个人
 |---|---|---|
 | 撤回规则、补偿、通知、验收都已确认 | action-ready | 直接交付 + 比例适当的 verification |
 | 局部、可逆的 helper 抽取，public contract 不变 | agent-owned 实现选择 | 直接改 + 针对性测试 |
-| “接口慢了”，日志 / 画像还没看 | 缺事实，不是缺决策 | inspect / diagnose；证据暴露 trade-off 再进入 |
+| “只查接口变慢的原因”，日志 / 画像还没看 | 本轮只要求事实调查 | inspect / diagnose；证据暴露 trade-off 再进入 |
 | 压缩邮件、按规则整理文件夹、对齐 CSV | 普通改写 / 文件 / 数据操作 | 直接执行；规则冲突变成 owner decision 时再 Clarify |
 | 没有可见缺陷，也没有人要求 review，只是想“再稳一点” | 仪式性 Challenge | 跳过 |
 
@@ -77,9 +80,9 @@ Sensemaking 只处理这几类 **thinking-state** 问题。产品需求、个人
 | Decision | 哪些现实选择必须由人承担，且会改变结果？ | Clarify |
 | Validity | 当前 proposal / decision 是否存在实质缺陷？ | Challenge |
 
-另两类故意不吞进来：
+未要求探索或检验时，以下请求直接处理：
 
-- **Fact uncertainty** → 先 inspect / research / diagnose / prototype
+- **Fact-only uncertainty** → inspect / research / diagnose / prototype；用户同时要求讨论时，调查结果带回讨论
 - **Action-ready** → 直接交付，不为“证明想过”而走流程
 
 使用者往往说不清自己缺的是哪一种。拆成三个公开 skill 会逼人选对工具；**一个入口**让 agent 按信号路由，需要时再切换 mode，且绝不把三个当仪式全跑一遍。
@@ -114,7 +117,7 @@ Sensemaking 只处理这几类 **thinking-state** 问题。产品需求、个人
 
 ### Challenge — 已有方案，需要检验
 
-对已看见的矛盾、错误假设、失败路径或不安全边界，直接给 finding、依据、后果和最小修正。只在修正涉及价值取舍、风险承担或不可逆承诺时提问。
+用户要求检验时，主动检查相关假设与盲点；对有证据的缺陷给出 finding、依据、后果和最小修正。推荐依赖未确认取舍时，先说明条件，避免过早锁定方案。
 
 **完成：** material findings 被接受、修正、驳回并留理由，或记为 accepted risk。
 
@@ -127,7 +130,7 @@ Sensemaking 负责 shared understanding；其他能力负责各自的缺口。�
 | 当前缺口 | 最小动作 |
 |---|---|
 | 方向 / 人责决策 / 方案有效性 | Sensemaking |
-| 事实、根因、兼容性、可行性 | inspect / research / diagnose / prototype |
+| 事实、根因、兼容性、可行性 | inspect / research / diagnose / prototype；在探讨中获取的证据及时带回讨论 |
 | 可识别、可复用的领域方法 | 窄业务 skill（如隐私审查、对账、发版 checklist） |
 | 已 action-ready，改动局部可逆 | 直接交付 + 比例适当的 verification |
 | 会改 contract / data / failure / security / migration | compact design（需要追溯时再写 durable design） |
@@ -165,6 +168,9 @@ STRUCTURE 是贯穿各 mode 的轻量状态层，不是固定表单。按需记�
 ## 边界
 
 - 可以是 session 或 agent 工作的第一步，没有其他 skill 前置。
+- 显式探讨会检查相关目标、假设与边界；没有实质问题时允许零提问，简短说明检查依据。
+- “继续”延续当前讨论、调查或执行；回答一个问题只确认对应决定，不代表批准其他建议。
+- 已授权的后续工作在相关决策解决后继续，不重复请求同一授权。
 - 完成当前 thinking job 后立即结束，不指定固定 successor。
 - facts 由 agent 调查；intent、价值取舍、风险承担和 hard-to-reverse decisions 由用户决定。
 - 独立 reviewer 仅在显式要求、高风险或确需第二专业视角时按 domain 选择。
@@ -210,7 +216,7 @@ python3 /path/to/skill-creator/scripts/quick_validate.py skills/sensemaking
 python3 -m json.tool evals/evals.json >/dev/null
 ```
 
-行为校准覆盖 Discover、Clarify、Challenge、STRUCTURE-only、skip、fact-only investigation、跨领域不变量和下游边界。用例见 [`evals/evals.json`](evals/evals.json)。
+行为校准覆盖三种 mode、显式/隐式调用、带源码的短草案、多轮续聊与局部确认，以及清晰请求、纯事实查询和已授权执行。用例见 [`evals/evals.json`](evals/evals.json)，运行约定见 [行为校准](docs/internal/evaluation.md)。
 
 ---
 

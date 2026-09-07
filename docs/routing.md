@@ -2,6 +2,8 @@
 
 Sensemaking 只解决 shared understanding。完成后不要问“固定下一步是什么”，而要问“现在还缺什么”。
 
+先保留用户请求的活动与已有授权。探讨中的调查结果要回到讨论；“继续”沿用当前活动；回答某个问题只确认对应决定。用户已要求决策解决后直接交付时，按原授权推进，不另加批准环节。
+
 ## 六个独立维度
 
 | 维度 | 可选路线 |
@@ -19,7 +21,7 @@ Sensemaking 只解决 shared understanding。完成后不要问“固定下一�
 
 | 当前缺口 | 最小动作 | 何时升级 |
 |---|---|---|
-| 事实、根因、兼容性或可行性未知 | inspect / research / diagnose / cheap prototype | evidence 暴露新的 owner decision 或 validity problem |
+| 事实、根因、兼容性或可行性未知 | inspect / research / diagnose / cheap prototype；探讨中的证据带回讨论 | evidence 暴露新的 owner decision 或 validity problem |
 | 状态清楚、改动局部且可逆 | direct delivery + proportionate verification | 实现选择改变重要边界 |
 | contract、data、coupling、failure/recovery、security 或 migration 会被改变 | compact design | 需要审批、长期追溯或多人 handoff 时写 durable design/ADR/spec |
 | 多步骤存在依赖、并行、长时间恢复或复杂 rollout | plan | 默认维护 task state；只有 continuity need 才落盘 |

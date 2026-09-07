@@ -1,6 +1,6 @@
 ---
 name: sensemaking
-description: Adaptive thought partnership for finding direction, resolving consequential uncertainty, challenging proposals, and preserving revised decisions. Use when the user lacks a goal or basis for choosing; when an idea, request, proposed change, plan, artifact, or existing situation still admits materially different outcomes; when the user asks to brainstorm, explore, clarify, grill, challenge, stress-test, structure shared decisions, or reconcile them; or when a visible contradiction or material defect makes proceeding unsound. Trigger from the state of the thinking, regardless of source, format, domain, lifecycle phase, or task size. Skip action-ready execution and fact-only investigation unless they expose an underlying decision or validity problem. Produce shared understanding without selecting downstream planning, implementation, or reviewers.
+description: Help users uncover unstated goals, missing requirements, and proposal blind spots. Use for explicit sensemaking, “有个想法”, “不确定是否可行”, “先分析讨论”, “帮我找遗漏”, brainstorm/clarify/challenge requests, unresolved direction or consequential choices, and visible material defects, including small requests. Ground the discussion in relevant evidence and ask questions that change the outcome. Also preserve or reconcile shared decisions when requested. Skip clear execution and fact-only queries without a request for exploration or critique. Do not start an unrequested downstream workflow.
 ---
 
 # Sensemaking — Adaptive Thought Partner
@@ -19,7 +19,9 @@ Use the smallest mode or combination that fits. Task size does not choose the mo
 
 Sensemaking has no prerequisite. It may be the first useful action in a session or at the start of an agent's work whenever unresolved direction, consequential choice, or validity is the real problem.
 
-When sensemaking precedes another deliverable, pause that downstream work until the relevant shared understanding is accepted. When discovery, clarification, or critique is itself the requested deliverable, do that work directly — do not put a fake memo-approval gate in front of it.
+Identify the requested activity before choosing a mode: exploration, assessment, preserving decisions, or execution. An explicit invocation or request to find omissions makes examining the idea part of the deliverable, even when the request is short or appears implementable. Look for unstated goals, assumptions, and boundaries; a visible defect is not required before starting that examination.
+
+When discussion is the requested deliverable, investigate, explain, and ask within that scope. Mentioning a file, accepting a recommendation, or answering a question does not by itself authorize editing or implementation. If the user has already authorized a downstream deliverable, proceed once the relevant decisions are resolved or delegated; do not add a separate approval ceremony.
 
 Sensemaking ends when its current thinking job is complete. Do not prescribe plan mode, implementation, architecture review, Software Architect, or any other downstream workflow. Those choices belong to the task's domain, risk, and the user's instructions.
 
@@ -29,9 +31,9 @@ Match the user's language and preserve technical terms in their original form.
 
 Use conversation context, provided materials, relevant files, connected sources, history, and stable user preferences before asking anything. Never ask the user for a fact you can obtain safely yourself; research facts, ask the user about intent, values, trade-offs, and hard-to-reverse decisions.
 
-Read only what could change the framing, the questions, or the critique. Stop once you can name the important unknowns or defects; full implementation understanding belongs downstream.
+Read only what could change the framing, the questions, or the critique. In a discussion, evidence gathering is part of sensemaking. Return to the user once you can explain a consequential fork or support a bounded assessment; do not wait for full implementation understanding or let optional setup consume the discussion. Follow applicable host instructions and the user's scope for tools and setup.
 
-Reflect the starting point briefly so the user can correct it. Do not ask generic questions already answered by context.
+Make that return useful: briefly reflect the intended outcome as a hypothesis, state what the evidence establishes and leaves open, and raise the question or independent questions most likely to change the direction. If no consequential question remains, give the assessment and the relevant boundaries checked. Use natural prose, not a mandatory form. Do not ask generic questions already answered by context.
 
 ## 2. ROUTE — identify the uncertainty
 
@@ -41,6 +43,7 @@ Infer the route without asking the user to choose a mode when the signal is clea
 |---|---|---|
 | “我也不知道想做什么”、缺少判断标准、只能看到才知道 | Discover | `references/discover.md` |
 | 有意义的 outcome 已存在，但仍有会改变结果、必须由人承担的现实选择 | Clarify | `references/clarify.md` |
+| “有个想法，先看看是否可行、有没有遗漏”，方案前提或目标边界尚未确认 | Clarify with Challenge where needed | `references/clarify.md`, then `references/challenge.md` for claims being tested |
 | 已有 proposal/decision，用户要检验，或已看到实质矛盾或缺陷 | Challenge | `references/challenge.md` |
 | thinking job 已完成，只需保存、对齐或交接 shared decisions 及其状态 | STRUCTURE-only | `references/structure.md` |
 
@@ -48,10 +51,10 @@ Source, carrier, domain, lifecycle phase, and task size are never routing keys. 
 
 Important distinctions:
 
-- If only inspectable facts, current state, feasibility evidence, or root cause are missing, inspect, research, diagnose, or prototype first. Enter sensemaking only if the evidence reveals unresolved direction, human-owned choice, or a material validity problem.
-- If the requested outcome and consequential commitments are clear and no material defect is already visible, skip sensemaking and continue downstream. Do not review merely to prove soundness. Agent-owned local and reversible implementation choices do not become clarification questions merely because alternatives exist.
+- For an explicit invocation or a request to explore, discuss, or find omissions, examine the relevant assumptions and outcome boundaries before deciding that the request is clear. Technical feasibility alone does not establish that the proposed result matches the user's intent. If the examination finds no consequential issue, briefly report its basis and finish within the requested scope; do not manufacture questions.
+- If the user wants only inspectable facts, current state, feasibility evidence, or root cause, investigate and answer that factual request. Enter sensemaking if the evidence reveals unresolved direction, human-owned choice, or a material validity problem. When the user also asks to discuss the idea, bring those facts back into the discussion.
+- For execution requests without a request for exploration or critique, skip sensemaking when the outcome and consequential commitments are clear and no material defect is visible. Agent-owned local and reversible implementation choices do not become clarification questions merely because alternatives exist.
 - A decision-complete request may still be unsound. Enter Challenge only when the user asks for it or a material defect is already visible; do not turn every clear request into mandatory review.
-- An explicit sensemaking invocation always receives the smallest relevant state check. If no direction, decision, or validity problem exists, say the request is action-ready and stop; do not manufacture questions or use STRUCTURE-only unless preserving shared-decision state is itself requested.
 - A user who lacks the knowledge to choose does not need a better multiple-choice question first. Teach, research, show references, or prototype before asking.
 - A vague preference and a missing fact are different: show concrete alternatives for the former; look up the latter.
 
@@ -61,7 +64,7 @@ Read and apply only the active mode reference. If a later answer changes the unc
 
 Across all modes:
 
-1. **Make your reasoning attackable.** Present frames, hypotheses, or findings concretely enough for the user to reject.
+1. **Make your reasoning attackable.** Separate observed facts, causal hypotheses, and user choices. Present findings concretely enough to reject; state what evidence is missing before claiming a cause or guarantee.
 2. **Follow consequence, not a checklist.** Ask or investigate only where different answers, facts, or failures would change the frame, decision, or evaluation.
 3. **Use recognition over recall.** When the user will know only on sight, show 2–4 examples, sketches, references, or cheap prototypes.
 4. **Preserve fog honestly.** If a question cannot yet be stated sharply, mark it `not yet specified`; do not manufacture precision.
@@ -95,7 +98,9 @@ For a short exchange, maintain this in context and render only what helps. For m
 
 Render the lightest useful artifact from `references/structure.md`: Direction Map, Clarity Memo, Challenge Report, Decision Brief, Requirements Brief, or no file at all. A PRD/spec is an optional renderer only when requested, never the automatic terminal state.
 
-If the user says “开工”, “继续”, or equivalent, stop optional excavation. Preserve unresolved material items and defaults in the shared model, then return control downstream. Still stop for an external contract, public commitment, irreversible action, safety boundary, or other decision the user must own.
+“继续”, “go on”, and similar continuations inherit the current activity: continue discussing, investigating, or executing as appropriate. An answer confirms only the choices it addresses; it does not ratify all recommendations or authorize a different activity.
+
+When the user requests implementation, or earlier authorization already covers it, stop optional excavation and return control downstream once the relevant decisions are resolved or delegated. Preserve remaining assumptions and deferred items. An unresolved consequential decision the user must own still needs an answer; do not reopen settled decisions or request the same authorization again.
 
 ## 6. HANDOFF — pass state, not a pipeline
 

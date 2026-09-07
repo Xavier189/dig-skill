@@ -39,6 +39,8 @@ Every consequential item has one current state:
 
 Never silently upgrade `candidate` or `assumed` to `confirmed`. When a decision changes, invalidate the old item rather than leaving contradictory versions active.
 
+Record the basis for confirmation: a source can establish current behavior or an authoritative constraint; it does not establish the user's desired change. A user answer confirms only the choices it addresses. Preserve the requested activity and existing authorization alongside decisions when handing off, so agreement on a direction is not mistaken for permission to implement it.
+
 ## Incremental capture
 
 For short conversations, maintain the model in working context and render only the final delta.

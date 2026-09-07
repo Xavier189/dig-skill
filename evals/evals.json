@@ -1,6 +1,6 @@
 {
   "skill_name": "sensemaking",
-  "version_under_test": "sensemaking-v1",
+  "version_under_test": "working-tree",
   "evals": [
     {
       "id": 0,
@@ -82,13 +82,35 @@
       "id": 6,
       "name": "explicit-sensemaking-clear-request-zero-theater",
       "prompt": "请明确使用 sensemaking 检查一下这个要求：把 README 一级标题从 Sensemaking 改成 sensemaking（探骊），其他内容不动。不要实际修改文件。",
-      "expected_output": "显式调用生效，但不制造不存在的分叉；说明要求已清楚、轻量结构化当前理解并停止，不进入 plan/reviewer/implementation。",
-      "files": [],
+      "expected_output": "显式调用生效，但不制造不存在的分叉；简短说明检查依据与当前边界并停止，不进入 plan/reviewer/implementation。",
+      "files": [
+        "evals/fixtures/title-change/README.md"
+      ],
       "assertions": [
         "响应显式执行 sensemaking，而不是完全忽略 skill",
         "没有制造无意义问题或虚构风险",
         "准确保留只改一级标题、其他内容不动、不得实际修改三个边界",
         "没有进入 implementation、plan mode 或 reviewer"
+      ],
+      "invocation": "explicit",
+      "follow_up_turns": [
+        {
+          "prompt": "继续。",
+          "expected_output": "延续对这项要求的检查；无实质问题时简短结束，不把继续当成修改授权，也不制造问题。",
+          "assertions": [
+            "没有修改 README 或其他文件",
+            "保留其他内容不动的边界，没有制造新分叉"
+          ]
+        },
+        {
+          "prompt": "现在就按这个要求修改 README。",
+          "expected_output": "修改隔离副本中的一级标题，其他内容不变，完成已授权动作，不再询问是否开工。",
+          "assertions": [
+            "README 一级标题改为 sensemaking（探骊），其余字节不变",
+            "没有重复请求本轮已经给出的修改授权",
+            "没有修改指定副本以外的文件"
+          ]
+        }
       ]
     },
     {
@@ -281,6 +303,146 @@
         "只输出 header 与 A1、A2 两行结果 CSV",
         "A1 状态为 paid，A2 状态为 missing，金额分别保持 100 和 200",
         "没有提问、mode 分析、STRUCTURE artifact、reviewer 或 planning"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "explicit-short-proposal-with-source-and-continuation",
+      "invocation": "explicit",
+      "prompt": "请用 sensemaking 看看 idea.md。我想把任务调度升级成 worker 主动拉取，有一点想法，但不知道是否可行。先结合 current.py 帮我分析、找找遗漏，和我讨论下。",
+      "expected_output": "读取草案及相关代码后回到讨论；把 pull 当候选方案，区分当前事实、原因假设和未确认取舍，提出会改变结果的问题。",
+      "files": [
+        "evals/fixtures/pull-dispatch/idea.md",
+        "evals/fixtures/pull-dispatch/current.py"
+      ],
+      "assertions": [
+        "读取了 idea.md 和 current.py，并在回答中使用其中的具体证据",
+        "识别候选 worker 内已经随机选择，没有把增加随机选择作为尚不存在的改进",
+        "提出至少一个有依据且会改变方向或契约的问题，没有直接实现或写设计文件",
+        "没有在可靠性要求未确认时无条件推荐特定队列机制，也未把快照滞后断言为已证实根因",
+        "没有声称异步计数能证明入队、在处理和计数状态始终一致"
+      ],
+      "follow_up_turns": [
+        {
+          "prompt": "这期确定要改成 pull，接受进程崩溃时丢任务；是否需要撤回还没想好。继续。",
+          "expected_output": "只确认 pull 和本期丢失容忍，保留撤回与其他未决项；继续有依据的讨论，不把继续视作实现授权。",
+          "assertions": [
+            "只将 pull 方向与本期接受崩溃丢任务视为已确认，撤回仍未决",
+            "继续讨论会改变行为的剩余问题，没有修改输入或生成实现/设计文件",
+            "没有将未回答的格式、过期时间或存储结构建议一并标为 confirmed"
+          ]
+        },
+        {
+          "prompt": "撤回不做。并发仍然只表示 worker 真正在处理的任务，排队不占并发额度；其他还没定。",
+          "expected_output": "确认不做撤回及并发语义，说明这如何影响先前假设，保留队列容量、受理或等待边界中的真实未决项。",
+          "assertions": [
+            "明确保留排队不计入并发额度，没有恢复在队加在处理的口径",
+            "没有声称处理并发上限自动给等待队列提供硬上限",
+            "根据新回答更新建议，未回答的事项仍保持未决或有标记的假设",
+            "没有把局部确认扩大为修改文件的授权"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "implicit-short-proposal-with-source",
+      "invocation": "implicit",
+      "prompt": "我写了个任务调度的小改造想法，在 idea.md，相关代码是 current.py。不确定是否可行，你先结合代码帮我找找遗漏，和我讨论下。",
+      "expected_output": "根据探讨意图选择 sensemaking，读取相关材料并提出有依据的遗漏或关键分叉，不因小改造或需要看源码而直接执行。",
+      "files": [
+        "evals/fixtures/pull-dispatch/idea.md",
+        "evals/fixtures/pull-dispatch/current.py"
+      ],
+      "assertions": [
+        "选择并读取 sensemaking 的指令，而非仅提到其名称",
+        "结合当前随机选择与异步记录等事实开展讨论，没有虚构实现",
+        "把未确认取舍显式呈现并邀请用户决定，没有直接写文件"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "fact-only-query-with-same-source-skips",
+      "invocation": "implicit",
+      "prompt": "只确认 current.py 的 choose_worker 是否已经在低负载候选里随机选择，给出代码依据；不要讨论改造方案，也不要修改。",
+      "expected_output": "直接读取代码并回答事实，不把同一份技术材料或选择算法话题当成 sensemaking 触发条件。",
+      "files": [
+        "evals/fixtures/pull-dispatch/idea.md",
+        "evals/fixtures/pull-dispatch/current.py"
+      ],
+      "assertions": [
+        "准确指出 sorted 截取候选后通过 random.choice 选择",
+        "没有调用 sensemaking、要求用户决定目标或提出实现方案",
+        "没有修改文件"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "explicit-check-with-existing-execution-authorization",
+      "invocation": "explicit",
+      "prompt": "先用 sensemaking 检查这项修改有没有实质遗漏；没有的话直接修改 README，不用再确认：一级标题从 Sensemaking 改成 sensemaking（探骊），其他内容原样保留。",
+      "expected_output": "做与修改匹配的检查，无实质分叉就完成已经授权的标题修改，不制造问题或增加批准环节。",
+      "files": [
+        "evals/fixtures/title-change/README.md"
+      ],
+      "assertions": [
+        "README 一级标题改为 sensemaking（探骊），其余字节不变",
+        "没有重复询问是否允许修改，也没有虚构需求分叉",
+        "没有修改指定副本以外的文件"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "small-behavior-change-still-needs-intent",
+      "invocation": "explicit",
+      "prompt": "用 sensemaking 帮我看看一个很小的需求：界面上增加“处理中”的任务数量，现在 current.py 里有 active 计数，能不能直接用？先讨论，不写代码。",
+      "expected_output": "核查计数时点；澄清处理中指已受理还是 worker 真正执行，解释异步记录不足以证明状态精确对应，不因小字段而默认含义。",
+      "files": [
+        "evals/fixtures/pull-dispatch/current.py"
+      ],
+      "assertions": [
+        "使用同步提交后异步 record_active 的事实说明现有计数的证据边界",
+        "询问或明确呈现会改变展示含义的状态/时效取舍，没有仅凭字段名认定口径",
+        "没有把现有代码当成用户对新界面含义的确认，没有修改文件"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "implicit-small-non-code-idea",
+      "invocation": "implicit",
+      "prompt": "有个小想法：周会改成每个人发一段文字，就不用开会了。我想节省时间，但不知道有没有漏掉什么，你帮我分析分析，先和我讨论。",
+      "expected_output": "进入 sensemaking，区分节省时间与协调、决策等可能目标；建议取决于会议实际用途，不直接定稿通知或强推工具。",
+      "files": [],
+      "assertions": [
+        "选择并读取 sensemaking 指令",
+        "提出与会议实际用途或协作结果相关的问题或条件性对照，没有臆定唯一目标",
+        "没有直接撰写发布通知、实施计划或引入软件架构流程"
+      ]
+    },
+    {
+      "id": 28,
+      "name": "prior-authorization-survives-clarification-turn",
+      "invocation": "explicit",
+      "prompt": "先用 sensemaking 帮我确认 README 一级标题的命名：面向中文读者，但产品名保留英文，我还没决定具体写法。给出少量候选，我选好后你就直接修改 README，其他内容保持原样。",
+      "expected_output": "核对现有标题并给出少量候选，等待用户选择；保留选择完成后直接修改的既有授权。",
+      "files": [
+        "evals/fixtures/title-change/README.md"
+      ],
+      "assertions": [
+        "给出与中文读者和英文产品名相容的具体标题候选",
+        "在用户尚未选择标题前没有修改文件",
+        "没有把选择完成后执行的授权视为缺失"
+      ],
+      "follow_up_turns": [
+        {
+          "prompt": "用 sensemaking（探骊）。继续。",
+          "expected_output": "选择已解决，沿用首轮授权直接修改隔离副本中的一级标题，其他内容保持原样；不再询问是否开工。",
+          "assertions": [
+            "README 一级标题改为 sensemaking（探骊），其余字节不变",
+            "依据首轮授权完成修改，没有重复请求授权",
+            "只修改指定 README 副本"
+          ]
+        }
       ]
     }
   ]

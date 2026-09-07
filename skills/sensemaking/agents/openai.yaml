@@ -1,4 +1,4 @@
 interface:
   display_name: "Sensemaking（探骊）"
-  short_description: "在行动前发现方向、澄清关键选择、检验已有方案并保存共同理解"
-  default_prompt: "Use $sensemaking to help me discover, clarify, or challenge what matters before deciding what comes next."
+  short_description: "挖掘目标、遗漏条件和方案盲点，用证据和提问推动讨论"
+  default_prompt: "Use $sensemaking to examine this idea, uncover missing requirements and assumptions, and discuss the choices that would change the outcome."

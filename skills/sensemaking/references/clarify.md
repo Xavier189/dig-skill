@@ -6,7 +6,7 @@ Use Clarify when a meaningful outcome exists but intent, scope, resulting behavi
 
 A sentence, document, proposed refactor, deployment request, folder, existing system, or conversation is a starting point, not evidence of clarity. Its source, format, domain, lifecycle phase, and size do not trigger or skip Clarify.
 
-First inspect the relevant current state, materials, conventions, code or files, and authoritative sources. Let established facts and safe inherited defaults resolve agent-owned details. Use Clarify only for remaining choices whose realistic answers would change the outcome, scope, validation, risk, or external commitments and therefore require human ownership.
+First inspect the relevant current state, materials, conventions, code or files, and authoritative sources. Let established facts and safe inherited defaults resolve agent-owned details. Surface remaining choices whose realistic answers would change the outcome, scope, validation, risk, or external commitments. A low-risk or easy implementation can still encode a user preference worth exploring when the user asks to find omissions; do not equate ease of implementation with clarity of intent.
 
 If the starting point contains a visible contradiction, false assumption, or consequential defect, state the finding through Challenge instead of disguising it as a clarification question. Continue Clarify only for the owner decisions that remain after the defect is exposed.
 
@@ -15,6 +15,8 @@ If the starting point contains a visible contradiction, false assumption, or con
 Before prescribing a frame or asking for a commitment, test whether current-state evidence could materially change the diagnosis or option set. If it could, inspect that evidence first. When it is unavailable, name and request the smallest source pointer, then keep any dependent frame `candidate`; do not turn a reported symptom into an assumed cause or target design.
 
 Examples of such evidence include recent change paths, actual wait stages, frequency and severity distributions, current exceptions, usage traces, and authoritative constraints. The list is illustrative: request only evidence with enough information value to change the next decision.
+
+Once the evidence supports a useful question or assessment, return to the discussion. State the relevant finding and its limit, then expose the choice it creates. Further investigation can follow the answer; a complete source tour is not a prerequisite for an owner decision.
 
 ## The bar for a question
 
@@ -34,6 +36,8 @@ Present a concise hypothesis only after there is enough evidence to choose a fra
 
 If the request is a solution (“add Redis”, “make a dashboard”, “book a villa”), trace it back to the problem and test whether the solution actually serves it. Do not spend the session tuning parameters on top of an unexamined premise.
 
+Before favoring a solution, identify any unconfirmed goal or trade-off that would reverse the recommendation. Explain options conditionally until that premise is settled. Current behavior is evidence about the starting point, not proof of the behavior the user wants next.
+
 Keep the hypothesis compact and easy to reject. A sentence that would survive unchanged in an unrelated task is filler.
 
 ## Find the material forks
@@ -49,6 +53,8 @@ Stress-test the hypothesis adaptively:
 - long-term fit and reversibility.
 
 These are lenses, not required headings. Surface only what could reroute the result.
+
+Pay attention to familiar words whose meaning may change: “success”, “complete”, “active”, or “available” can refer to different stages or audiences. Explain the observable difference before treating a technical change as behavior-preserving.
 
 ## Ask with dependency awareness
 
@@ -70,7 +76,7 @@ After each answer set:
 
 1. State only the delta in the shared model.
 2. Admit a follow-up only when the new answer exposed it; name the answer and the fork it opened.
-3. Update the structured state immediately, invalidating superseded assumptions.
+3. Update only the decisions the answer addresses, invalidating superseded assumptions and leaving unanswered recommendations provisional.
 4. Converge when no material follow-up remains.
 
 A useful dependent follow-up has this shape:
@@ -78,6 +84,8 @@ A useful dependent follow-up has this shape:
 > “You said writes must be visible immediately. That rules out plain TTL, so the remaining decision is invalidate-on-write versus no cache for this query.”
 
 Do not manufacture extra rounds to appear thorough. If new forks grow as fast as they close, the request contains multiple efforts; preserve the fog, propose a split, and clarify only the first meaningful unit.
+
+For example, a user asks: “列表加个导出按钮，帮我看看有没有遗漏。” After checking the existing filters, ask whether export means the current filtered results or all accessible records, explaining how the outputs differ. If they choose filtered results, keep any unanswered format or size-limit recommendation provisional. “继续” continues that discussion; it does not authorize adding the button. If the user already asked to implement after resolving these choices, honor that authorization when the choices are settled.
 
 ## Completion
 

@@ -10,6 +10,10 @@ Challenge is not a software architecture ceremony. It applies to product ideas, 
 
 Understand the proposal, its intended outcome, and the evidence or constraints it relies on. Read relevant sources before judging. Then lead with concrete findings; do not turn every flaw you can already explain into a question.
 
+For a tentative idea, test its claims while clarifying the premises that would change the recommendation. Do not treat the supplied mechanism as an accepted direction. A finding supported independently of the user's preferences can be stated directly; a preferred repair that depends on an unconfirmed goal or risk tolerance should remain conditional.
+
+Verify how an alternative differs from the current state before recommending it. Name the behavior it changes and the evidence supporting the expected benefit. Keep causal explanations provisional when source inspection shows only a plausible mechanism; guarantees require evidence for their preconditions and failure cases.
+
 Use questions only when:
 
 - the finding depends on the user's intent or risk tolerance;

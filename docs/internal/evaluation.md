@@ -12,12 +12,31 @@
 - Fact uncertainty：性能根因与外部事实先调查；
 - Invariance：相同 thinking state 跨代码/非代码、个人/工作、greenfield/maintenance 保持同一路由；
 - Handoff：不自动选择 design、plan、reviewer 或 implementation。
+- Discussion：短草案与源码共同输入，调查后回到讨论，推荐随目标与取舍变化；
+- Continuation：“继续”延续当前活动，局部回答不确认其他建议，不扩大授权；
+- Authorization：已授权执行在检查完成后继续，无需重复确认。
+
+## 执行约定
+
+`files` 使用仓库相对路径。每次运行先把这些 fixture 复制到隔离的临时目录，保留输入文件之间的相对关系，并向 agent 提供副本路径。fixtures 是虚构的评测输入，不代表任何生产项目。不得让实现用例修改仓库原件或用户项目。
+
+带 `follow_up_turns` 的用例按顺序运行：发送首个 `prompt`，保存完整回答与工具轨迹，再逐轮发送后续 `prompt`。同一用例内保留会话；不同用例、baseline 与 candidate 使用各自的 fresh context。后续输入按原文发送，不补充期待答案；若它与模型的问题没有自然衔接，记录该限制。
+
+`invocation: explicit` 的用例使用指定版本的 Skill；`invocation: implicit` 的用例只提供技能目录中的 name/description 与可读取路径，由 host 决定是否加载。不得把完整正文预先注入隐式触发测试。旧用例未标 invocation 时用于行为校准，不据此计算隐式触发率。
+
+评分应同时查看对话、读取/写入工具轨迹和文件差异，分别报告：
+
+- **触发**：在隐式场景中是否选择并加载 Skill；
+- **作用**：是否依据材料发现影响结果的遗漏或假设，推荐是否受真实前提约束；
+- **连续性与授权**：是否正确保留未决项、当前活动和允许修改的范围。
+
+提问数量不是质量指标。明确请求可零提问；过早定论、虚构事实或问题、重复建议已有机制、无授权写入均需单独记录。运行结果区分静态检查、行为 smoke test 与多次重复的 benchmark；单次对照不能证明触发率或整体质量提高。
 
 ## 静态校验
 
 ```bash
-python3 -m json.tool evals/evals.json >/dev/null
-python3 /path/to/skill-creator/scripts/quick_validate.py skills/sensemaking
+uv run --no-project python -m json.tool evals/evals.json >/dev/null
+uv run --no-project --with pyyaml python /path/to/skill-creator/scripts/quick_validate.py skills/sensemaking
 ```
 
 行为 benchmark 必须记录 model、host instructions、skill path、run count、grader 与原始 evidence。被全局 instructions 或 memory 污染的 baseline 不能解读为裸模型对照；缺失的 timing/token 数据不得填零后用于效率结论。

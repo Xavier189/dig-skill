@@ -1,6 +1,6 @@
 # 下游路由与能力边界
 
-Sensemaking 只解决 shared understanding。完成后不要问“固定下一步是什么”，而要问“现在还缺什么”。
+Sensemaking 组织上下文核验、影响探索、知识解释、对话与适度设计。根据剩余缺口选择能力，不把调查、设计或实现排成固定流水线。
 
 先保留用户请求的活动与已有授权。探讨中的调查结果要回到讨论；“继续”沿用当前活动；回答某个问题只确认对应决定。用户已要求决策解决后直接交付时，按原授权推进，不另加批准环节。
 
@@ -8,22 +8,22 @@ Sensemaking 只解决 shared understanding。完成后不要问“固定下一�
 
 | 维度 | 可选路线 |
 |---|---|
-| Thinking | Discover / Clarify / Challenge / STRUCTURE-only / skip |
+| Exploration | 上下文与影响探索；按需使用 Discover / Clarify / Challenge / STRUCTURE |
 | Evidence | inspect / research / diagnose / prototype / none |
 | Solution shaping | direct / compact design / durable design |
 | Execution topology | primary agent / subagent / human or tool reviewer |
 | Coordination | inline task state / plan |
 | Persistence | conversation / inline Snapshot / durable carrier |
 
-它们可以组合，但互不自动触发。明确的博客部署可以 `skip + inspect + direct delivery + smoke test`；模糊的小重构可以 `inspect + Clarify + direct delivery`；高风险 encryption 需求可以 `skip + technical design + Security review + rollout plan`。
+它们可以组合，但互不自动触发。明确的博客部署可以 `skip + inspect + direct delivery + smoke test`；描述清楚的小功能也可以在上下文核验后形成 compact design；已核验的高风险方案仍按实际需要组合专业设计与审查。
 
 ## 下游动作
 
 | 当前缺口 | 最小动作 | 何时升级 |
 |---|---|---|
-| 事实、根因、兼容性或可行性未知 | inspect / research / diagnose / cheap prototype；探讨中的证据带回讨论 | evidence 暴露新的 owner decision 或 validity problem |
-| 状态清楚、改动局部且可逆 | direct delivery + proportionate verification | 实现选择改变重要边界 |
-| contract、data、coupling、failure/recovery、security 或 migration 会被改变 | compact design | 需要审批、长期追溯或多人 handoff 时写 durable design/ADR/spec |
+| 事实、根因、兼容性或可行性未知 | 自行调查；解决方案请求中的证据及时带回设计与讨论，狭窄事实查询直接回答 | 需要补知识、验证前提或处理实质选择 |
+| 相关前提与影响已核验、改动局部且可逆 | direct delivery + proportionate verification | 实现选择改变重要边界 |
+| contract、data、coupling、failure/recovery、security 或 migration 会被改变 | 在探索中形成 compact design；复杂专题组合领域能力 | 需要审批、长期追溯或多人 handoff 时写 durable design/ADR/spec |
 | 多步骤存在依赖、并行、长时间恢复或复杂 rollout | plan | 默认维护 task state；只有 continuity need 才落盘 |
 | 高风险或需要独立专业判断 | domain review | 按 Security、Privacy、Legal、DBA、SRE、Domain Expert 或 Software Architect 选择 |
 | 当前 thinking 本身就是交付 | stop | 不制造 implementation handoff |

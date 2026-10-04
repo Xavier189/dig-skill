@@ -1,111 +1,78 @@
 # Sensemaking 产品设计
 
-## North Star
+## 目标与使用者
 
-把 uncertainty 转化为明确、可检验、可延续的 shared understanding，同时不把清晰工作拖入流程仪式。
+让用户能够从尚未展开或已经描述清楚的需求、问题、方案与材料开始，借助 Agent 的调查、解释和对话，发现隐含前提、关联影响与知识缺口，形成适度的设计。
 
-Sensemaking 解决的是 thinking state，不是某一种输入：产品需求、个人想法、重构、部署、资料整理、制度设计或现有文档都只是 starting point。
+适用于代码与非代码工作。工程任务依据代码、设计、配置与运行证据；非工程任务依据相关材料、流程、参与者和约束。用户不需要先识别遗漏或学习模式分类。
 
-## 核心模型
+## 进入条件
 
-不确定性分为三个需要对话协作的类型：
+新功能、行为改造、需要形成解决方案的问题，以及明确要求探索、设计、批评或找遗漏的任务，进入相关上下文核验。描述长度、实现难度、代码位置和文档完整度都不能单独作为跳过依据。
 
-| 类型 | 关键问题 | Mode |
-|---|---|---|
-| Direction uncertainty | 有哪些值得考虑的方向，依据是什么？ | Discover |
-| Decision uncertainty | 哪些现实选择必须由人承担，且会改变结果？ | Clarify |
-| Validity uncertainty | 当前 proposal/decision 是否存在实质缺陷？ | Challenge |
+机械修改、狭窄事实查询（包括仅求根因的诊断），以及相关前提与影响已经核验的执行任务直接处理。事实调查始终由 Agent 承担；仅求一个事实时不扩大为需求访谈。新证据推翻前提时重新展开。
 
-先确定用户本轮请求的活动。显式调用或要求分析讨论、挖掘遗漏时，先检查相关目标、假设与结果边界，不以实现简单或尚未发现缺陷为由跳过。没有实质问题时允许零提问，简短给出检查依据。
+新 session 先恢复已有决定与相关证据，只刷新缺失或会漂移的内容。新消息不重置已确认的目标、排除项和授权。
 
-未要求探索或检验时，以下情况直接处理：
+## 行为循环
 
-- **Fact-only uncertainty**：缺事实、根因、现状或可行性证据，先 inspect/research/diagnose/prototype。用户同时要求讨论时，调查属于 sensemaking 内部活动。
-- **Action-ready**：consequential decisions 已清楚且没有可见 material defect，直接交付。
-
-### Route invariant
-
-route 不由 source、format、domain、lifecycle phase 或 task size 决定。任意 starting point 都使用同一个 gate；具体场景只用于校准这个抽象，不产生专属规则。
-
-## Mode contract
-
-### Discover
-
-Discover 服务于“尚无足够 basis to choose”。它从真实 starting point 出发，识别缺失的是方向、词汇、例子还是判断标准；必要时先 teaching/research，再用 multiple frames 与 recognition-based examples 扩大可见空间。
-
-完成条件是形成 chosen direction、shortlist、待验证 hypothesis，或明确决定暂不继续。不得用首个 hypothesis 锚定用户，也不自动翻译成 PRD。
-
-### Clarify
-
-Clarify 服务于“已有 outcome，但仍有 consequential human-owned choices”。先查证可获得的事实，再提出足够具体、可被否定的 working hypothesis；只追踪答案不同会改变 outcome、scope、validation、risk 或 external commitment 的 material forks。
-
-完成条件是每个 material fork 已 `confirmed`、以可见默认 `assumed`、明确 `deferred`，或转为 evidence/prototype action。agent-owned、局部且可逆的实现选择不升级为用户决策。
-
-### Challenge
-
-Challenge 服务于明确 critique 请求或已经可见的 material defect。它使用少量相关 lens 检验 goal fit、consistency、evidence、boundaries、failure/recovery、stakeholders、testability、reversibility 与 alternatives。
-
-finding 必须说明 defect、basis、consequence 与最小 correction；推荐依赖未确认目标或取舍时保持条件性，并核对方案相对现状的实际变化。完成条件是 material findings 已修正、驳回、转为决定、暂缓或接受为 risk。
-
-## STRUCTURE
-
-STRUCTURE 保存 shared understanding，而不控制认知过程。它按需记录：
-
-- Intent、Stakeholders、Scenarios
-- Scope、Requirements、Constraints
-- Decisions、Assumptions & evidence
-- Risks & edge cases、Success evidence、Open items
-
-每个 consequential item 使用 `candidate`、`confirmed`、`assumed`、`invalidated`、`deferred` 或 `risk` 状态。修订时 invalidate 旧决定，避免 polished summary 让旧假设重新变成 active requirement。
-
-STRUCTURE-only 只用于保存、对齐或交接已经形成的 shared-decision state，不承担普通改写、摘要、文件整理或数据转换。
-
-## Interaction principles
-
-1. **Evidence before owner question**：能安全查到的事实由 agent 获取。
-2. **Teach/show before asking**：用户没有判断基础时先补足 basis。
-3. **Consequence over checklist**：只有会改变结果的问题、证据或 finding 才进入对话。
-4. **Dependency-aware pacing**：依赖问题逐层追，独立问题可批量展示。
-5. **Attackable reasoning**：frame、hypothesis 与 finding 必须具体到可以被反驳。
-6. **Honest fog**：暂时无法精确定义的内容保持 open，不制造虚假确定性。
-7. **Delta reflection**：后续轮次只说明 shared model 的变化，只确认回答实际覆盖的决定。
-8. **Bounded investigation**：证据已足以支持关键问题或有限结论时，回到讨论，不等待完整实现调查。
-9. **Activity continuity**：“继续”继承当前活动；既有实现授权持续有效，讨论中的局部同意不扩大授权。
-
-## 输出与 persistence
-
-输出是 renderer，不是固定终点。按需要选择 Direction Map、Clarity Memo、Challenge Report、Decision Brief、Requirements Brief、Handoff Snapshot 或不生成 artifact。
-
-默认只维护 conversation state。另一个 agent、后续 session、审批、审计或长期协作会丢失关键信息时，才使用项目既有 carrier 持久化。恢复时保留已接受决定，同时重新验证会漂移的事实与实现状态。
-
-## 下游边界
-
-Sensemaking 完成 thinking job 即归还控制权。剩余工作可以是 evidence gathering、prototype、direct delivery、design、coordination planning、domain review 或 stop；它们没有固定顺序，也不是任何 mode 的自动后继。
-
-独立 reviewer 是 risk-based escalation。Software Architect 只适用于真实 software architecture；非代码任务、文件数量和任务规模都不是调用理由。详细选择规则见 [routing.md](routing.md)。
-
-## 被否决方案
-
-| 方案 | 否决原因 |
+| 动作 | 工作结果 |
 |---|---|
-| 单一巨型流程 | Discover 需要扩展空间，Clarify 需要收敛，Challenge 需要直接判断，默认动作无法统一 |
-| 三个公开 skill | 用户往往不知道当前 uncertainty type；一个入口更利于正确路由 |
-| task-size workflow | 规模不能同时决定是否澄清、设计、评审与计划 |
-| 固定输出 schema | renderer 反向控制 thinking 会制造 checklist theater |
-| 默认独立 reviewer | 跨领域误路由、成本高，且独立视角并非总有增益 |
-| 默认自动落盘 | 短会话产生噪音，carrier 与 continuity need 被混为一谈 |
+| 理解目标 | 保留目标、约束、已有选择和请求活动；必要时提出可被纠正的理解 |
+| 核对现实 | 找到相关机制、可复用能力与证据限制；不从现有行为推定期望行为 |
+| 追踪影响 | 沿实际关系说明本次变化怎样影响下游行为、概念、数据或参与者 |
+| 补足知识 | 查证事实、解释机制、展示场景或开展已授权的小实验 |
+| 讨论设计 | 给出比例适当的设计、依据和代价，把真正需要用户取舍的选择带回对话 |
+| 根据新证据更新 | 调整建议与后续问题；保留未决项，废止被推翻的假设 |
 
-## 验收不变量
+循环中的动作按信息需要交错进行，不要求完整走一遍，也不是批准流水线。设计属于思考工作；详细实现、计划和专业方法按任务需要组合。
 
-1. 缺方向时展示多个可比较 frames，不用单一 hypothesis 锚定。
-2. 缺知识时先提供 decision-relevant evidence/examples。
-3. solution-disguised-as-requirement 会被追溯到真实问题。
-4. critique 先给 evidence-backed findings，不把已知缺陷伪装成问题。
-5. 修订过的决定不会在 summary 中复活。
-6. 清晰请求不因规模或领域被误触发。
-7. 只缺事实或根因时先调查。
-8. 任一 mode 完成后不自动进入 design、plan、implementation 或 reviewer。
-9. STRUCTURE-only 不吞掉普通内容转换和文件操作。
-10. route invariant 在跨领域成对案例中保持成立。
-11. 显式探讨会检查遗漏与假设；短小请求不会仅因看似可实现而退出。
-12. 调查、用户回答和“继续”不会自行把讨论切换为实现；已授权执行也不被追加确认门槛。
+影响分析使用“现有机制 → 本次变化 → 受影响关系 → 可观察后果 → 证据或待验证前提”。状态含义、数据依赖、外部契约、失败恢复、兼容性和验收只是按需选择的视角，不是必填表。
+
+## 缺口与责任
+
+- 可查的事实由 Agent 调查；源码存在、配置启用和线上发生分开表述。
+- 无法验证的机制保留假设，提出能够区分解释的最小实验。
+- 缺少知识或判断依据时，先给与当前任务有关的例子和后果，再请用户选择。
+- 业务含义、目标、价值与重要承诺由用户决定；局部可逆的实现细节沿已有约束自行处理。
+- 不知道、不回答或只接受一个选项，都不等于确认其余推荐。
+
+提问围绕当前最重要且前提已足够的问题。独立问题可合并；依赖问题等待前提。答案会反过来改变设计，不能在答案到来前锁定依赖它的推荐。已能解释的缺陷直接说明，不伪装成问题。
+
+## 方法与状态
+
+一个公开入口，按需读取内部方法：
+
+- Context and Impact：发现未被提出的依赖、影响和知识缺口。
+- Discover：补方向、词汇、例子或判断基础；不假设存在唯一隐藏目标。
+- Clarify：处理调查暴露的实质选择，跟进答案产生的新分叉。
+- Challenge：检验前提与设计；不以缺陷已经可见为调查前提。
+- STRUCTURE：保存已形成的理解，不承担普通格式转换。
+
+状态沿用 candidate、confirmed、assumed、invalidated、deferred、risk。证据能确认现状，不能确认用户期望。必要时记录影响关系、知识缺口、验证步骤、当前活动与授权；默认保存在上下文。
+
+## 范围、完成与授权
+
+每个建议必须关联当前目标，说明不处理的后果与最小充分响应。区分必要工作、相关取舍和独立优化；遗留风险不自动成为本次必须治理的范围。
+
+当当前交付所需的关键前提与影响已在明确范围内核验，实质未知已解决、可见委托、明确暂缓或转为验证步骤，停止可选挖掘。不能用任意问题数量、清晰度分数或“遍历所有分支”代替这个判断。
+
+只求审查意见时，有依据的发现、建议与证据限制即可完成；报告中的建议和风险不因此被接受。共同定稿时继续处理关键选择。已授权执行时，处理依赖的阻塞项后继续实现与验证。讨论本身不授权实现，“继续”延续当前活动。
+
+## 交付与协作
+
+默认交付有依据的对话、简要设计或评估。PRD、ADR、计划、词汇表与交接文件只按请求和已授权流程保存。专项 Skill、subagent 和 reviewer 是按价值及宿主规则选用的能力，不是固定后继。
+
+## 外部方法取舍
+
+吸收代码与材料先行、展示有依据的假设、按依赖持续提问、具体场景核验概念、按影响排列遗漏。来源与适配见 [研究记录](internal/research.md)。
+
+不采用：每次强制批准、穷尽所有设计分支、固定问卷/清晰度分数、默认生成 PRD、描述清楚或出现代码就跳过、任务复杂度只升不降。它们分别增加无意义确认、用户负担或范围膨胀。
+
+## 接入与验收
+
+Skill 元数据与全局路由保持一致，宿主规则不再把“目标清楚”直接等同于“已核验”。名称和调用方式保持稳定，不新增插件或后台服务依赖。
+
+先在隔离副本测试，再同步规范源。软链接消费者会直接读取源文件；全局规则若由管理器生成，则先预览再生成，不独立修改生成文件。更新后用新 session 检查实际发现和调用。
+
+验收关注：真实遗漏被发现、知识解释能支持选择、回答改变建议、既有决定不丢失、实现范围不膨胀、清晰机械任务不被拖入访谈。静态通过不代表触发率或任务效果提高。

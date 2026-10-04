@@ -1,6 +1,6 @@
 # Discover — Find a Direction and Basis for Choosing
 
-Use Discover when the user lacks a stable goal, vocabulary, examples, or the knowledge needed to choose. The aim is not to extract a hidden requirement. It is to make meaningful directions visible and give the user a basis for comparing them.
+Use Discover within the exploration loop when the user lacks a stable goal, vocabulary, examples, or the knowledge needed to choose. Do not reopen a clear goal just because its implementation has unexamined effects; use [context-and-impact.md](context-and-impact.md) for those. The aim is not to extract a hidden requirement. It is to make meaningful directions visible and give the user a basis for comparing them.
 
 ## Frame
 

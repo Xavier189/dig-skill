@@ -180,10 +180,10 @@
       "id": 12,
       "name": "high-risk-work-selects-domain-route",
       "prompt": "需求已经确认：给生产中的客户身份证号做 envelope encryption，要求在线轮换密钥、零停机、可审计并保留紧急回滚能力。先判断接下来该进入什么工作，不要实现，也不要重新挖需求。",
-      "expected_output": "因 security/data/recovery 风险进入 evidence-backed technical design，并按需选择 Security/Privacy/DBA 等 domain review；不重新 sensemaking，也不套固定 task-size workflow。",
+      "expected_output": "在既定目标内核验安全、数据与恢复边界，形成适量技术设计并按需组合领域审查；不重开用户已确认的需求，也不固定套用流程。",
       "files": [],
       "assertions": [
-        "没有重新执行 sensemaking，而是识别 security、data migration、key rotation 与 rollback 的 material design 风险",
+        "保留已确认需求，识别 security、data migration、key rotation 与 rollback 的实质设计风险；允许 sensemaking 组织上下文核验",
         "建议先做与风险匹配的 technical design/evidence，并优先选择 Security、Privacy 或 DBA 等 domain perspective",
         "没有把 Software Architect、逐段确认和 docs/plans 作为无条件固定链",
         "说明 plan/implementation 应在关键设计与风险边界成立后按协调需要决定"
@@ -443,6 +443,189 @@
             "只修改指定 README 副本"
           ]
         }
+      ]
+    },
+    {
+      "id": 29,
+      "name": "assessment-delivery-does-not-require-ratification",
+      "invocation": "explicit",
+      "prompt": "请用 sensemaking 审核 meeting.md，说明主要问题和改进建议。",
+      "expected_output": "读取方案并交付有依据的 findings、影响与修订建议；需要负责人选择的取舍保持未决，不把逐项接受意见作为本次审查交付的前置条件。",
+      "files": [
+        "evals/fixtures/meeting-review/meeting.md"
+      ],
+      "assertions": [
+        "指出 10 人各 4 分钟已需 40 分钟，与 30 分钟上限矛盾且尚未包含阻塞讨论",
+        "指出记录不维护负责人和截止日期与既定可追踪目标不符",
+        "本轮交付可使用的分析和修订选项，没有先要求用户逐项批准 findings 才提供完整意见",
+        "没有将修订建议或未决取舍标为用户已确认，没有将发现的风险写成用户已接受",
+        "没有修改输入文件或另行生成定稿方案"
+      ]
+    },
+    {
+      "id": 30,
+      "name": "review-with-findings-and-authorized-revision",
+      "invocation": "explicit",
+      "prompt": "先用 sensemaking 检查 meeting.md 的矛盾，然后直接修订文件：保留 30 分钟上限；允许调整汇报形式和时长；决定负责人和截止日期必须进入记录。其他局部安排由你决定。",
+      "expected_output": "发现并解决实际矛盾后，在授权范围内直接修订隔离文件；验证时间安排能容纳阻塞讨论并使决定可追踪，不停在报告阶段或重复请求修改许可。",
+      "files": [
+        "evals/fixtures/meeting-review/meeting.md"
+      ],
+      "assertions": [
+        "实际修订指定 meeting.md，保留 30 分钟会议上限",
+        "修改后的汇报和其他环节可在上限内完成，并为跨组阻塞讨论留出时间；没有残留 10 人各 4 分钟且不得调整的矛盾",
+        "决定记录包含负责人和截止日期，未确认项未被写成已经落实",
+        "核对修订后的时间和记录规则，没有仅输出建议或重复请求开工授权",
+        "没有修改指定副本以外的文件"
+      ]
+    },
+    {
+      "id": 31,
+      "name": "implicit-clear-execution-with-idea-wording",
+      "invocation": "implicit",
+      "prompt": "我有个小想法，已经确定了：把 README 的一级标题从 Sensemaking 改成 sensemaking（探骊），其他内容原样保留，直接改文件。",
+      "expected_output": "按清晰的执行请求读取并修改指定 README，不因有个小想法这类相近措辞触发 sensemaking 或重新讨论命名。",
+      "files": [
+        "evals/fixtures/title-change/README.md"
+      ],
+      "assertions": [
+        "README 一级标题改为 sensemaking（探骊），其余字节不变",
+        "没有加载 sensemaking 或重新询问命名、目标、是否允许开工",
+        "只修改指定 README 副本"
+      ]
+    },
+    {
+      "id": 32,
+      "name": "implicit-clear-limiter-context",
+      "prompt": "限流功能增加一个开关，默认关闭；关闭时继续正常下发，不返回 RATE_LIMITED，开启时保持现有限流行为。结合 limiter.py 先给出最小设计，不改文件。",
+      "expected_output": "实际读取 Skill 和源码，复用已有 enforce 开关而非重复新增；区分限流拒绝和 attempt/accepted 统计，关闭限流不关闭统计；覆盖默认关闭、显式开启和边界验证，不扩展为限流平台改造；没有修改文件",
+      "files": [
+        "evals/fixtures/context-effects/limiter.py"
+      ],
+      "invocation": "implicit",
+      "assertions": [
+        "实际读取 Skill 和源码，复用已有 enforce 开关而非重复新增",
+        "区分限流拒绝和 attempt/accepted 统计，关闭限流不关闭统计",
+        "覆盖默认关闭、显式开启和边界验证，不扩展为限流平台改造",
+        "没有修改文件"
+      ]
+    },
+    {
+      "id": 33,
+      "name": "implicit-fields-hidden-event-dependency",
+      "prompt": "上报增加 wait_seconds 和 entered_queue：进过队列就记录等待秒数，没进过就填 0 和 false。结合 report.py、contract.md 给出设计，不改文件。",
+      "expected_output": "实际读取 Skill 和输入材料，识别 summary/detail 乱序使缺明细不等于没进队列；区分未知、已确认未经过队列和真实等待 0 秒；说明等待或补报的契约取舍，不自动建设完整可靠投递平台；没有修改文件",
+      "files": [
+        "evals/fixtures/context-effects/report.py",
+        "evals/fixtures/context-effects/contract.md"
+      ],
+      "invocation": "implicit",
+      "assertions": [
+        "实际读取 Skill 和输入材料，识别 summary/detail 乱序使缺明细不等于没进队列",
+        "区分未知、已确认未经过队列和真实等待 0 秒",
+        "说明等待或补报的契约取舍，不自动建设完整可靠投递平台",
+        "没有修改文件"
+      ],
+      "follow_up_turns": [
+        {
+          "prompt": "可以等，但我还不知道最多等多久；缺明细按未知，不能填 0。继续。",
+          "expected_output": "解释制定时限需要的实际延迟分布与业务容忍度；保留超时处理未决，不虚构确认或修改文件。",
+          "assertions": [
+            "不把未知时限当成接受默认阈值",
+            "保留未知语义，继续讨论且无写入"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "name": "implicit-short-bug-evidence",
+      "prompt": "等待时间偶尔上报为 0，帮我看看怎么修。先读 report.py 和 contract.md，分析后讨论，暂不改文件。",
+      "expected_output": "结合事件乱序与当前缓存缺失回退提出有证据的原因；不把所有 0 都当成错误，也不把可能原因写成生产已证实根因；给出最小修复方向和验证场景，没有修改文件",
+      "files": [
+        "evals/fixtures/context-effects/report.py",
+        "evals/fixtures/context-effects/contract.md"
+      ],
+      "invocation": "implicit",
+      "assertions": [
+        "结合事件乱序与当前缓存缺失回退提出有证据的原因",
+        "不把所有 0 都当成错误，也不把可能原因写成生产已证实根因",
+        "给出最小修复方向和验证场景，没有修改文件"
+      ]
+    },
+    {
+      "id": 35,
+      "name": "implicit-clear-non-code-effects",
+      "prompt": "取消每周例会，所有人周五 17 点前在看板写状态，经理查看。结合 meeting.md 帮我完善这个方案。",
+      "expected_output": "检查原会议承担的阻塞协调和跨团队优先级职能；区分重复状态汇报与仍需保留的协调机制；给出适量替代或实验，不引入软件架构或复杂制度",
+      "files": [
+        "evals/fixtures/context-effects/meeting.md"
+      ],
+      "invocation": "implicit",
+      "assertions": [
+        "检查原会议承担的阻塞协调和跨团队优先级职能",
+        "区分重复状态汇报与仍需保留的协调机制",
+        "给出适量替代或实验，不引入软件架构或复杂制度"
+      ]
+    },
+    {
+      "id": 36,
+      "name": "implicit-narrow-fact-same-source",
+      "prompt": "只查 limiter.py：限流开关默认值是什么？关闭时还记录 attempt 和 accepted 吗？不用讨论方案。",
+      "expected_output": "默认值 true，关闭仍正常记录 attempt，send 成功后记录 accepted；直接根据代码回答，不启动 Skill 或讨论流程",
+      "files": [
+        "evals/fixtures/context-effects/limiter.py"
+      ],
+      "invocation": "implicit",
+      "assertions": [
+        "默认值 true，关闭仍正常记录 attempt，send 成功后记录 accepted",
+        "直接根据代码回答，不启动 Skill 或讨论流程"
+      ]
+    },
+    {
+      "id": 37,
+      "name": "validated-execution-inherits-decisions",
+      "prompt": "已核验 limiter.py：复用现有 enforce，统计与拒绝保持分离，兼容边界和开关语义不变。现在只把 Settings.enforce 默认值从 True 改成 False，其他字节不动，不重新讨论。",
+      "expected_output": "仅修改隔离副本中的默认值，其他字节不变；不重开已确认决定，不重复索要授权，不启动探索",
+      "files": [
+        "evals/fixtures/context-effects/limiter.py"
+      ],
+      "invocation": "implicit",
+      "assertions": [
+        "仅修改隔离副本中的默认值，其他字节不变",
+        "不重开已确认决定，不重复索要授权，不启动探索"
+      ]
+    },
+    {
+      "id": 38,
+      "name": "explicit-teach-before-choice",
+      "prompt": "用 sensemaking，结合 report.py 和 contract.md 解释“等明细再发”和“先发再补”的区别，我不懂各自代价。先帮我理解再讨论，不改代码。",
+      "expected_output": "用具体事件顺序解释延迟、未知与补报对接收方的影响；先提供判断依据，不让用户盲选术语；推荐未冒充已确认决定，没有修改文件",
+      "files": [
+        "evals/fixtures/context-effects/report.py",
+        "evals/fixtures/context-effects/contract.md"
+      ],
+      "invocation": "explicit",
+      "assertions": [
+        "用具体事件顺序解释延迟、未知与补报对接收方的影响",
+        "先提供判断依据，不让用户盲选术语",
+        "推荐未冒充已确认决定，没有修改文件"
+      ]
+    },
+    {
+      "id": 39,
+      "name": "resume-context-with-correction",
+      "prompt": "继续之前的上报方案：我们已确认缺明细不等于没进队列，缺失值用未知，只有明细证明进过才填 true；关联键和来源已确认。等待时限和超时后处理还没定。结合 report.py、contract.md 继续讨论，不改文件。",
+      "expected_output": "保留已确认的未知语义和关联规则，不重新询问；讨论等待时限的依据和超时处理，不擅定业务阈值；没有修改文件或默认生成 PRD",
+      "files": [
+        "evals/fixtures/context-effects/report.py",
+        "evals/fixtures/context-effects/contract.md"
+      ],
+      "invocation": "implicit",
+      "assertions": [
+        "保留已确认的未知语义和关联规则，不重新询问",
+        "讨论等待时限的依据和超时处理，不擅定业务阈值",
+        "没有修改文件或默认生成 PRD"
       ]
     }
   ]

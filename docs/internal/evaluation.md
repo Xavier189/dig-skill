@@ -8,13 +8,16 @@
 - Clarify：solution-disguised-as-requirement、evidence gate、owner decisions；
 - Challenge：非代码方案、material defect、finding-first；
 - STRUCTURE-only：修订状态、handoff 与普通转换的边界；
-- Skip：清晰一步任务、局部 refactor、decision-complete 大任务；
+- Skip：机械一步任务、行为保持的局部 refactor、相关前提与影响已核验的执行任务；
 - Fact uncertainty：性能根因与外部事实先调查；
 - Invariance：相同 thinking state 跨代码/非代码、个人/工作、greenfield/maintenance 保持同一路由；
-- Handoff：不自动选择 design、plan、reviewer 或 implementation。
+- Design：按需形成适量设计，不自动开启 plan、reviewer 或未授权 implementation。
 - Discussion：短草案与源码共同输入，调查后回到讨论，推荐随目标与取舍变化；
 - Continuation：“继续”延续当前活动，局部回答不确认其他建议，不扩大授权；
 - Authorization：已授权执行在检查完成后继续，无需重复确认。
+- Completion：同一份有缺陷方案中，审查意见交付、共同定稿与已授权修订有不同完成条件；开放选择不自动变为确认或风险接受。
+
+新增上下文用例覆盖：完整功能描述与现有机制、事件乱序造成的隐含依赖、一句话 Bug、非代码协作影响、同源狭窄事实查询、已核验执行、先解释再选择、跨轮纠正与未决项。描述长度与文件位置不作为跳过依据。
 
 ## 执行约定
 
@@ -31,6 +34,8 @@
 - **连续性与授权**：是否正确保留未决项、当前活动和允许修改的范围。
 
 提问数量不是质量指标。明确请求可零提问；过早定论、虚构事实或问题、重复建议已有机制、无授权写入均需单独记录。运行结果区分静态检查、行为 smoke test 与多次重复的 benchmark；单次对照不能证明触发率或整体质量提高。
+
+对于审查用例，同时检查是否已交付可用的意见，以及是否把非必要确认作为交付前置条件；不能因回答含有一个真实 owner question 就判失败。对于 Discover，检查是否提供了有意义的选择依据，不能只计数方向或问题。implicit 用例需包括相近措辞的清晰执行与事实查询，避免只验证正例。
 
 ## 静态校验
 

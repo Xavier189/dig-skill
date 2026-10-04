@@ -1,8 +1,8 @@
 # Challenge — Stress-Test Proposals and Decisions
 
-Use Challenge when the user explicitly asks for critique, review, grilling, stress-testing, or design validation, or when an already-visible material defect makes silent execution unsound.
+Use Challenge to test assumptions and effects during exploration or design, for requested critique or review, and when evidence exposes a material defect. A defect need not already be visible before examining a clear-looking proposal.
 
-The same starting point may contain both missing owner decisions and visible defects. Use Clarify for the former and Challenge for contradictions, invalid assumptions, untestable claims, or unsafe boundaries. Source, format, domain, lifecycle phase, and size do not determine validity.
+The same starting point may contain unsettled choices, untested claims, and defects revealed by investigation. Use Clarify for the former and Challenge for contradictions, invalid assumptions, untestable claims, or unsafe boundaries. Source, format, domain, lifecycle phase, and size do not determine validity.
 
 Challenge is not a software architecture ceremony. It applies to product ideas, policies, meetings, writing structures, operating procedures, technical designs, and any other consequential proposal.
 
@@ -12,7 +12,7 @@ Understand the proposal, its intended outcome, and the evidence or constraints i
 
 For a tentative idea, test its claims while clarifying the premises that would change the recommendation. Do not treat the supplied mechanism as an accepted direction. A finding supported independently of the user's preferences can be stated directly; a preferred repair that depends on an unconfirmed goal or risk tolerance should remain conditional.
 
-Verify how an alternative differs from the current state before recommending it. Name the behavior it changes and the evidence supporting the expected benefit. Keep causal explanations provisional when source inspection shows only a plausible mechanism; guarantees require evidence for their preconditions and failure cases.
+Name the behavior a recommendation changes and the evidence supporting its expected benefit. Guarantees require evidence for their preconditions and failure cases. Follow relevant relationships using [context-and-impact.md](context-and-impact.md); assess enough of the current design to discover effects the user has not named.
 
 Use questions only when:
 
@@ -45,21 +45,17 @@ Apply named methods only when they sharpen the relevant lens:
 - stakeholder mapping for conflicting incentives;
 - prototype or simulation for behavior the user must see to judge.
 
-## Finding format
+## Communicate findings
 
-For each material finding, provide:
-
-1. **Finding** — the precise defect, blind spot, or tension.
-2. **Basis** — evidence, contradiction, counterexample, or explicit inference.
-3. **Consequence** — what fails or changes if it remains.
-4. **Recommendation** — the smallest effective correction or experiment.
-5. **Owner decision** — only when the user must choose a trade-off.
+Make each material finding's defect, basis, consequence, and smallest useful correction or experiment clear. Include an owner decision only when a trade-off needs one. These are content requirements, not mandatory headings or a five-part form.
 
 Use severity sparingly:
 
 - `blocking` — proceeding would contradict the goal, violate a hard constraint, or create an unacceptable irreversible risk;
 - `material` — likely to cause rework, failure, or a different outcome;
 - `watch` — worth recording but not worth delaying work.
+
+Connect each proposed correction to the requested outcome. Separate necessary corrections, trade-offs for the user, and independent improvements; do not promote a legacy weakness into mandatory scope without showing why this change depends on fixing it.
 
 Do not mistake stylistic preference for a defect. Do not overstate an inference as fact; label it and say what evidence would resolve it.
 
@@ -71,12 +67,10 @@ When proposing alternatives, compare what each optimizes and sacrifices. Do not 
 
 ## Completion
 
-Challenge completes when each material finding is:
+Completion depends on what the user requested:
 
-- corrected;
-- rejected with rationale;
-- converted into an owner decision;
-- deferred with an explicit consequence; or
-- recorded as an accepted `risk`.
+- **Assessment or recommendations:** complete when the relevant claims have been examined and supported findings, consequences, recommendations, and evidence limits have been delivered. Owner choices may remain open and recommendations conditional; user acceptance of each finding is not required. If no material defect is found, state the scope and basis of that conclusion.
+- **Resolve or revise the proposal together:** continue until material findings are corrected, rejected with rationale, delegated, explicitly deferred with their consequences, or accepted as risks. A decision outside the agent's authority remains open until its owner resolves or defers it.
+- **Review followed by authorized execution:** resolve blocking findings or owner choices, then complete the authorized work and its necessary verification. Preserve non-blocking concerns without turning them into additional approval gates.
 
-Render a Challenge Report, revised Decision Brief, Requirements Brief, or proposal when useful. Do not automatically invoke a reviewer, write an implementation plan, or begin implementation.
+Delivering an assessment does not mark its recommendations as confirmed or its risks as accepted. Render a report or revised proposal only when it serves the requested deliverable.

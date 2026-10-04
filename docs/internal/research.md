@@ -1,21 +1,22 @@
 # 方法参照与取舍
 
-本页记录当前设计真正吸收的外部思想，不复述产品文档。
+以下为 2026-10-04 对上游 main 分支指令的阅读与设计取舍，不是效果排名或运行基准。借鉴方法，未将第三方 Skill 包或执行流程作为依赖引入。
 
 | 参照 | 吸收 | 不吸收 |
 |---|---|---|
-| [Superpowers brainstorming](https://github.com/obra/superpowers) | context-first、alternatives、incremental validation | every-project hard gate、forced spec → plan pipeline |
-| [Matt Pocock skills](https://github.com/mattpocock/skills) 的 grilling / wayfinding 方法 | facts 与 decisions 分离、dependency-aware questions、shared understanding、fog of war | relentless tone、全程 one-question doctrine、普通任务默认 issue map |
-| [Socratic AI prompt skill](https://github.com/roy-reshef/socratic-ai-prompt-skill) | challenge assumptions、perspective shift | 永不直接给答案的纯教练定位 |
-| [Requirements elicitation examples](https://github.com/andreaswasita/copilot-agents-dojo) | 不接受 solution-disguised-as-requirement、关注边界与验收 | 固定维度逐项填表、默认 user story/sign-off ceremony |
-| [Finding your unknowns](https://claude.com/blog/a-field-guide-to-claude-fable-finding-your-unknowns) | blind spots、references、show/prototype before asking、unknowns 会在全周期出现 | 把所有 unknowns 强制装进前置 checklist |
-| [GitHub Spec Kit](https://github.com/github/spec-kit) | ambiguity、coverage、consistency 与 testability lens | software artifact pipeline 作为跨领域核心 |
+| [Matt Pocock grilling](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md) | 根据决定依赖展开后续问题；事实由 Agent 调查；答案改变问题集合 | 穷尽所有分支、所有决定都交给用户、统一要求结束批准 |
+| [Matt Pocock domain-modeling](https://github.com/mattpocock/skills/blob/main/skills/engineering/domain-modeling/SKILL.md) | 对照代码检验描述；用具体场景发现概念边界 | 每次明确术语就写词汇表；把讨论默认变成文档维护 |
+| [Superpowers brainstorming](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md) | 功能与行为变更也开展探索；相关上下文先行；比较设计及代价 | 所有路径强制批准；复杂度只升不降；架构路径固定衔接 spec 和 plan |
+| [GSD assumptions mode](https://github.com/gsd-build/get-shit-done/blob/main/docs/workflow-discuss-mode.md) | 先分析代码，展示假设的证据、错误后果与不确定性，便于用户纠正 | 固定文件数量、阶段目录与输出文档；将现有实现当成用户期望 |
+| [Spec Kit clarify](https://github.com/github/spec-kit/blob/main/templates/commands/clarify.md) | 按影响与不确定性处理覆盖缺口；更新矛盾陈述；问题说明意义 | 规格文件前置、固定问题与答案长度、将设计方法完全排除在讨论之外 |
+| [Requirements Clarity](https://github.com/softaworks/agent-toolkit/blob/main/skills/requirements-clarity/SKILL.md) | 核对价值并寻找更简单的实现 | 主观清晰度分数作为完成标准；默认生成 PRD；出现代码或路径就不触发 |
 
-## 形成的原则
+## 组合后的原则
 
-1. 提问只是获得 decision-relevant information 的工具，不是完成度指标。
-2. 能查证的 facts 由 agent 调查；用户只承担 intent、价值取舍与不可逆决定。
-3. 用户没有词汇或判断基础时，show/teach/prototype 比更精致的问卷有效。
-4. Discover、Clarify 与 Challenge 需要不同默认动作，不能压成单一流程。
-5. shared state 需要保存修订语义，但 renderer 不应反向控制 thinking。
-6. 后续 design、review、plan 与 execution 是独立维度，不能由 task size 或某个 mode 自动串联。
+调查、解释、对话和设计可以交错。先在相关上下文中发现值得讨论的影响，再由事实、知识缺口、用户选择或验证需求决定下一步动作。
+
+需求清楚不是跳过核验的理由；已经核验的前提也不因新消息而重复讨论。分析发现须关联当前目标，独立优化不得自动变成实施要求。
+
+现有 Discover 的多种方向与具体例子、Clarify 的依赖感知提问、Challenge 的有依据判断和 STRUCTURE 的状态保留继续使用。主入口不再要求先识别某种不确定性或可见缺陷才能开始。
+
+上述取舍需要通过真实风格输入和隔离 fixture 验证。热度、指令长度和方法数量不能证明触发可靠或结果更好。

@@ -1,6 +1,6 @@
 # STRUCTURE — Preserve Shared Understanding
 
-STRUCTURE is the cross-cutting state layer for Discover, Clarify, and Challenge. It prevents a polished final summary from erasing exact decisions, negative requirements, revised assumptions, or unresolved risk.
+STRUCTURE preserves the evolving understanding across investigation, explanation, dialogue, and design. It prevents a polished final summary from erasing exact decisions, negative requirements, revised assumptions, or unresolved risk.
 
 It does not discover, clarify, or challenge by itself. It records shared decisions already established by those modes, prior conversation, or an authoritative source.
 
@@ -17,7 +17,8 @@ Capture only dimensions that matter to the current work:
 - **Requirements** — observable behavior the result must exhibit.
 - **Constraints** — limits, dependencies, policies, compatibility, time, or budget.
 - **Decisions** — ratified choices and their rationale.
-- **Assumptions & evidence** — provisional beliefs and the facts that support or refute them.
+- **Assumptions & evidence** — provisional beliefs, the facts that support or refute them, and their effect on recommendations.
+- **Impacts & knowledge gaps** — affected relationships, unresolved mechanisms, and concrete verification steps.
 - **Risks & edge cases** — failure modes, negative requirements, and accepted trade-offs.
 - **Success evidence** — observable or measurable proof that the result worked.
 - **Open items** — unresolved, deferred, or not-yet-specifiable questions.

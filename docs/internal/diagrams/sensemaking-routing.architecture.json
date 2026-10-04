@@ -2,54 +2,202 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "Sensemaking 路由图",
-    "subtitle": "按当前思考状态选择路线，完成后归还控制权",
+    "title": "Sensemaking：从输入到可行动的理解",
+    "locale": "zh-CN",
     "output": "sensemaking-routing.html",
-    "viewBox": [1080, 820]
+    "quality_profile": "showcase",
+    "viewBox": [
+      1200,
+      520
+    ]
   },
   "components": [
-    { "id": "start", "type": "external", "label": "任意起点", "sublabel": "想法 / 需求 / 方案", "pos": [40, 270], "size": [140, 64] },
-    { "id": "gate", "type": "security", "label": "判断当前缺口", "sublabel": "到底还缺什么？", "pos": [230, 270], "size": [150, 64] },
-    { "id": "discover", "type": "frontend", "label": "发现方向", "sublabel": "Discover · 判断依据", "pos": [460, 70], "size": [150, 64] },
-    { "id": "clarify", "type": "backend", "label": "澄清选择", "sublabel": "Clarify · 人来取舍", "pos": [460, 190], "size": [150, 64] },
-    { "id": "challenge", "type": "security", "label": "检验方案", "sublabel": "Challenge · 缺陷与有效性", "pos": [460, 310], "size": [170, 64] },
-    { "id": "evidence", "type": "database", "label": "先查证据", "sublabel": "inspect / diagnose", "pos": [460, 460], "size": [150, 64] },
-    { "id": "deliver", "type": "cloud", "label": "直接交付", "sublabel": "action-ready", "pos": [460, 580], "size": [150, 64] },
-    { "id": "state", "type": "messagebus", "label": "共同理解", "sublabel": "按需结构化保存", "pos": [710, 190], "size": [150, 64] },
-    { "id": "downstream", "type": "external", "label": "下游工作", "sublabel": "自主选择下一动作", "pos": [910, 310], "size": [140, 64] }
-  ],
-  "boundaries": [
-    { "kind": "region", "label": "共同理解工作", "wraps": ["discover", "clarify", "challenge", "state"], "pad": 24 }
+    {
+      "id": "start",
+      "type": "external",
+      "label": "一句话或完整描述",
+      "sublabel": "需求 / Bug / 改造 / 想法",
+      "pos": [
+        40,
+        50
+      ],
+      "size": [
+        200,
+        76
+      ]
+    },
+    {
+      "id": "context",
+      "type": "database",
+      "label": "核验真实上下文",
+      "sublabel": "代码 / 文档 / 使用场景",
+      "pos": [
+        330,
+        50
+      ],
+      "size": [
+        200,
+        76
+      ]
+    },
+    {
+      "id": "impact",
+      "type": "security",
+      "label": "追踪关联影响",
+      "sublabel": "前提 → 变化 → 后果",
+      "pos": [
+        620,
+        50
+      ],
+      "size": [
+        200,
+        76
+      ]
+    },
+    {
+      "id": "learn",
+      "type": "frontend",
+      "label": "补足判断依据",
+      "sublabel": "查事实 / 解释机制",
+      "pos": [
+        910,
+        50
+      ],
+      "size": [
+        200,
+        76
+      ]
+    },
+    {
+      "id": "design",
+      "type": "backend",
+      "label": "形成适量设计",
+      "sublabel": "讨论关键取舍",
+      "pos": [
+        910,
+        230
+      ],
+      "size": [
+        200,
+        76
+      ]
+    },
+    {
+      "id": "state",
+      "type": "messagebus",
+      "label": "更新共同理解",
+      "sublabel": "已确认 / 假设 / 未决",
+      "pos": [
+        620,
+        230
+      ],
+      "size": [
+        200,
+        76
+      ]
+    },
+    {
+      "id": "done",
+      "type": "external",
+      "label": "完成当前任务",
+      "sublabel": "交付分析或继续已授权执行",
+      "pos": [
+        330,
+        230
+      ],
+      "size": [
+        200,
+        76
+      ]
+    },
+    {
+      "id": "direct",
+      "type": "cloud",
+      "label": "直接处理",
+      "sublabel": "机械 / 狭窄事实 / 已核验",
+      "pos": [
+        40,
+        410
+      ],
+      "size": [
+        200,
+        76
+      ]
+    }
   ],
   "connections": [
-    { "from": "start", "to": "gate", "variant": "emphasis" },
-    { "from": "gate", "to": "discover", "variant": "emphasis", "fromSide": "right", "toSide": "left", "via": [[405, 302], [405, 102]] },
-    { "from": "gate", "to": "clarify", "variant": "emphasis", "fromSide": "right", "toSide": "left", "via": [[420, 302], [420, 222]] },
-    { "from": "gate", "to": "challenge", "variant": "security", "fromSide": "right", "toSide": "left", "via": [[435, 302], [435, 342]] },
-    { "from": "gate", "to": "evidence", "variant": "dashed", "fromSide": "bottom", "toSide": "left", "via": [[395, 412], [420, 412], [420, 492]] },
-    { "from": "gate", "to": "deliver", "fromSide": "bottom", "toSide": "left", "via": [[395, 432], [405, 432], [405, 612]] },
-    { "from": "discover", "to": "state", "variant": "emphasis", "fromSide": "right", "toSide": "top", "route": "orthogonal-h" },
-    { "from": "clarify", "to": "state", "variant": "emphasis" },
-    { "from": "challenge", "to": "state", "variant": "security", "fromSide": "right", "toSide": "bottom", "route": "orthogonal-h" },
-    { "from": "state", "to": "downstream", "variant": "emphasis", "fromSide": "right", "toSide": "top", "route": "orthogonal-h" },
-    { "from": "evidence", "to": "downstream", "variant": "dashed", "fromSide": "right", "toSide": "left", "route": "orthogonal-h" },
-    { "from": "deliver", "to": "downstream", "fromSide": "right", "toSide": "bottom", "route": "orthogonal-h" }
+    {
+      "from": "start",
+      "to": "context",
+      "variant": "emphasis"
+    },
+    {
+      "from": "context",
+      "to": "impact",
+      "variant": "emphasis"
+    },
+    {
+      "from": "impact",
+      "to": "learn",
+      "variant": "emphasis"
+    },
+    {
+      "from": "learn",
+      "to": "design",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "variant": "emphasis"
+    },
+    {
+      "from": "design",
+      "to": "state",
+      "fromSide": "left",
+      "toSide": "right",
+      "variant": "emphasis"
+    },
+    {
+      "from": "state",
+      "to": "done",
+      "fromSide": "left",
+      "toSide": "right",
+      "variant": "emphasis"
+    },
+    {
+      "from": "state",
+      "to": "impact",
+      "label": "新证据",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "variant": "dashed"
+    },
+    {
+      "from": "start",
+      "to": "direct",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "from": "direct",
+      "to": "done",
+      "fromSide": "right",
+      "toSide": "bottom"
+    }
   ],
   "cards": [
     {
       "dot": "cyan",
-      "title": "路由不变量",
+      "title": "什么时候展开",
       "items": [
-        "来源、格式、领域、阶段和任务规模都不决定路线",
-        "事实由 agent 调查；影响结果的人类取舍才需要澄清"
+        "描述清楚不等于关联影响已核验",
+        "Discover / Clarify / Challenge 是按需使用的方法"
       ]
     },
     {
       "dot": "emerald",
-      "title": "能力边界",
+      "title": "如何避免过度",
       "items": [
-        "只使用最小必要 mode",
-        "不自动进入设计、计划、实现或独立评审"
+        "事实自行查；关键取舍才询问",
+        "新增发现不自动扩大范围；已有授权持续有效"
       ]
     }
   ]

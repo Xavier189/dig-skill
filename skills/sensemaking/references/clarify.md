@@ -60,7 +60,7 @@ Each question should make three things clear:
 
 - what part of the working hypothesis it tests;
 - how realistic answers would change the outcome;
-- the recommended default and why (conditional if an unsettled premise could reverse it), phrased so the user can accept it with a brief confirmation once they have the basis to evaluate it.
+- the recommended default and why, when the user has enough basis to evaluate it.
 
 If only the recommendation changes based on another independent answer, keep both in the batch and make the recommendation conditional. If the question's existence or option set changes, defer it to the next turn.
 
@@ -92,6 +92,6 @@ Clarify completes when every material fork is:
 - explicitly `deferred`; or
 - converted into a research/prototype action because it is not yet answerable.
 
-Completion of a clarification pass does not authorize implementation or resolve deferred dependencies. Before substantive implementation, apply the outcome, boundaries, and success-evidence check in the main Skill. A proposed check must test the user's intended result, not merely confirm that the requested mechanism runs.
+Completing a clarification pass does not by itself authorize implementation; the readiness check in the main Skill still applies.
 
 Render a Clarity Memo, Decision Brief, or Requirements Brief only when it helps the user or downstream consumer. Confirmation applies to the shared decisions, not to a mandatory document shape.

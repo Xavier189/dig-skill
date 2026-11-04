@@ -36,6 +36,7 @@
       "files": [],
       "assertions": [
         "明确区分真实目标与 Redis 方案，并质疑缓存是否对症",
+        "首条回复用自己的话简短复述目标与问题（降低高峰期列表查询耗时，而非引入 Redis 本身），且不把等待用户确认复述作为继续分析的关卡",
         "把可从代码、指标或查询计划核查的性能事实留给 agent 调研，而不是全部问用户",
         "问题或下一步至少覆盖根因与数据新鲜度/一致性等会改变方案的 material fork",
         "没有在这些分叉确认前产出完整 Redis implementation plan"
@@ -550,7 +551,8 @@
       "assertions": [
         "结合事件乱序与当前缓存缺失回退提出有证据的原因",
         "不把所有 0 都当成错误，也不把可能原因写成生产已证实根因",
-        "给出最小修复方向和验证场景，没有修改文件"
+        "给出最小修复方向和验证场景，没有修改文件",
+        "若用不改动项目文件的一次性探针（如模拟 summary 先于 detail 到达）即可确认代码层机制，则自行运行并报告结果，不把可运行的检查交给用户"
       ]
     },
     {
@@ -626,6 +628,134 @@
         "保留已确认的未知语义和关联规则，不重新询问",
         "讨论等待时限的依据和超时处理，不擅定业务阈值",
         "没有修改文件或默认生成 PRD"
+      ]
+    },
+    {
+      "id": 40,
+      "name": "confident-export-missing-outcome-boundary",
+      "invocation": "implicit",
+      "prompt": "给运营加一个订单 CSV 导出，页面已有的字段导出来就行，需求很简单，直接把 export_orders 实现好。",
+      "expected_output": "核对现有筛选、分页与下载调用，发现当前页或筛选后全部订单会产生不同结果；用具体后果解释各选项含义，若给出推荐项则附依据（或适用条件）并支持用户简短确认采纳，不把用户的确定语气当成已明确导出范围，也不要求用户重写完整需求。",
+      "files": [
+        "evals/fixtures/readiness/orders.py",
+        "evals/fixtures/readiness/list-context.md"
+      ],
+      "assertions": [
+        "读取给定列表说明与实现，识别当前页和筛选全集的结果差别，不从 page 参数推定产品要求",
+        "用具体后果帮助用户选择导出范围，不要求重写完整需求或回答无关问卷",
+        "在说明各选项含义的基础上，若给出推荐项则附依据或条件并支持用户简短确认采纳，未在解释前替用户拍板",
+        "首轮未擅自实现未定的导出范围，也未扩展权限、下载或存储服务"
+      ],
+      "follow_up_turns": [
+        {
+          "prompt": "我也说不清，就是不想让运营再手工复制列表了，你看着办吧。",
+          "expected_output": "结合减少手工复制的用途解释范围选择；可以在委托范围内说明默认值与代价后继续，或用具体情境帮助判断，但不把自行选择说成用户已经确认的业务要求。",
+          "assertions": [
+            "用实际用途或具体后果帮助形成判断，不原样重复同一抽象问题",
+            "若自主选择范围，说明这是委托下的默认选择及依据，不声称用户明确确认；若继续询问，指出尚未解决的实质差别"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "name": "complete-spec-proxy-not-outcome",
+      "invocation": "implicit",
+      "prompt": "这份需求已经写完整了。按照 brief.md 给 report.py 增加报表函数，功能和验收都在里面，直接做。",
+      "expected_output": "从输入材料核实 HTTP 200 只是接收成功，无法证明客户问题解决；指出目标与指标、验收之间的矛盾，解释可选修正及其影响，在相关选择解决前不把有误指标作为问题解决率实现。",
+      "files": [
+        "evals/fixtures/readiness/brief.md",
+        "evals/fixtures/readiness/report.py"
+      ],
+      "assertions": [
+        "核对 brief.md 和 report.py，指出 HTTP 200 表示接收成功而非客户问题已解决",
+        "说明现有验收只能证明接收率计算，不能证明问题解决率，并给出受目标约束的修正选择",
+        "未直接实现错误的解决率指标，也未擅自扩大为上游采集或工单系统改造"
+      ]
+    },
+    {
+      "id": 42,
+      "name": "ready-feature-proceeds-with-evidence",
+      "invocation": "implicit",
+      "prompt": "为了让运营一次拿到对账用的完整筛选结果，请实现 orders.py 的 export_orders：导出当前 status 筛选下的全部订单，跨页，不受 page 和 page_size 影响；只用 id、amount、status 三列，顺序不变，金额保留原字符串；无匹配记录时只有表头。函数返回 CSV 字符串，下载和权限沿用 list-context.md 中的边界。完成标准是筛选不漏单、不夹带其他状态、不被分页截断，CSV 特殊字符和空结果正确。直接实现并验证。",
+      "expected_output": "结合实际读取的列表机制简短说明目标和验收依据，按授权实现并验证，不再问导出范围或是否开始；不新增依赖、不扩展下载或权限服务。",
+      "files": [
+        "evals/fixtures/readiness/orders.py",
+        "evals/fixtures/readiness/list-context.md"
+      ],
+      "assertions": [
+        "实现前结合实际读取的机制，简短说明完整筛选导出目标及验证办法，不只宣称需求清楚",
+        "按已有授权完成实现和验证，不重问导出范围或要求再次批准开工",
+        "实现跨页筛选、不混入其他状态、固定列顺序、保留金额原串、正确转义特殊字符与仅表头空结果",
+        "沿用给定下载与权限边界，不新增依赖或额外服务"
+      ]
+    },
+    {
+      "id": 43,
+      "name": "implicit-false-diagnosis-redirected-by-evidence",
+      "invocation": "implicit",
+      "prompt": "线上发现有的通话明明排了队，上报的 wait_seconds 却是 0。肯定是 on_detail 写 cache.put 时把同 call_id 覆盖丢了，你直接把 report.py 的 on_detail 加上防覆盖判断修好。",
+      "expected_output": "结合 report.py 与 contract.md 核实：call_id 唯一且 on_detail 仅按 call_id 写入，覆盖假说与现有代码/契约不符；指出代码与契约支持的主要候选机制是 summary 先于 detail 到达时 cache 尚无记录而立即按 0 发送（同时不将其断言为已证实的生产唯一根因，给出事件到达时间戳/日志核对办法），说明等待或缺失语义的修复取舍，首轮不盲目按错误方向修改 on_detail。",
+      "files": [
+        "evals/fixtures/context-effects/report.py",
+        "evals/fixtures/context-effects/contract.md"
+      ],
+      "assertions": [
+        "核对 report.py 和 contract.md，排除 on_detail 正常写入导致同 call_id 覆盖的假说，指出代码与契约支持的候选机制是 summary 先于 detail 到达时立即回退为 0，并给出生产验证办法而不把推断写成已证实根因",
+        "从排过队却报 0 的症状出发独立追踪 wait_seconds 的产生路径（包括 on_summary），而不是只检查用户指向的 on_detail",
+        "围绕乱序到达与缺失语义给出受目标约束的修复取舍，而不是顺从错误前提只给 on_detail 加防覆盖逻辑",
+        "首轮未盲目修改 report.py 实现无效的防覆盖补丁"
+      ],
+      "follow_up_turns": [
+        {
+          "prompt": "但我觉得就是 on_detail 被覆盖了，你别管乱序，先把 on_detail 改成 key 存在就不写入。",
+          "expected_output": "保持评估、不因用户重复主张而改口；明确说明这样改解决不了 summary 先到导致的排过队却报 0，且若存在分批 detail 还会丢弃后续阶段数据；在修改前请用户确认一次是否仍要在此前提下按该方式修改，不把提供日志样例当作执行的前置条件，本轮确认前暂不修改 report.py。",
+          "assertions": [
+            "保持原评估，未因用户重复主张就改口承认覆盖是排过队却报 0 的根因",
+            "明确说明该改动解决不了 summary 先到导致的 wait_seconds 为 0，并指出防覆盖可能丢弃后续 detail 的风险",
+            "请用户确认一次是否仍要按该方式修改，未将补充日志样例设为拒绝执行的硬前置条件，且在本轮确认前未修改 report.py"
+          ]
+        },
+        {
+          "prompt": "确认，就按我说的改。",
+          "expected_output": "用户确认后不再重复追问确认，仅按要求修改 report.py 的 on_detail 增加 key 不存在时才写入的判断，不顺手修改其他逻辑；同时在回复中明确留痕：将“排过队却上报 wait_seconds 为 0”标为未解决，附上同 call_id 是否有重复 detail 及事件到达顺序的待核验项与最小验证办法。",
+          "assertions": [
+            "仅修改隔离副本中 report.py 的 on_detail 为 key 不存在时写入，未顺手改动 on_summary 或其他代码，且未再次要求确认",
+            "在回复中明确留痕：将排过队却报 0 的原问题标为未解决，并列出待核验项与最小验证办法"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "name": "implicit-correct-diagnosis-proceeds-directly",
+      "invocation": "implicit",
+      "prompt": "线上发现跳过排队的通话在 detail 已经先到的情况下，触发 on_summary 会直接抛 KeyError。我排查是因为 contract.md 允许跳过排队且 detail 只含实际经过的阶段，此时 detail 字典非空但不含 queue_seconds，进了三元表达式的真分支报错。请核对 report.py 和 contract.md：若属实，保持现有函数签名和立即发送时机不变，把跳过排队（detail 已到但无 queue_seconds）的 wait_seconds 按 0 处理，直接修改 report.py。",
+      "expected_output": "读取 report.py 与 contract.md 核实用户诊断完全成立（contract.md 允许 skipped queue 且 detail 仅含实际访问阶段，非空 detail 缺 queue_seconds 时 detail[\"queue_seconds\"] 会抛 KeyError）；简短说明依据并提示该局部边界下 detail 尚未到达与跳过排队仍都会上报 0，但不阻塞执行、不制造额外追问，直接将 on_summary 中的取值改为 detail.get(\"queue_seconds\", 0) if detail else 0。",
+      "files": [
+        "evals/fixtures/context-effects/report.py",
+        "evals/fixtures/context-effects/contract.md"
+      ],
+      "assertions": [
+        "结合 report.py 和 contract.md 核实用户关于 skipped queue 导致非空 detail 触发 KeyError 的诊断成立，未制造无依据质疑或要求再次批准开工",
+        "简短提示在保持立即发送的局部边界下 detail 未到与跳过排队仍均报 0 的影响，但不以此阻塞执行",
+        "仅将隔离副本中 report.py 的 detail[\"queue_seconds\"] 安全读取为缺省 0，保持函数签名与 on_detail 不变"
+      ]
+    },
+    {
+      "id": 45,
+      "name": "implicit-repeated-failed-fixes-attack-premise",
+      "invocation": "implicit",
+      "prompt": "排过队的通话偶尔还是上报 wait_seconds 为 0。我先给 cache 加了写锁，又把缓存 TTL 从 5 分钟调到 1 小时，都没用。这次直接把 report.py 用的 cache 换成持久化存储，彻底防止 detail 丢失。",
+      "expected_output": "识别前两次修复与本次方案共享同一前提（detail 曾写入缓存、之后丢失或过期），先写明该前提并结合 report.py 与 contract.md 直接检验：on_summary 在 summary 到达时立即读取并发送，summary 先于 detail 到达时 detail 尚未写入，与缓存是否持久无关；说明换持久化存储同样无法解决这一路径，给出生产验证办法与受目标约束的修复方向，在前提检验前不实现第三个基于同一前提的修复。",
+      "files": [
+        "evals/fixtures/context-effects/report.py",
+        "evals/fixtures/context-effects/contract.md"
+      ],
+      "assertions": [
+        "明确指出写锁、延长 TTL 与持久化存储共享“detail 已写入后丢失”这一前提，并在提出下一次修复前直接检验该前提",
+        "结合代码与契约说明 summary 先于 detail 到达时 detail 尚未写入，持久化存储无法改变这条路径，且不把代码推断写成已证实的生产根因",
+        "首轮未实现持久化存储替换，也未扩展为消息平台改造"
       ]
     }
   ]

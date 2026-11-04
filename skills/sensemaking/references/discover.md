@@ -44,6 +44,8 @@ If the user repeatedly says “不知道/你定”, stop asking them to choose. 
 
 Keep the teaching decision-relevant. The goal is not a domain lecture; it is to give the user enough basis to react intelligently.
 
+To surface needs the user would not think to request, ask yourself what a top practitioner in this domain would do here that was not asked for, which raw material they would start from instead of a digested summary, which methods or tools they would use, and what other than the agent or the user would show the result is right. Offer what this reveals as candidates and leave the user's choices open.
+
 ### 3. Generate multiple plausible frames
 
 Offer 2–4 meaningfully different interpretations of the opportunity. Each frame should state:

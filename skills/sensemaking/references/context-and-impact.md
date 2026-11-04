@@ -24,6 +24,8 @@ This is a reasoning aid, not a required output table. An impact may justify reta
 
 Do not mechanically apply every lens. Be specific about which effects are established, plausible, or unexamined. Code presence, configured enablement, and live behavior are different evidence levels.
 
+When a change's safety rests on one or two facts, name them and push each as far as is cheap along this ladder: asserted → pointed at the exact line or library source → failure path walked step by step → exercised by a script or test against the real code → reproduced in the running system. State where each fact stopped; an asserted fact is unproven.
+
 ## Turn gaps into the appropriate next move
 
 - **Discoverable fact:** inspect or research it, including authoritative documentation for unfamiliar behavior.

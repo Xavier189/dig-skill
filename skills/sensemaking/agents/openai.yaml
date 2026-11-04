@@ -1,6 +1,6 @@
 interface:
   display_name: "Sensemaking（探骊）"
-  short_description: "结合真实上下文，挖掘目标、关联影响、知识缺口与设计取舍"
-  default_prompt: "Use $sensemaking to examine this request against its real context, uncover hidden assumptions and downstream effects, explain knowledge gaps, and work with me toward a proportionate design."
+  short_description: "核验目标、关键约束与验收依据，发现未意识到的需求缺口"
+  default_prompt: "Use $sensemaking to examine this request against its real context, check the intended outcome and success evidence, uncover consequential gaps, and explain the basis for proceeding or the choices still needed."
 policy:
   allow_implicit_invocation: true
